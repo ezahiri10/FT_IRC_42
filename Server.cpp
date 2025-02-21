@@ -6,11 +6,13 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 16:58:57 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 18:41:42 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+bool Server::isstop = false;
 
 void Server::ifFailed(const std::string &e)
 {
@@ -18,7 +20,7 @@ void Server::ifFailed(const std::string &e)
     throw std::runtime_error(e.c_str());
 }
 
-Server::Server(const std::string &port, const std::string &pass)
+Server::Server(const std::string &port, const std::string &pass) 
 {
     if (pass.find_first_of(" \t") != std::string::npos || pass.empty())
         throw std::invalid_argument("invalid password");
@@ -36,7 +38,8 @@ Server::Server(const std::string &port, const std::string &pass)
 
 void Server::acceptConnection()
 {
-
+    if (isstop == true)
+        return ;
     int clienfd = accept(this->servfd, NULL, NULL);
     if (clienfd < 0)
         throw std::runtime_error ("accept failed");
@@ -65,9 +68,22 @@ void Server::recevMesseages(int i)
     std::cout << "s :" << s << std::endl;
 }
 
+Server::~Server()
+{
+    for (size_t i = 0;i < this->polls.size(); i++)
+    {
+        close (this->polls[i].fd);
+    }
+}
+void Server::handler(int sig)
+{
+    (void)sig;
+    std::cout << "signal is received " << std::endl;
+    Server::isstop = true;
+}
+
 void Server::creatServer ()
 {
-    
     sockaddr_in add;
     pollfd p;
 
@@ -83,29 +99,24 @@ void Server::creatServer ()
     if (listen(this->servfd, MAX_CLIENT) == -1)
         ifFailed ("listen failed");
     
+    signal(SIGINT, handler);
     p.fd = this->servfd;
     p.events = POLLIN;
     this->polls.push_back(p);
-    while (true)
+    while (!isstop)
     {
         int tocheck = poll (this->polls.data(), this->polls.size(), -1);
-        if (tocheck < 0)
+        if (tocheck < 0 && !isstop)
             throw std::runtime_error ("poll failed");
         if (this->polls[0].revents & POLLIN)
             acceptConnection();
         for (size_t i = 1; i < this->polls.size(); i++)
         {
             if (this->polls[i].revents & POLLIN)
+            {
                 recevMesseages(i);
+            }
         }
     }
     
-}
-
-Server::~Server()
-{
-    for (size_t i = 0;i < this->polls.size(); i++)
-    {
-        close (this->polls[i].fd);
-    }
 }

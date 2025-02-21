@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:03:15 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 16:25:27 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 18:03:21 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@ class Server
         std::string serverpass;
         std::vector<pollfd> polls;
         std::vector<Client> clients;
-
         void acceptConnection ();
         void recevMesseages(int i);
         void ifFailed(const std::string &e);
+        static bool isstop;
     public :
+        static void handler(int sig);
         Server(const std::string &port, const std::string &pass);
         void creatServer();
         ~Server ();
