@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 15:48:25 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:32:06 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@
 #include <poll.h>
 #include <sstream>
 #include <netinet/in.h>
-
+#include <signal.h>
+#include <fcntl.h>
+ 
 #define MAX_CLIENT 128
 
 class Client
@@ -42,7 +44,6 @@ class Client
         void setNickname (const std::string &nickname);
         void setUsername (const std::string &username);
         void setPassword (const std::string &password);
-        // ~Client();
 };
 
 #endif

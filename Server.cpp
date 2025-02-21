@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 15:54:45 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:58:57 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,14 @@ void Server::recevMesseages(int i)
 
 void Server::creatServer ()
 {
+    
     sockaddr_in add;
     pollfd p;
 
     add.sin_family = AF_INET;
     add.sin_port = htons(this->port);
     add.sin_addr.s_addr = INADDR_ANY;
+
     int en = 1;
     if(setsockopt(this->servfd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1)
         ifFailed ("setsockopt failed");
@@ -80,6 +82,7 @@ void Server::creatServer ()
         ifFailed ("bind failed");
     if (listen(this->servfd, MAX_CLIENT) == -1)
         ifFailed ("listen failed");
+    
     p.fd = this->servfd;
     p.events = POLLIN;
     this->polls.push_back(p);

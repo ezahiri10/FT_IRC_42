@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 15:48:54 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:55:41 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,4 @@ void Client::setPassword (const std::string &password)
     this->password = password;
 }
 
-// Client::~Client()
-// {
-//     // if (this->Clientfd != -1)
-//     //     close(this->Clientfd);
-// }
 

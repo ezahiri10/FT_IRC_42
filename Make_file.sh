@@ -13,7 +13,7 @@ HEADER = ${HEADER_FILES}
 
 OBJ = \$(SRC:.cpp=.o)
 
-NAME = a.out
+NAME = ircserv
 
 all: \$(NAME)
 
