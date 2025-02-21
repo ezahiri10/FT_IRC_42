@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:39:40 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 14:49:53 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void Server::recevMesseages(int i)
 void Server::creatServer ()
 {
     sockaddr_in add;
-    int clientfd;
+    // int clientfd;
     pollfd p;
 
     add.sin_family = AF_INET;
@@ -83,7 +83,7 @@ void Server::creatServer ()
             throw std::runtime_error ("poll failed");
         if (this->polls[0].revents & POLLIN)
             acceptConnection();
-        for (int i = 1; i < this->polls.size(); i++)
+        for (unsigned long i = 1; i < this->polls.size(); i++)
         {
             if (this->polls[i].revents & POLLIN)
                 recevMesseages(i);

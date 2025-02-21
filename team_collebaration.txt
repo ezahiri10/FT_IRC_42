@@ -1,0 +1,45 @@
+1. Server Core & Networking (Member 1)
+    Socket Programming & Connection Handling
+
+    Implement the server that listens on <port> and accepts client connections.
+    Use poll() (or equivalent) for managing multiple connections efficiently.
+    Ensure non-blocking I/O for reading/writing client data.
+    Handle graceful disconnections.
+    Implement parsing of raw IRC messages.
+    Client Management
+
+    Maintain a list of connected clients.
+    Implement authentication (handling <password> from the command line).
+
+2. Command Handling & Message Routing (Member 2)
+    Basic IRC Commands
+
+    Implement core commands:
+    NICK (set nickname)
+    USER (set username)
+    JOIN (join a channel)
+    PRIVMSG (send private messages)
+    PART (leave a channel)
+    Message Broadcasting
+
+    Ensure messages sent to a channel are forwarded to all members.
+    User Roles
+
+    Implement distinction between operators and regular users.
+
+3. Channel Management & Operator Commands (Member 3)
+    Channel-Specific Features
+
+    Implement channel creation, deletion, and user tracking.
+    Handle operator privileges.
+    Operator Commands
+
+    Implement:
+    KICK (remove a user from a channel)
+    INVITE (invite a user)
+    TOPIC (change/view channel topic)
+    MODE (manage channel settings: invite-only, topic restriction, password, operator privileges, user limit)
+    Server Configuration & Testing
+
+    Ensure server behaves like a real IRC server with the reference client.
+    Handle error cases (e.g., invalid commands, nickname conflicts).

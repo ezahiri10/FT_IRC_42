@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:03:15 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:16:42 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:06:31 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #define BUFFER_SIZE 1024
 
 #include "Client.hpp"
+#include "Channel.hpp"
 
 class Server
 {
