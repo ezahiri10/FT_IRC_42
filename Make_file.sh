@@ -20,7 +20,6 @@ all: \$(NAME)
 \$(NAME): \$(OBJ)
 	\$(CC) \$(CFLAGS) \$(OBJ) -o \$(NAME)
 
-# Rule to compile .cpp files in subdirectories
 %.o: %.cpp \$(HEADER)
 	\$(CC) \$(CFLAGS) -c \$< -o \$@
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:39:40 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:15:31 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Server::Server(const std::string &port, const std::string &pass)
 {
-    if (pass.find_first_of(" \t") != std::string::npos)
+    if (pass.find_first_of(" \t") != std::string::npos || pass.empty())
         throw std::invalid_argument("invalid password");
     if (port.find_first_not_of("0123456789") != std::string::npos)
         throw std::invalid_argument("invalid port");
@@ -60,7 +60,6 @@ void Server::recevMesseages(int i)
 void Server::creatServer ()
 {
     sockaddr_in add;
-    int clientfd;
     pollfd p;
 
     add.sin_family = AF_INET;
@@ -83,7 +82,7 @@ void Server::creatServer ()
             throw std::runtime_error ("poll failed");
         if (this->polls[0].revents & POLLIN)
             acceptConnection();
-        for (int i = 1; i < this->polls.size(); i++)
+        for (size_t i = 1; i < this->polls.size(); i++)
         {
             if (this->polls[i].revents & POLLIN)
                 recevMesseages(i);
