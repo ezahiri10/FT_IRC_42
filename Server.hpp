@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:03:15 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 15:50:24 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:51:37 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Server
         void ifFailed(const std::string &e);
     public :
         Server(const std::string &port, const std::string &pass);
+        ~Server ();
         void creatServer();
 };
 

@@ -7,7 +7,7 @@ HEADER = Client.hpp Server.hpp
 
 OBJ = $(SRC:.cpp=.o)
 
-NAME = server
+NAME = a.out
 
 all: $(NAME)
 
