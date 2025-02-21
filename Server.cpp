@@ -5,62 +5,90 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/20 13:28:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/20 17:15:33 by ezahiri          ###   ########.fr       */
+/*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
+/*   Updated: 2025/02/21 14:39:40 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <poll.h>
-#define MAX_LOG 128
+#include "Server.hpp"
 
-#define PORT 8080
-int main ()
+Server::Server(const std::string &port, const std::string &pass)
+{
+    if (pass.find_first_of(" \t") != std::string::npos)
+        throw std::invalid_argument("invalid password");
+    if (port.find_first_not_of("0123456789") != std::string::npos)
+        throw std::invalid_argument("invalid port");
+    std::stringstream ss(port);
+    ss >> this->port;
+    if (this->port <= 0 || this->port > 65535)
+        throw std::invalid_argument("invalid port");
+    this->servfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (this->servfd == -1)
+        throw std::runtime_error ("socket failed");
+}
+
+void Server::acceptConnection()
+{
+
+    int clienfd = accept(this->servfd, NULL, NULL);
+    if (clienfd < 0)
+        throw std::runtime_error ("accept failed");
+    pollfd p;
+    p.fd = clienfd;
+    p.events= POLLIN;
+    this->polls.push_back(p);
+}
+
+void Server::recevMesseages(int i)
+{
+    char s[BUFFER_SIZE];
+
+    int numChar = recv(this->polls[i].fd, s, sizeof(s), 0);
+    if (numChar < 0)
+        throw std::runtime_error ("recv failed");
+    if (numChar == 0)
+    {
+        std::cout << "Client " << this->polls[i].fd <<  " is disconnected" << std::endl;
+        close(this->polls[i].fd);
+        this->polls.erase(this->polls.begin() + i);
+        return ;
+    }
+    s[numChar] = '\0';
+    std::cout << "s :" << s << std::endl;
+}
+
+void Server::creatServer ()
 {
     sockaddr_in add;
+    int clientfd;
+    pollfd p;
 
     add.sin_family = AF_INET;
-    add.sin_port = htons(PORT);
+    add.sin_port = htons(this->port);
     add.sin_addr.s_addr = INADDR_ANY;
-
-    int sockfd = socket (AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1)
+    int en = 1;
+    if(setsockopt(this->servfd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1 &&  close(this->servfd))
+        throw std::runtime_error ("setsockopt failed");
+    if (bind (this->servfd, (sockaddr *)&add, sizeof(add)) == -1 && close(this->servfd))
+        throw std::runtime_error ("bind failed");
+    if (listen(this->servfd, MAX_CLIENT) == -1 && close(this->servfd))
+        throw std::runtime_error ("listen failed");
+    p.fd = this->servfd;
+    p.events = POLLIN;
+    this->polls.push_back(p);
+    while (true)
     {
-        perror("socket :");
-        return(1);
+        int tocheck = poll (this->polls.data(), this->polls.size(), -1);
+        if (tocheck < 0)
+            throw std::runtime_error ("poll failed");
+        if (this->polls[0].revents & POLLIN)
+            acceptConnection();
+        for (int i = 1; i < this->polls.size(); i++)
+        {
+            if (this->polls[i].revents & POLLIN)
+                recevMesseages(i);
+        }
     }
-    if (bind( sockfd, (const sockaddr *)&add, sizeof(add)) == -1)
-    {
-        perror("bind :");
-        return(1);
-    }
-    if (listen(sockfd, MAX_LOG) == -1)
-    {
-        perror("listen :");
-        return (1);
-    }
-    int client_fd = accept(sockfd, nullptr, nullptr);
-    if (client_fd == -1)
-    {
-        perror("accept :");
-        return (1);
-    }
-    struct pollfd pol;
     
-    pol.events = POLLIN;
-    pol.fd = sockfd;
-    // std::cout << "client_fd : " << client_fd << std::endl;
-    char s[1000];
-    if (poll(&pol, 1, -1) < -1)
-        exit (1);
-    // std::cout << "salam" <<std::endl;
-    // int rv = recv(client_fd, s, 1000, 0);
-    // if (rv == 0)
-    //     std::cout << "connction is cut" << std::endl;
-    // std::cout << rv << std::endl;
-    // // send(client_fd, "salam kalam 3aalam", 19, 0);
 }
+    
