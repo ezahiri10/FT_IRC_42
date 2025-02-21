@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 18:41:42 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 18:44:38 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void Server::creatServer ()
         ifFailed ("listen failed");
     
     signal(SIGINT, handler);
+    signal(SIGQUIT, handler);
     p.fd = this->servfd;
     p.events = POLLIN;
     this->polls.push_back(p);
