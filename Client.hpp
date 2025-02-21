@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 15:37:08 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:48:25 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ class Client
         bool arr[3];
     public :
         Client();
-        int getFd( void );
-        std::string getNickname( void );
-        std::string getUsername ( void );
-        std::string getPassword ( void );
+        int getFd( void ) const;
+        std::string getNickname( void ) const;
+        std::string getUsername ( void ) const;
+        std::string getPassword ( void ) const;
         void setFd (int fd);
         void setNickname (const std::string &nickname);
         void setUsername (const std::string &username);

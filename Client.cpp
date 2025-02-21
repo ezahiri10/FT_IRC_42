@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:22:09 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:48:54 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@ Client::Client()
         this->arr[i] = false;
 }
 
-int Client::getFd( void )
+int Client::getFd( void ) const 
 {
     return (this->Clientfd);
 }
 
-std::string Client::getNickname( void )
+std::string Client::getNickname( void ) const 
 {
     return (this->nickname);
 }
 
-std::string Client::getUsername( void )
+std::string Client::getUsername( void ) const 
 {
     return (this->username);
 }
 
-std::string Client::getPassword( void )
+std::string Client::getPassword( void ) const
 {
     return (this->password);
 }
