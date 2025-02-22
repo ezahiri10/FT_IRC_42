@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 15:55:41 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/22 14:33:24 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ Client::Client()
     this->nickname = "";
     this->username = "";
     this->password = "";
-    for (int i = 0; i < 3; i++)
-        this->arr[i] = false;
+    this->has_pass = false;
+    this->has_nick = false;
+    this->has_user = false;
+    // for (int i = 0; i < 3; i++)
+    //     this->arr[i] = false;
 }
 
 int Client::getFd( void ) const 
@@ -60,6 +63,11 @@ void Client::setUsername (const std::string &username)
 void Client::setPassword (const std::string &password)
 {
     this->password = password;
+}
+
+bool Client::Authontacated() const
+{
+    return (this->has_pass && this->has_nick && this->has_user);
 }
 
 

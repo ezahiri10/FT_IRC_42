@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 19:04:29 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/22 19:55:12 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void Server::recevMesseages(int i)
 {
     char s[BUFFER_SIZE];
 
+    if (isstop == true)
+        return ;
     int numChar = recv(this->polls[i].fd, s, sizeof(s), 0);
     if (numChar < 0)
         throw std::runtime_error ("recv failed");
@@ -65,7 +67,7 @@ void Server::recevMesseages(int i)
         return ;
     }
     s[numChar] = '\0';
-    std::cout << "s :" << s << std::endl;
+    Authentication(s, i);
 }
 
 Server::~Server()
@@ -75,6 +77,7 @@ Server::~Server()
         close (this->polls[i].fd);
     }
 }
+
 void Server::handler(int sig)
 {
     (void)sig;
@@ -86,7 +89,6 @@ void Server::creatServer ()
 {
     sockaddr_in add;
     pollfd p;
-
     add.sin_family = AF_INET;
     add.sin_port = htons(this->port);
     add.sin_addr.s_addr = INADDR_ANY;
@@ -106,8 +108,9 @@ void Server::creatServer ()
         int tocheck = poll (this->polls.data(), this->polls.size(), -1);
         if (tocheck < 0 && !isstop)
             throw std::runtime_error ("poll failed");
-        if (this->polls[0].revents & POLLIN)
+        if (this->polls[0].revents & POLLIN){
             acceptConnection();
+        }
         for (size_t i = 1; i < this->polls.size(); i++)
         {
             if (this->polls[i].revents & POLLIN)
@@ -116,5 +119,10 @@ void Server::creatServer ()
             }
         }
     }
-    
+    // for(size_t i = 0; i < this->clients.size(); i++){
+    //     std::cout << "pass : " << clients[i].getPassword() << std::endl;
+    //     std::cout << "user : " << clients[i].getUsername() << std::endl;
+    //     std::cout << "nick : " << clients[i].getNickname() << std::endl;
+    //     std:: cout << "===============\n";
+    // }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 16:32:06 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/22 14:32:54 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@
 #include <netinet/in.h>
 #include <signal.h>
 #include <fcntl.h>
- 
+#include "Replies.hpp"
+#include <map>
+
 #define MAX_CLIENT 128
 
 class Client
@@ -33,10 +35,13 @@ class Client
         std::string nickname;
         std::string username;
         std::string password;
-        bool arr[3];
+        // bool arr[3];
     public :
-        Client();
+        bool has_pass;
+        bool has_nick;
+        bool has_user;
         int getFd( void ) const;
+        Client();
         std::string getNickname( void ) const;
         std::string getUsername ( void ) const;
         std::string getPassword ( void ) const;
@@ -44,6 +49,6 @@ class Client
         void setNickname (const std::string &nickname);
         void setUsername (const std::string &username);
         void setPassword (const std::string &password);
+        bool Authontacated()const;
 };
-
 #endif
