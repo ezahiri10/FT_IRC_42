@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/23 14:52:13 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/23 15:49:41 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,19 @@ bool Bot::isWin (char XO)
     return (false);
 }
 
-bool Bot::playerMove()
+bool Bot::playerMove(bool &iseof)
 {
     std::string line;
     int r;
 
     std::cout << "select numbet 1 ~ 9 : ";
     getline(std::cin, line);
+    if (std::cin.eof())
+    {
+        iseof = true;
+        std::cout << "\nBye" << std::endl;
+        return (false);
+    }
     if (line.empty() || line.size() != 1 || !std::isdigit(line[0]))
     {
         std::cout << "invalid argement" << std::endl;
@@ -116,13 +122,14 @@ bool Bot::isFall()
 
  void Bot::ticTacToe()
  {
+    bool iseof = false;
     std::cout << "select numbet 1 ~ 9 : " << std::endl;
     this->affichTable();
-    while (true)
+    while (iseof == false)
     {
         if (this->isFall())
             break ;
-        if (!this->playerMove())
+        if (!this->playerMove(iseof))
             continue;
         if (this->isWin('X') == true)
             break ;
