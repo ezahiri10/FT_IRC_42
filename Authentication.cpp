@@ -89,7 +89,6 @@ void Server::Authentication(std::string message, int clientId){
     if (this->newClient.Authontacated()){
         this->clients.push_back(this->newClient);
         this->newClient = Client();
-        std::cout << "=>: "<<this->newClient.getNickname() << std::endl;
         std::string welc = RPL_WELCOME(this->newClient.getNickname());
         send(this->polls[clientId].fd, welc.c_str(), strlen(welc.c_str()), 0);return;
     }
