@@ -2,8 +2,8 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC = Client.cpp main.cpp Server.cpp 
-HEADER = Client.hpp Server.hpp 
+SRC = Bot.cpp Client.cpp main.cpp Server.cpp 
+HEADER = Bot.hpp Client.hpp Server.hpp 
 
 OBJ = $(SRC:.cpp=.o)
 

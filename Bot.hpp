@@ -1,23 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 10:06:22 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/23 14:12:39 by ezahiri          ###   ########.fr       */
+/*   Created: 2025/02/23 13:26:43 by ezahiri           #+#    #+#             */
+/*   Updated: 2025/02/23 14:16:22 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef BOT_HPP
+#define BOT_HPP
+
 #include "Server.hpp"
-#include "Bot.hpp"
+#include <array>
+#include <time.h>
 
-
-
-int main ()
+class Bot
 {
-    Bot b;
+    private :
+        std::array<std::array<char, 3>, 3> s;
+    public :
+        Bot();
+        void ticTacToe();
+        void affichTable();
+        bool isWin (char XO);
+        void botMove();
+        bool playerMove();
+        bool isFall();
+};
 
-    b.ticTacToe();   
-}
+#endif
