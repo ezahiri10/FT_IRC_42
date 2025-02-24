@@ -9,6 +9,9 @@
 
 
 //Errors :
+#define ERR_USERONCHANNEL(client, Invite_client, channel)   PREFIX "443 " + client + " " + Invite_client + " " + channel + " :is already on channel" POSTFIX 
+#define ERR_UMODEUNKNOWNFLAG(client)                        PREFIX "501 " + client + " :Unknown MODE flag" POSTFIX
+#define ERR_USERSDONTMATCH(client)                          (std::string(PREFIX) + "502 " + client + " :Cant change mode for other users\n")
 #define ERR_NICKNAMEINUSE(target)						PREFIX "433 " + target + " :Nickname is already in use" POSTFIX 
 #define ERR_NEEDMOREPARAMS(command)						PREFIX "461 " + command + " :Not enough parameters" POSTFIX  
 #define ERR_UNKNOWNCOMMAND(command)						PREFIX "421 " + command + " :Unknown command" POSTFIX 
