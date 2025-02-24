@@ -2,7 +2,7 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC = Authentication.cpp Client.cpp main.cpp Server.cpp 
+SRC = Authentication/Authentication.cpp Client.cpp main.cpp Server.cpp 
 HEADER = Client.hpp Replies.hpp Server.hpp 
 
 OBJ = $(SRC:.cpp=.o)

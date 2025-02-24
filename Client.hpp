@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/22 14:32:54 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 02:36:41 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class Client
         bool has_pass;
         bool has_nick;
         bool has_user;
+        bool clientExist;
         int getFd( void ) const;
         Client();
         std::string getNickname( void ) const;

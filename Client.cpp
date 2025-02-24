@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/22 14:33:24 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 02:38:18 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 Client::Client()
 {
+    std::cout << "constractor\n";
     this->Clientfd = -1;
+    this->password = "";
     this->nickname = "";
     this->username = "";
-    this->password = "";
     this->has_pass = false;
     this->has_nick = false;
     this->has_user = false;
-    // for (int i = 0; i < 3; i++)
-    //     this->arr[i] = false;
+    this->clientExist = false;
 }
 
 int Client::getFd( void ) const 

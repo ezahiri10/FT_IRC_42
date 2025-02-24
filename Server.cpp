@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/23 09:36:59 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 03:38:15 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,22 +52,23 @@ void Server::acceptConnection()
 
 void Server::recevMesseages(int i)
 {
-    char s[BUFFER_SIZE];
+    char buffer[BUFFER_SIZE];
 
     if (isstop == true)
         return ;
-    int numChar = recv(this->polls[i].fd, s, sizeof(s), 0);
+    int numChar = recv(this->polls[i].fd, buffer, sizeof(buffer), 0);
     if (numChar < 0)
         throw std::runtime_error ("recv failed");
-    if (numChar == 0)
+    if (numChar <= 0)
     {
         std::cout << "Client " << this->polls[i].fd <<  " is disconnected" << std::endl;
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
         return ;
+    }else{
+        buffer[numChar] = '\0';
+        Authentication(buffer, i);
     }
-    s[numChar] = '\0';
-    Authentication(s, i);
 }
 
 Server::~Server()
@@ -119,10 +120,4 @@ void Server::creatServer ()
             }
         }
     }
-    // for(size_t i = 0; i < this->clients.size(); i++){
-    //     std::cout << "pass : " << clients[i].getPassword() << std::endl;
-    //     std::cout << "user : " << clients[i].getUsername() << std::endl;
-    //     std::cout << "nick : " << clients[i].getNickname() << std::endl;
-    //     std:: cout << "===============\n";
-    // }
 }
