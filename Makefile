@@ -1,7 +1,13 @@
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98 #-g -fsanitize=address
 SRCS =	main.cpp\
 		Client.cpp\
-		Server.cpp
+		Server.cpp\
+		Channel.cpp\
+		operators/Kick.cpp\
+		operators/Mode.cpp\
+		operators/Invite.cpp\
+		operators/Topic.cpp\
+		operators/utils.cpp
 
 NAME = ircserv
 
@@ -11,7 +17,7 @@ RM = rm -f
 
 all: $(NAME)
 
-%.o: %.cpp  Server.hpp Client.hpp
+%.o: %.cpp  Server.hpp Client.hpp Channel.hpp
 	c++ $(CFLAGS) -c -o $@ $<
 
 $(NAME): $(OBJECTS)

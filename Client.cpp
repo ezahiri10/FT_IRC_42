@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:22:09 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/23 20:48:28 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@ int Client::getFd( void )
     return (this->Clientfd);
 }
 
-std::string Client::getNickname( void )
+std::string& Client::getNickname( void )
 {
-    return (this->nickname);
+      return (this->nickname);
 }
 
-std::string Client::getUsername( void )
+std::string& Client::getUsername( void )
 {
     return (this->username);
 }
 
-std::string Client::getPassword( void )
+std::string& Client::getPassword( void )
 {
     return (this->password);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:06:22 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:19:34 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:56:09 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int main (int ac , char **av)
         if (ac != 3)
             throw std::invalid_argument ("Not enough of Arguments");
         Server serv (av[1], av[2]);
-        serv.creatServer();
+        serv.creatServer(&serv);
     }
     catch(std::exception &e)
     {

@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:49:53 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/23 17:52:50 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void Server::acceptConnection()
     this->polls.push_back(p);
 }
 
-void Server::recevMesseages(int i)
+void Server::recevMesseages(Server *serv, int i)
 {
     char s[BUFFER_SIZE];
 
@@ -54,10 +54,20 @@ void Server::recevMesseages(int i)
         return ;
     }
     s[numChar] = '\0';
-    std::cout << "s :" << s << std::endl;
+    if (!strncmp(s, "KICK", 4))
+        Kick_func(serv, s, this->polls[i].fd);
+    else if (!strncmp(s, "INVITE", 6))
+        Invite_func(serv, s, this->polls[i].fd);
+    else if (!strncmp(s, "MODE", 4))
+        Mode_func(serv, s, this->polls[i].fd);
+    else if (!strncmp(s, "TOPIC", 4))
+        Topic_func(serv, s, this->polls[i].fd);
+    else
+        std::cout << "s :" << s << std::endl;
+
 }
 
-void Server::creatServer ()
+void Server::creatServer (Server *serv)
 {
     sockaddr_in add;
     // int clientfd;
@@ -86,7 +96,7 @@ void Server::creatServer ()
         for (unsigned long i = 1; i < this->polls.size(); i++)
         {
             if (this->polls[i].revents & POLLIN)
-                recevMesseages(i);
+                recevMesseages(serv, i);
         }
     }
     

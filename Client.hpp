@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 14:42:29 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/23 20:48:12 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ class Client
     public :
         Client();
         int getFd( void );
-        std::string getNickname( void );
-        std::string getUsername ( void );
-        std::string getPassword ( void );
+        std::string& getNickname( void );
+        std::string& getUsername ( void );
+        std::string& getPassword ( void );
         void setFd (int fd);
         void setNickname (const std::string &nickname);
         void setUsername (const std::string &username);
