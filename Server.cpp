@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/24 03:38:15 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 05:38:22 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void Server::acceptConnection()
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
 }
 
-void Server::recevMesseages(int i)
+void Server::recevMesseages(Server *serv, int i)
 {
     char buffer[BUFFER_SIZE];
 
@@ -67,7 +67,16 @@ void Server::recevMesseages(int i)
         return ;
     }else{
         buffer[numChar] = '\0';
-        Authentication(buffer, i);
+        if (!strncmp(buffer, "KICK", 4))
+            Kick_func(serv, buffer, this->polls[i].fd);
+        else if (!strncmp(buffer, "INVITE", 6))
+            Invite_func(serv, buffer, this->polls[i].fd);
+        else if (!strncmp(buffer, "MODE", 4))
+            Mode_func(serv, buffer, this->polls[i].fd);
+        else if (!strncmp(buffer, "TOPIC", 4))
+            Topic_func(serv, buffer, this->polls[i].fd);
+        else
+            Authentication(buffer, i);
     }
 }
 
@@ -86,7 +95,7 @@ void Server::handler(int sig)
     Server::isstop = true;
 }
 
-void Server::creatServer ()
+void Server::creatServer (Server *serv)
 {
     sockaddr_in add;
     pollfd p;
@@ -116,7 +125,7 @@ void Server::creatServer ()
         {
             if (this->polls[i].revents & POLLIN)
             {
-                recevMesseages(i);
+                recevMesseages(serv, i);
             }
         }
     }
