@@ -6,11 +6,37 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/24 03:38:15 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 06:40:08 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+void Server::printWelcomeBanner(){
+    const std::string color_cyan = "\033[1;36m"; 
+    const std::string color_green = "\033[1;32m"; 
+    const std::string color_reset = "\033[0m";  
+
+    std::cout << color_cyan <<
+       "IIIIIIIIIIRRRRRRRRRRRRRRRRR           CCCCCCCCCCCCC\n"
+        "I::::::::IR::::::::::::::::R       CCC::::::::::::C\n"
+        "I::::::::IR::::::RRRRRR:::::R    CC:::::::::::::::C\n"
+        "II::::::IIRR:::::R     R:::::R  C:::::CCCCCCCC::::C\n"
+        "  I::::I    R::::R     R:::::R C:::::C       CCCCCC\n"
+        "  I::::I    R::::R     R:::::RC:::::C              \n"
+        "  I::::I    R::::RRRRRR:::::R C:::::C              \n"
+        "  I::::I    R:::::::::::::RR  C:::::C              \n"
+        "  I::::I    R::::RRRRRR:::::R C:::::C              \n"
+        "  I::::I    R::::R     R:::::RC:::::C              \n"
+        "  I::::I    R::::R     R:::::RC:::::C              \n"
+        "  I::::I    R::::R     R:::::R C:::::C       CCCCCC\n"
+        "II::::::IIRR:::::R     R:::::R  C:::::CCCCCCCC::::C\n"
+        "I::::::::IR::::::R     R:::::R   CC:::::::::::::::C\n"
+        "I::::::::IR::::::R     R:::::R     CCC::::::::::::C\n"
+        "IIIIIIIIIIRRRRRRRR     RRRRRRR        CCCCCCCCCCCCC\n";
+        std::cout<< color_reset << std::endl;
+}
+
 
 bool Server::isstop = false;
 
@@ -48,26 +74,27 @@ void Server::acceptConnection()
     p.events= POLLIN;
     this->polls.push_back(p);
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
+    printWelcomeBanner();
 }
 
 void Server::recevMesseages(int i)
 {
-    char buffer[BUFFER_SIZE];
+    char s[BUFFER_SIZE];
 
     if (isstop == true)
         return ;
-    int numChar = recv(this->polls[i].fd, buffer, sizeof(buffer), 0);
+    int numChar = recv(this->polls[i].fd, s, sizeof(s), 0);
     if (numChar < 0)
         throw std::runtime_error ("recv failed");
-    if (numChar <= 0)
+    if (numChar == 0)
     {
         std::cout << "Client " << this->polls[i].fd <<  " is disconnected" << std::endl;
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
         return ;
     }else{
-        buffer[numChar] = '\0';
-        Authentication(buffer, i);
+        s[numChar] = '\0';
+        Authentication(s, i);
     }
 }
 

@@ -2,6 +2,11 @@
 
 #define PREFIX ":IRCServer "
 #define POSTFIX "\r\n" 
+#define RED "\033[31m"
+#define YELLOW "\033[33m"
+#define GREEN "\033[32m"
+#define RESET "\033[0m"
+
 
 //Errors :
 #define ERR_NICKNAMEINUSE(target)						PREFIX "433 " + target + " :Nickname is already in use" POSTFIX 
@@ -26,7 +31,7 @@
 #define ERR_INCORPASS(nickname)							(": 464 " + nickname + " :Password incorrect !" + POSTFIX )
 
 //Replays :
-#define RPL_WELCOME(sender, msg)               			PREFIX "001 " + sender + " : " + msg + POSTFIX 
+#define RPL_WELCOME(sender, msg)               			GREEN PREFIX "001 " + sender + " : " + msg + POSTFIX RESET
 #define RPL_NAMREPLY(sender, channel, users)    		PREFIX "353 " + sender + " = " + channel + " :" + users + POSTFIX
 #define RPL_ENDOFNAMES(sender, channel)        			PREFIX "366 " + sender + " " + channel + " :End of /NAMES list." POSTFIX
 #define RPL_TOPIC(sender, channel, topic)				PREFIX " 332 " + sender + " " + channel + " :" + topic + POSTFIX    

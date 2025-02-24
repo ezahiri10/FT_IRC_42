@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:03:15 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/24 04:49:53 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 06:11:58 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Server
         void user(std::string arg, int clientId);
         void getArgs(std::string message);
         std::vector<Client>::iterator getClient(int fd);
+        void printWelcomeBanner();
 };
 
 

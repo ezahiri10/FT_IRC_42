@@ -19,23 +19,6 @@ bool checkPass(std::string clientPass, std::string serverPass, int clientId, boo
     return (true);
 }
 
-// bool checkNick(std::string nick, int clientId){
-//     if (!is_valid(nick)){
-//         std::string err = ERR_SPACENOTALLOWED(nick);
-//         send(clientId, err.c_str(), strlen(err.c_str()), 0);
-//         return (false);
-//     }
-//     return (true);
-// }
-
-// bool checkUser(std::string user, int clientId){
-//     if (!is_valid(user)){
-//         std::string err = ERR_SPACENOTALLOWED(user);
-//         send(clientId, err.c_str(), strlen(err.c_str()), 0);
-//         return (false);
-//     }
-//     return (true);
-// }
 bool Server::checkNickAvailability(const std::string& nick){
     std::vector<Client>::iterator iter;
     for (iter = this->clients.begin(); iter != this->clients.end(); iter++){
@@ -146,7 +129,7 @@ void Server::Authentication(std::string message, int clientId){
     iter = getClient(clientId);
     if (iter != clients.end() && iter->Authontacated() && !iter->clientExist){
         this->clients[clientId - 1].clientExist = true;
-        std::string welc = RPL_WELCOME(this->clients[clientId].getNickname(), "welcome to irc server");
+        std::string welc = RPL_WELCOME(this->clients[clientId].getNickname(), "Welcome To The Irc Server");
         send(this->polls[clientId].fd, welc.c_str(), strlen(welc.c_str()), 0);return;
     }
 }
