@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/25 19:35:23 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/25 22:04:44 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,15 @@ class Server
         int Topic_func(std::string arg, int client_Fd);
         int Invite_func(std::string arg, int client_Fd);
         bool there_is_user(std::string client, int client_Fd);
-        int Get_client_pos(const std::string& nickname, int index);
-        void Add_Remove_OP(std::string mode, std::string op, int index);
-        bool there_is_channel(std::string channel, int &index, int clientFD);
+        int Get_Channel_client_pos(const std::string& nickname, int channel_pos);
+        void Add_Remove_OP(std::string mode, std::string op, int channel_pos);
+        bool there_is_channel(std::string channel, int &channel_pos, int clientFD);
         void Add_topic(std::string channel, std::string topic, int client_Fd);
-        bool Check_identify(std::string mode, std::string identify, int index);
+        bool Check_identify(std::string mode, std::string identify, int channel_pos);
         void Set_mode(std::string channel, std::string mode, std::string identify, int client_Fd);
         bool Check_kick(std::string channel, std::string client, std::string reasen, int client_Fd);
         int Invite_client(std::string arg, std::string invit_client, std::string channel, int client_Fd);
-        bool already_on_channel(std::string client, std::string channel, int client_Fd, int index, int check);
+        bool already_on_channel(std::string client, std::string channel, int client_Fd, int channel_pos, int check);
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/25 20:05:47 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/25 22:04:28 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,13 @@ std::string Server::Get_client_nick(int client_Fd)
     return ("");
 }
 
-bool Server::there_is_channel(std::string channel, int &index, int clientFD)
+bool Server::there_is_channel(std::string channel, int &channel_pos, int clientFD)
 {
     for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); it++)
     {
-        std::cout << "Channel = " << it->getChannelName() << std::endl;
         if (channel == it->getChannelName())
         {
-            index = std::distance(this->channels.begin(), it);
+            channel_pos = std::distance(this->channels.begin(), it);
             return (true);
         }
     }
@@ -54,10 +53,10 @@ bool Server::there_is_channel(std::string channel, int &index, int clientFD)
     return (false);
 }
 
-bool Server::already_on_channel(std::string client, std::string channel, int client_Fd, int index, int check)
+bool Server::already_on_channel(std::string client, std::string channel, int client_Fd, int channel_pos, int check)
 {
     std::vector<Client>::iterator it;
-    for (it = this->channels[index].getClients().begin(); it != this->channels[index].getClients().end(); it++){
+    for (it = this->channels[channel_pos].getClients().begin(); it != this->channels[channel_pos].getClients().end(); it++){
         if (client == it->getNickname())
         {
             if (check == 1)
@@ -73,9 +72,9 @@ bool Server::already_on_channel(std::string client, std::string channel, int cli
     return (false);
 }
 
-int Server::Get_client_pos(const std::string& nickname, int index)
+int Server::Get_Channel_client_pos(const std::string& nickname, int channel_pos)
 {
-    std::vector<Client>& clients = this->channels[index].getClients();
+    std::vector<Client>& clients = this->channels[channel_pos].getClients();
     std::vector<Client>::iterator it;
     if (clients.empty())
         std::cout << "WAS HERE\n";
