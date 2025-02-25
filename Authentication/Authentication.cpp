@@ -114,12 +114,13 @@ void Server::Authentication(std::string message, int clientId){
     std::string command, arg;
     getArgs(message);
     arg = getArg(message);
+    // if (this->args.size() < 1)return; // FIX SEGFAULT EMPTY INPUT 
     command = this->args[0];
     if (this->args.size() < 2){
         std::string err = ERR_NEEDMOREPARAMS(command);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
     }
-    if (!checkCommand(command)){
+    if(!checkCommand(command)){
         std::string err = ERR_UNKNOWNCOMMAND(command);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
     }
@@ -135,7 +136,7 @@ void Server::Authentication(std::string message, int clientId){
     iter = getClient(clientId);
     if (iter != clients.end() && iter->Authontacated() && !iter->clientExist){
         this->clients[clientId - 1].clientExist = true;
-        std::string welc = RPL_WELCOME(this->clients[clientId].getNickname(), "Welcome To The Irc Server");
+        std::string welc = RPL_WELCOME(this->clients[clientId - 1].getNickname(), "Welcome To The Irc Server");
         send(this->polls[clientId].fd, welc.c_str(), strlen(welc.c_str()), 0);return;
     }
 }

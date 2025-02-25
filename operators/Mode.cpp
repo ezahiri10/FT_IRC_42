@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 05:01:43 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:45:33 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ void Add_Remove_OP(Server *My_serv, std::string mode, std::string op, int index)
 
 void Add_Remove_LIMIT(Server *My_serv, std::string mode, int user_limit, int index){//l
     if (mode == "+l")
-        My_serv->channels[index].setLimit(user_limit);
+        My_serv->channels[index].setChannelLimit(user_limit);
     else
-        My_serv->channels[index].setLimit(10);
+        My_serv->channels[index].setChannelLimit(10);
 }
 
 void Add_Remove_TOPIC(Server *My_serv, std::string mode, std::string topic, int index){//t
@@ -180,7 +180,7 @@ int  Mode_func(Server *My_serv, std::string arg, int client_Fd)
     std::string mode;
     std::string identify;
 
-    My_channel.setName("#MY_CHANNEL");
+    My_channel.setChannelName("#MY_CHANNEL");
     My_serv->channels.push_back(My_channel);
 
     My_client.setFd(client_Fd);

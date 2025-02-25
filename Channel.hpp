@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 21:18:40 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:20:22 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,23 @@ class Channel {
     private:
         int         limit;
         bool        invited;
+        bool        isPrivate;
         std::string name;                       // Channel name
         std::string topic;                      // Current topic of the channel
         std::string password;                   // Channel password (if needed)             
         std::vector<std::string> operators;     //:vector of operator nicknames
         std::vector<std::string> modes;         // Channel mode flags (e.g., +i, +m, +t, etc.)
-        std::vector<Client> Channelclients;            //:vector of Clients nicknames
     public:
+        std::vector<Client> Channelclients;            //:vector of Clients nicknames
         Channel();
         ~Channel();
 
-        std::string getName();
-        void setName(std::string name);
+        std::string getChannelName();
+        void setChannelName(std::string name);
 
-        int geLimit();
-        void setLimit(int name);
+        int getChannelLimit();
+        void setChannelLimit(int limit);
+        void incrChannelLimit();
 
         bool geInvited();
         void setInvited(bool invt);
@@ -43,7 +45,7 @@ class Channel {
         std::string getTopic();
         void setTopic(std::string topic);
 
-        std::string getPassword();
+        std::string getChannelPassword();
         void setPassword(std::string password);
 
         std::vector<std::string> getOperators();
@@ -58,6 +60,8 @@ class Channel {
         void addClient(const Client& client);
         void addOperator(const std::string op);
         void removeClient(int pos);
+        void setIsprivate(bool isPrivate);
+        bool getIsprivate();
 };
 
 #endif

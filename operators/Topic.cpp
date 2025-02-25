@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:44:48 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 04:42:26 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:46:14 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int Topic_func(Server *My_serv, std::string arg, int client_Fd)
     std::string channel;
     std::string topic;
 
-    My_channel.setName("#MY_CHANNEL");
+    My_channel.setChannelName("#MY_CHANNEL");
     My_channel.setTopic("HELLLLLLDLDLDLDLDLLDDL");
     My_serv->channels.push_back(My_channel);
 

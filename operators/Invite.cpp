@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 04:42:01 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:45:51 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int Invite_func(Server *My_serv, std::string arg, int client_Fd)
 
     My_serv->channels.push_back(Channel());
     Channel &My_channel = My_serv->channels.back();
-    My_channel.setName("#CHANNEL");
+    My_channel.setChannelName("#CHANNEL");
 
     // Create client
     My_serv->clients.push_back(Client());

@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/24 21:49:29 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:45:35 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ class Server
         void user(std::string arg, int clientId);
         void getArgs(std::string message);
         std::vector<Client>::iterator getClient(int fd);
-        void printWelcomeBanner();
         void exec_cmds(std::string command, std::string arg, int i);
         void join(std::string arg, int clientId);
         bool checkChannelExist(std::string channelName);
-        void createChannel(std::string Ch_name, std::string Ch_pass, bool isOperator, int clientId);
-        void addToChannel(std::string Ch_name, std::string Ch_pass, bool isOperator, int clientId);
+        void createChannel(std::string Ch_name, std::string Ch_pass, int clientId);
+        void addClientToChannel(std::string Ch_name, std::string Ch_pass, int clientId);
+        std::vector<Channel>::iterator getChannelByName(std::string name);
 
 };
 int Kick_func(Server *My_serv, std::string arg, int client_Fd);

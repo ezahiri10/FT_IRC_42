@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 04:57:50 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:46:42 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ bool there_is_channel(Server *My_serv, std::string channel, int &index, int clie
 {
     for (std::vector<Channel>::iterator it = My_serv->channels.begin(); it != My_serv->channels.end(); it++)
     {
-        if (channel == it->getName())
+        if (channel == it->getChannelName())
         {
             index = std::distance(My_serv->channels.begin(), it);
             return (true);

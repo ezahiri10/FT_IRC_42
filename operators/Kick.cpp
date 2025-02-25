@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 04:42:09 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:43:05 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int Kick_func(Server *My_serv, std::string arg, int client_Fd)
     std::string channel;
     std::string reasen;
 
-    My_channel.setName("#MY_CHANNEL");
+    My_channel.setChannelName("#MY_CHANNEL");
     My_serv->channels.push_back(My_channel);
 
     My_client.setFd(client_Fd);

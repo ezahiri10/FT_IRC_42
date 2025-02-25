@@ -6,39 +6,12 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/24 17:06:10 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:44:29 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Server.hpp"
-
-void Server::printWelcomeBanner(){
-    const std::string color_cyan = "\033[1;36m"; 
-    const std::string color_green = "\033[1;32m"; 
-    const std::string color_reset = "\033[0m";  
-
-    std::cout << color_cyan <<
-       "IIIIIIIIIIRRRRRRRRRRRRRRRRR           CCCCCCCCCCCCC\n"
-        "I::::::::IR::::::::::::::::R       CCC::::::::::::C\n"
-        "I::::::::IR::::::RRRRRR:::::R    CC:::::::::::::::C\n"
-        "II::::::IIRR:::::R     R:::::R  C:::::CCCCCCCC::::C\n"
-        "  I::::I    R::::R     R:::::R C:::::C       CCCCCC\n"
-        "  I::::I    R::::R     R:::::RC:::::C              \n"
-        "  I::::I    R::::RRRRRR:::::R C:::::C              \n"
-        "  I::::I    R:::::::::::::RR  C:::::C              \n"
-        "  I::::I    R::::RRRRRR:::::R C:::::C              \n"
-        "  I::::I    R::::R     R:::::RC:::::C              \n"
-        "  I::::I    R::::R     R:::::RC:::::C              \n"
-        "  I::::I    R::::R     R:::::R C:::::C       CCCCCC\n"
-        "II::::::IIRR:::::R     R:::::R  C:::::CCCCCCCC::::C\n"
-        "I::::::::IR::::::R     R:::::R   CC:::::::::::::::C\n"
-        "I::::::::IR::::::R     R:::::R     CCC::::::::::::C\n"
-        "IIIIIIIIIIRRRRRRRR     RRRRRRR        CCCCCCCCCCCCC\n";
-        std::cout<< color_reset << std::endl;
-}
-
-
 bool Server::isstop = false;
 
 void Server::ifFailed(const std::string &e)
@@ -75,7 +48,6 @@ void Server::acceptConnection()
     p.events= POLLIN;
     this->polls.push_back(p);
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
-    printWelcomeBanner();
 }
 
 void Server::recevMesseages(int i)

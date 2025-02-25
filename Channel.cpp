@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 21:23:39 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:20:36 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,31 @@
 
 Channel::Channel(){
     this->invited = false;
-    this->limit = 10;
+    this->limit = 0;
     this->name = "";
     this->password = "";
     this->topic = "";
+    this->isPrivate = false;
 }
 Channel::~Channel(){
 
 }
-std::string Channel::getName(){
+std::string Channel::getChannelName(){
     return (this->name);
 }
-void Channel::setName(std::string name){
+void Channel::setChannelName(std::string name){
     this->name = name;
 }
 
-int Channel::geLimit(){
+int Channel::getChannelLimit(){
     return (this->limit);
 }
-void Channel::setLimit(int limit){
+void Channel::setChannelLimit(int limit){
     this->limit = limit;
+}
+
+void Channel::incrChannelLimit(){
+    this->limit++;
 }
 
 bool Channel::geInvited(){
@@ -49,7 +54,7 @@ std::string Channel::getTopic(){
 void Channel::setTopic(std::string topic){
     this->topic = topic;
 }
-std::string Channel::getPassword(){
+std::string Channel::getChannelPassword(){
     return (this->password);
 }
 void Channel::setPassword(std::string password){
@@ -76,7 +81,7 @@ void Channel::setClient(std::vector<Client> client){
 }
 
 void Channel::addClient(const Client& client) {
-        this->Channelclients.push_back(client);
+    this->Channelclients.push_back(client);
 }
 
 void Channel::removeClient(int pos){
@@ -85,7 +90,12 @@ void Channel::removeClient(int pos){
 void Channel::addOperator(const std::string op){
     this->getOperators().push_back(op);
 }
-
+void Channel::setIsprivate(bool isPrivate){
+    this->isPrivate = isPrivate;
+}
+bool Channel::getIsprivate(){
+    return this->isPrivate;
+}
 // void Channel::clearChannel() {
 //     this->clients.clear();
 //     this->operators.clear(); 
