@@ -16,9 +16,10 @@
 
 
 #define BUFFER_SIZE 1024
-
+#include <cstdlib>
 #include "Client.hpp"
 #include "Channel.hpp"
+#include <algorithm>
 
 class Server
 {
