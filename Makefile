@@ -3,6 +3,7 @@ CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC = Authentication/Authentication.cpp Client.cpp main.cpp Server.cpp\
+		Authentication/exec_cmds.cpp \
 		Channel.cpp\
 		operators/Kick.cpp\
 		operators/Mode.cpp\

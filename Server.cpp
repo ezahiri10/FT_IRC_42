@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/24 06:48:14 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:06:10 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void Server::acceptConnection()
     printWelcomeBanner();
 }
 
-void Server::recevMesseages(Server *serv, int i)
+void Server::recevMesseages(int i)
 {
     char buffer[BUFFER_SIZE];
 
@@ -96,15 +96,6 @@ void Server::recevMesseages(Server *serv, int i)
     }else{
         buffer[numChar] = '\0';
         Authentication(buffer, i);
-        buffer[numChar] = '\0';
-        if (!strncmp(buffer, "KICK", 4))
-            Kick_func(serv, buffer, this->polls[i].fd);
-        else if (!strncmp(buffer, "INVITE", 6))
-            Invite_func(serv, buffer, this->polls[i].fd);
-        else if (!strncmp(buffer, "MODE", 4))
-            Mode_func(serv, buffer, this->polls[i].fd);
-        else if (!strncmp(buffer, "TOPIC", 4))
-            Topic_func(serv, buffer, this->polls[i].fd);
     }
 }
 
@@ -123,7 +114,7 @@ void Server::handler(int sig)
     Server::isstop = true;
 }
 
-void Server::creatServer (Server *serv)
+void Server::creatServer()
 {
     sockaddr_in add;
     pollfd p;
@@ -153,7 +144,7 @@ void Server::creatServer (Server *serv)
         {
             if (this->polls[i].revents & POLLIN)
             {
-                recevMesseages(serv, i);
+                recevMesseages(i);
             }
         }
     }

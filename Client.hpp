@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/24 02:36:41 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/24 23:04:31 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include "Replies.hpp"
+#include <string.h>
 #include <map>
 
 #define MAX_CLIENT 128
@@ -35,12 +36,12 @@ class Client
         std::string nickname;
         std::string username;
         std::string password;
-        // bool arr[3];
     public :
         bool has_pass;
         bool has_nick;
         bool has_user;
         bool clientExist;
+        bool isOperator;
         int getFd( void ) const;
         Client();
         std::string getNickname( void ) const;

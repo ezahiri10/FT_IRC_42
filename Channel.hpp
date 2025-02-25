@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 02:52:11 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:18:40 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Channel {
         std::string password;                   // Channel password (if needed)             
         std::vector<std::string> operators;     //:vector of operator nicknames
         std::vector<std::string> modes;         // Channel mode flags (e.g., +i, +m, +t, etc.)
-        std::vector<Client> clients;            //:vector of Clients nicknames
+        std::vector<Client> Channelclients;            //:vector of Clients nicknames
     public:
         Channel();
         ~Channel();
@@ -56,6 +56,7 @@ class Channel {
         void setClient(std::vector<Client> client);
 
         void addClient(const Client& client);
+        void addOperator(const std::string op);
         void removeClient(int pos);
 };
 

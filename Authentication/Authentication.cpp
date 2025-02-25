@@ -7,7 +7,9 @@ bool is_valid(std::string arg){
 }
 
 bool checkCommand(std::string cmd){
-    return (cmd == "PASS" || cmd == "NICK" || cmd == "USER")? true: false;
+    return (cmd == "PASS" || cmd == "NICK" || cmd == "USER"
+        || cmd == "JOIN" || cmd == "KICK" || cmd == "INVITE"
+        || cmd == "TOPIC" || cmd == "MODE")? true: false;
 }
 
 bool checkPass(std::string clientPass, std::string serverPass, int clientId, bool XRP){
@@ -88,16 +90,18 @@ void Server::user(std::string arg, int clientId){
         this->clients[clientId - 1].has_user = true;
     }
 }
-void Server::getArgs(std::string message){
+void Server::getArgs(std::string message) {
     this->args.clear();
-    message.erase(message.find_last_not_of("\r\n") + 1);
+    size_t endPos = message.find_last_not_of("\r\n");
+    if (endPos != std::string::npos) {
+        message.erase(endPos + 1);
+    }
     std::stringstream ss(message);
     std::string str;
-    while(!ss.eof()){
-        ss >> str;
+    while (ss >> str)
         this->args.push_back(str);
-    }
 }
+
 std::string getArg(std::string str){
     int pos = 0;
     pos = str.find(' ');
@@ -125,6 +129,8 @@ void Server::Authentication(std::string message, int clientId){
         nick(this->args[1], clientId);
     else if(command == "USER")
         user(this->args[1], clientId);
+    else
+        this->exec_cmds(command,arg, clientId);
     std::vector<Client>::iterator iter;
     iter = getClient(clientId);
     if (iter != clients.end() && iter->Authontacated() && !iter->clientExist){

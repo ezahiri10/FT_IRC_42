@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/24 02:44:12 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:23:39 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,21 @@ void Channel::setModes(std::vector<std::string> modes){
 }
 
 std::vector<Client>& Channel::getClients(){
-    return (this->clients);
+    return (this->Channelclients);
 }
 void Channel::setClient(std::vector<Client> client){
-    this->clients = client;
+    this->Channelclients = client;
 }
 
 void Channel::addClient(const Client& client) {
-        this->clients.push_back(client);
+        this->Channelclients.push_back(client);
 }
 
 void Channel::removeClient(int pos){
-    this->clients.erase(this->clients.begin() + pos);
+    this->Channelclients.erase(this->Channelclients.begin() + pos);
+}
+void Channel::addOperator(const std::string op){
+    this->getOperators().push_back(op);
 }
 
 // void Channel::clearChannel() {
