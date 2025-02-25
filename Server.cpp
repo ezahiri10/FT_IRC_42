@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 19:04:29 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:36:08 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Server::Server(const std::string &port, const std::string &pass)
         throw std::invalid_argument("invalid port");
     std::stringstream ss(port);
     ss >> this->port;
-    if (this->port <= 0 || this->port > 65535)
+    if (this->port <= 1023 || this->port > 65535)
         throw std::invalid_argument("invalid port");
     this->servfd = socket(AF_INET, SOCK_STREAM, 0);
     if (this->servfd == -1)
@@ -64,6 +64,8 @@ void Server::recevMesseages(int i)
         this->polls.erase(this->polls.begin() + i);
         return ;
     }
+    if (numChar == 1024)
+        numChar += -1;
     s[numChar] = '\0';
     std::cout << "s :" << s << std::endl;
 }
