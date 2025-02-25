@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:44:48 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/25 11:46:14 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/25 20:02:58 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "operators.hpp"
+#include "../Channel.hpp"
+#include "../Server.hpp"
+#include "../Replies.hpp"
+#include <set>
+#include <iostream>
 
 /*
 
@@ -32,7 +36,7 @@ Clients joining the channel in the future will receive a RPL_TOPIC numeric (or l
 void Set_New_topic(Server *My_serv, std::string channel, std::string topic, int index, int client_Fd)
 {
     std::string str = RPL_TOPIC(My_serv->clients[client_Fd].getNickname(), channel, topic);
-    send_message(My_serv, str, client_Fd);
+    send(client_Fd, str.c_str(), str.length(), 0);
     // RPL_TOPIC(My_serv->clients[client_Fd].getNickname(), channel, topic);
     My_serv->channels[index].setTopic(topic);
 }
@@ -41,12 +45,12 @@ void Check_topic(Server *My_serv, std::string channel, std::string topic, int in
     {
         if (My_serv->channels[index].getTopic().empty()){
             std::string str = RPL_NOTOPIC(My_serv->clients[client_Fd].getNickname(), channel);
-            send_message(My_serv, str, client_Fd);
+            send(client_Fd, str.c_str(), str.length(), 0);
         }
         else{
             std::cout << "HELLLLLLLLL " << My_serv->channels[index].getTopic() << std::endl;
             std::string str =  My_serv->clients[client_Fd].getNickname() + " " + channel + " " + My_serv->channels[index].getTopic() + '\n';
-            send_message(My_serv, str, client_Fd);
+            send(client_Fd, str.c_str(), str.length(), 0);
         }
     }
     else {
@@ -57,42 +61,37 @@ void Check_topic(Server *My_serv, std::string channel, std::string topic, int in
 
 }
 
-void Add_topic(Server *My_serv, std::string channel, std::string topic, int client_Fd)
+void Server::Add_topic(std::string channel, std::string topic, int client_Fd)
 {
     int index = 0;
-    if (there_is_Fd(My_serv, client_Fd)
-        && there_is_channel(My_serv, channel, index, client_Fd))
+    if (there_is_Fd(client_Fd)
+        && there_is_channel(channel, index, client_Fd)
+        && already_on_channel(Get_client_nick(client_Fd), channel, client_Fd, index, 0))
     {
-        Check_topic(My_serv, channel, topic, index, client_Fd);
+        Check_topic(this, channel, topic, index, client_Fd);
     }
 }
 
-int Topic_func(Server *My_serv, std::string arg, int client_Fd)
+int Server::Topic_func(std::string arg, int client_Fd)
 {
-    Channel My_channel;
-    Client My_client;
     std::string channel;
     std::string topic;
 
-    My_channel.setChannelName("#MY_CHANNEL");
-    My_channel.setTopic("HELLLLLLDLDLDLDLDLLDDL");
-    My_serv->channels.push_back(My_channel);
-
-    My_client.setFd(client_Fd);
-    My_client.setNickname("CHIDORI");
-    My_serv->clients.push_back(My_client);
-
-    My_channel.addClient(My_client);
-    if (arg.empty())
-        return (false);
-
-    split_3_arguments(arg, channel, topic);
+    for (size_t i = 0; i < this->args.size(); i++){
+        if (i == 1)
+            channel = this->args[1];
+        if (i == 2)
+            topic = this->args[2];
+    }
     if (channel.empty())
     {
         std::string str = ERR_NEEDMOREPARAMS(arg);
-        send_message(My_serv, str, client_Fd);
+        send(client_Fd, str.c_str(), str.length(), 0);
     }
     else
-        Add_topic(My_serv, channel, topic, client_Fd);
+    {
+        std::cout << "Was Here \n";
+        Add_topic(channel, topic, client_Fd);
+    }
     return (true);
 }

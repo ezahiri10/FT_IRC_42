@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/25 14:57:37 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/25 19:36:29 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,11 +150,14 @@ void Server::exec_cmds(std::string command, std::string arg, int clientId){
         join(arg, clientId);
     }
     else if (command == "KICK")
-        Kick_func(this, arg, this->polls[clientId].fd);
+    {
+        std::cout << "KICK\n";
+        Kick_func(arg, this->polls[clientId].fd);
+    }
     else if (command == "INVITE")
-        Invite_func(this, arg, this->polls[clientId].fd);
+        Invite_func(arg, this->polls[clientId].fd);
     else if (command == "MODE")
-        Mode_func(this, arg, this->polls[clientId].fd);
+        Mode_func(arg, this->polls[clientId].fd);
     else if (command == "TOPIC")
-        Topic_func(this, arg, this->polls[clientId].fd);
+        Topic_func(arg, this->polls[clientId].fd);
 }

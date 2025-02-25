@@ -3,85 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/25 11:46:42 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/25 20:05:47 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "operators.hpp"
+#include "../Channel.hpp"
+#include "../Server.hpp"
+#include "../Replies.hpp"
+#include <set>
+#include <iostream>
 
-int split_3_arguments(std::string arg, std::string &p1, std::string &p2)
-{
-    std::stringstream ss(arg);
-	
-    std::string t;
-
-    int i = 0;
-    while (ss >> t)
-    {
-        if (i == 1)
-            p1 = t;
-        else if (i == 2)
-        {
-            p2 = t;
-            break;
-        }
-        i++;
-    }
-    return 1;
-}
-
-int split_4_arguments(std::string arg, std::string &channel, std::string &client, std::string &p3)
-{
-    std::stringstream ss(arg);
-	
-    std::string t;
-
-    int i = 0;
-    while (ss >> t)
-    {
-        if (i == 1)
-            channel = t;
-        else if (i == 2)
-            client = t;
-        else if (i == 3)
-        {
-            p3 = t;
-            break;
-        }
-        i++;
-    }
-    return 1;
-}
-
-void send_message(Server *My_serv, std::string message, int clientFD)
-{
-    (void)My_serv;
-    // int sock_fd;
-    // for (std::vector<Client>::iterator it = My_serv->clients.begin(); it != My_serv->clients.end(); it++)
-    // {
-    //     sock_fd = (*it).getFd();
-        // send(sock_fd, message.c_str(), message.length(), 0);
-    // }
-    send(clientFD, message.c_str(), message.length(), 0);
-}
-
-bool there_is_Fd(Server *My_serv, int fd)
+bool Server::there_is_Fd(int fd)
 {
     std::vector<pollfd>::iterator it;
-    for (it = My_serv->polls.begin(); it != My_serv->polls.end(); it++){
+    for (it = this->polls.begin(); it != this->polls.end(); it++){
         if (fd == (*it).fd)
             return (true);
     }
     return (false);
 }
 
-std::string Get_client_nick(Server *My_serv, int client_Fd)
+std::string Server::Get_client_nick(int client_Fd)
 {
     std::vector<Client>::iterator it;
-    for (it = My_serv->clients.begin(); it != My_serv->clients.end(); it++){
+    for (it = this->clients.begin(); it != this->clients.end(); it++){
         if (client_Fd == (*it).getFd())
         {
             return ((*it).getNickname());
@@ -90,13 +38,14 @@ std::string Get_client_nick(Server *My_serv, int client_Fd)
     return ("");
 }
 
-bool there_is_channel(Server *My_serv, std::string channel, int &index, int clientFD)
+bool Server::there_is_channel(std::string channel, int &index, int clientFD)
 {
-    for (std::vector<Channel>::iterator it = My_serv->channels.begin(); it != My_serv->channels.end(); it++)
+    for (std::vector<Channel>::iterator it = this->channels.begin(); it != this->channels.end(); it++)
     {
+        std::cout << "Channel = " << it->getChannelName() << std::endl;
         if (channel == it->getChannelName())
         {
-            index = std::distance(My_serv->channels.begin(), it);
+            index = std::distance(this->channels.begin(), it);
             return (true);
         }
     }
@@ -105,35 +54,46 @@ bool there_is_channel(Server *My_serv, std::string channel, int &index, int clie
     return (false);
 }
 
-bool already_on_channel(Server *My_serv, std::string client, std::string channel, int client_Fd, int index, int check)
+bool Server::already_on_channel(std::string client, std::string channel, int client_Fd, int index, int check)
 {
-    if (client.empty())
-        return (false);
     std::vector<Client>::iterator it;
-    for (it = My_serv->channels[index].getClients().begin(); it != My_serv->channels[index].getClients().end(); it++){
+    for (it = this->channels[index].getClients().begin(); it != this->channels[index].getClients().end(); it++){
         if (client == it->getNickname())
         {
             if (check == 1)
             {
-                std::string str = ERR_USERONCHANNEL(Get_client_nick(My_serv, client_Fd), client, channel);
-                send_message(My_serv, str, client_Fd);
+                std::string str = ERR_USERONCHANNEL(client, client, channel);
+                send(client_Fd, str.c_str(), str.length(), 0);
             }
             return (true);
         }
     }
+    std::string str = ERR_USERNOTINCHANNEL(client, channel);
+    send(client_Fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
-bool there_is_user(Server *My_serv, std::string client, int client_Fd)
+int Server::Get_client_pos(const std::string& nickname, int index)
 {
-    if (!My_serv)
-        return false;
+    std::vector<Client>& clients = this->channels[index].getClients();
+    std::vector<Client>::iterator it;
+    if (clients.empty())
+        std::cout << "WAS HERE\n";
+    for (it = clients.begin(); it != clients.end(); ++it)
+    {
+        if (nickname == it->getNickname())
+            return std::distance(clients.begin(), it);
+    }
+    return -1; 
+}
 
-    for (std::vector<Client>::iterator it = My_serv->clients.begin(); it < My_serv->clients.end(); it++) {
+bool Server::there_is_user(std::string client, int client_Fd)
+{
+    for (std::vector<Client>::iterator it = this->clients.begin(); it < this->clients.end(); it++) {
         if (client == it->getNickname())
             return true;
     }
-    std::string str = ERR_NOSUCHNICK(Get_client_nick(My_serv, client_Fd));
-    send_message(My_serv, str, client_Fd);
+    std::string str = ERR_NOSUCHNICK(client);
+    send(client_Fd, str.c_str(), str.length(), 0);
     return false;
 }
