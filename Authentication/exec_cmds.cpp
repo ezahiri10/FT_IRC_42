@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/25 14:57:37 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:05:23 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,19 @@ bool Server::checkChannelExist(std::string channelName){
     std::vector<Channel>::iterator iter;
     for(iter = channels.begin(); iter != channels.end(); iter++){
         if (channelName == iter->getChannelName())
+            return (true);
+    }
+    return (false);
+}
+
+bool Server::checkIsClientExistInChannel(std::string chName, int clientId){
+    std::vector<Channel>::iterator chIter;
+    std::vector<Client>::iterator clIter;
+    std::vector<Client>::iterator iter;
+    chIter = getChannelByName(chName);
+    clIter = getClient(clientId);
+    for(iter = chIter->Channelclients.begin(); iter != chIter->Channelclients.end(); iter++){
+        if (iter->getNickname() == clIter->getNickname())
             return (true);
     }
     return (false);
@@ -52,6 +65,7 @@ std::vector<Channel>::iterator Server::getChannelByName(std::string name){
 void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int clientId){
     std::vector<Channel>::iterator iter;
     iter = getChannelByName(Ch_name);
+    if (checkIsClientExistInChannel(Ch_name, clientId))return;
     if (iter->getChannelLimit() > 10){
         std::string err = ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
@@ -118,9 +132,9 @@ void Server::join(std::string arg, int clientId) {
         }
         i++;
     }
-    //!!!!!    TEST CHANNELS HERE : FOR ABDELLATIF OTATA ===============
-    // COMPLATE YOUR WORK BASED ON THIS CHANNEL INFO
-    std::cout << "=============size: "<<this->channels.size()<<std::endl;
+    //!!!!!    TEST CHANNELS HERE : FOR ABDELLATIF OTATA ===============//
+    // COMPLATE YOUR WORK BASED ON THIS CHANNELS INFO
+    std::cout << "=============size: "<<this->channels.size()<<"=================="<<std::endl;
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator iterc;
     for(iter=channels.begin(); iter!=channels.end();iter++){
@@ -157,4 +171,6 @@ void Server::exec_cmds(std::string command, std::string arg, int clientId){
         Mode_func(this, arg, this->polls[clientId].fd);
     else if (command == "TOPIC")
         Topic_func(this, arg, this->polls[clientId].fd);
+    else if (command == "PRIVMSG")
+        privMsg();
 }

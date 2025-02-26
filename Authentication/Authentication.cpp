@@ -9,7 +9,7 @@ bool is_valid(std::string arg){
 bool checkCommand(std::string cmd){
     return (cmd == "PASS" || cmd == "NICK" || cmd == "USER"
         || cmd == "JOIN" || cmd == "KICK" || cmd == "INVITE"
-        || cmd == "TOPIC" || cmd == "MODE")? true: false;
+        || cmd == "TOPIC" || cmd == "MODE" || cmd == "PRIVMSG") ? true: false;
 }
 
 bool checkPass(std::string clientPass, std::string serverPass, int clientId, bool XRP){
@@ -111,10 +111,10 @@ std::string getArg(std::string str){
 }
 
 void Server::Authentication(std::string message, int clientId){
+    if (message[0] == '\n')return;
     std::string command, arg;
     getArgs(message);
     arg = getArg(message);
-    // if (this->args.size() < 1)return; // FIX SEGFAULT EMPTY INPUT 
     command = this->args[0];
     if (this->args.size() < 2){
         std::string err = ERR_NEEDMOREPARAMS(command);

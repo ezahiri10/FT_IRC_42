@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/24 17:11:13 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 09:57:30 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 Client::Client()
 {
-    std::cout << "constractor\n";
     this->Clientfd = -1;
     this->password = "";
     this->nickname = "";
