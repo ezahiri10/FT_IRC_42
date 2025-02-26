@@ -6,36 +6,13 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 20:00:11 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 20:08:23 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Server.hpp"
 #include "../Client.hpp"
 #include "../Channel.hpp"
-
-
-bool Server::checkChannelExist(std::string channelName){
-    std::vector<Channel>::iterator iter;
-    for(iter = channels.begin(); iter != channels.end(); iter++){
-        if (channelName == iter->getChannelName())
-            return (true);
-    }
-    return (false);
-}
-
-bool Server::checkIsClientExistInChannel(std::string chName, int clientId){
-    std::vector<Channel>::iterator chIter;
-    std::vector<Client>::iterator clIter;
-    std::vector<Client>::iterator iter;
-    chIter = getChannelByName(chName);
-    clIter = getClient(clientId);
-    for(iter = chIter->Channelclients.begin(); iter != chIter->Channelclients.end(); iter++){
-        if (iter->getNickname() == clIter->getNickname())
-            return (true);
-    }
-    return (false);
-}
 
 void Server::createChannel(std::string Ch_name, std::string Ch_pass, int clientId){
     Channel newChannel;

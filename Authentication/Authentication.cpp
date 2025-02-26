@@ -21,22 +21,12 @@ bool checkPass(std::string clientPass, std::string serverPass, int clientId, boo
     return (true);
 }
 
-bool Server::checkNickAvailability(const std::string& nick){
-    std::vector<Client>::iterator iter;
-    for (iter = this->clients.begin(); iter != this->clients.end(); iter++){
-        if (iter->getNickname() == nick){
-            return true;
-        }
-    }
-    return false;
-}
-std::vector<Client>::iterator Server::getClient(int fd){
-    std::vector<Client>::iterator iter;
-    for(iter = clients.begin(); iter != clients.end(); iter++){
-        if (iter->getFd() == fd)
-            return (iter);
-    }
-    return clients.end();
+std::string getArg(std::string str){
+    int pos = 0;
+    pos = str.find(' ');
+    str = str.substr(pos + 1);
+    str.erase(str.find_last_not_of("\r\n") + 1);
+    return str;
 }
 
 void Server::pass(std::string arg, int clientId){
@@ -89,25 +79,6 @@ void Server::user(std::string arg, int clientId){
         this->clients[clientId - 1].setUsername(arg);
         this->clients[clientId - 1].has_user = true;
     }
-}
-void Server::getArgs(std::string message) {
-    this->args.clear();
-    size_t endPos = message.find_last_not_of("\r\n");
-    if (endPos != std::string::npos) {
-        message.erase(endPos + 1);
-    }
-    std::stringstream ss(message);
-    std::string str;
-    while (ss >> str)
-        this->args.push_back(str);
-}
-
-std::string getArg(std::string str){
-    int pos = 0;
-    pos = str.find(' ');
-    str = str.substr(pos + 1);
-    str.erase(str.find_last_not_of("\r\n") + 1);
-    return str;
 }
 
 void Server::Authentication(std::string message, int clientId){
