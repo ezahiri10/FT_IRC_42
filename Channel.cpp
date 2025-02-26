@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/26 16:45:22 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 19:42:06 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Channel::Channel(){
     this->invited = false;
-    this->limit = 0;
+    this->limit = 2;
     this->name = "";
     this->password = "";
     this->topic = "";
@@ -30,15 +30,11 @@ void Channel::setChannelName(std::string name){
     this->name = name;
 }
 
-int Channel::getChannelLimit(){
+size_t Channel::getChannelLimit(){
     return (this->limit);
 }
 void Channel::setChannelLimit(int limit){
     this->limit = limit;
-}
-
-void Channel::incrChannelLimit(){
-    this->limit++;
 }
 
 bool Channel::geInvited(){
@@ -88,7 +84,7 @@ void Channel::removeClient(int pos){
     this->Channelclients.erase(this->Channelclients.begin() + pos);
 }
 void Channel::addOperator(const std::string op){
-    this->getOperators().push_back(op);
+    this->operators.push_back(op);
 }
 void Channel::setIsprivate(bool isPrivate){
     this->isPrivate = isPrivate;

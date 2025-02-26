@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 17:30:51 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/26 20:00:11 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ bool Server::checkIsClientExistInChannel(std::string chName, int clientId){
 
 void Server::createChannel(std::string Ch_name, std::string Ch_pass, int clientId){
     Channel newChannel;
-    newChannel.incrChannelLimit();
     newChannel.setChannelName(Ch_name);
     if (!Ch_pass.empty()){
         newChannel.setIsprivate(true);
@@ -68,7 +67,7 @@ void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int cl
     std::vector<Channel>::iterator iter;
     iter = getChannelByName(Ch_name);
     if (checkIsClientExistInChannel(Ch_name, clientId))return;
-    if (iter->getChannelLimit() > 10){
+    if (iter->Channelclients.size() + 1 > iter->getChannelLimit()){
         std::string err = ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
     }
@@ -82,7 +81,6 @@ void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int cl
     }else{
         iter->addClient(this->clients[clientId - 1]);
     }
-    iter->incrChannelLimit();
     std::cout << RPL_JOIN(this->clients[clientId - 1].getNickname(), Ch_name);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/26 16:44:56 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 19:41:54 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 class Channel {
     private:
-        int         limit;
+        size_t         limit;
         bool        invited;
         bool        isPrivate;
         std::string name;                       // Channel name
@@ -35,9 +35,8 @@ class Channel {
         std::string getChannelName();
         void setChannelName(std::string name);
 
-        int getChannelLimit();
+        size_t getChannelLimit();
         void setChannelLimit(int limit);
-        void incrChannelLimit();
 
         bool geInvited();
         void setInvited(bool invt);
