@@ -86,6 +86,7 @@ void Server::Authentication(std::string message, int clientId){
     std::string command, arg;
     getArgs(message);
     arg = getArg(message);
+    if (!this->args.empty())
     command = this->args[0];
     if (this->args.size() < 2){
         std::string err = ERR_NEEDMOREPARAMS(command);
