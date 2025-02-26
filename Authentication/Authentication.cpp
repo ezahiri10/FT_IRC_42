@@ -40,7 +40,6 @@ std::vector<Client>::iterator Server::getClient(int fd){
 }
 
 void Server::pass(std::string arg, int clientId){
-    // std::cout << "comme from : " <<clientId <<std::endl;
     std::vector<Client>::iterator iter;
     iter = getClient(clientId);
     bool XRP = true;
@@ -59,7 +58,6 @@ void Server::pass(std::string arg, int clientId){
 }
 
 void Server::nick(std::string arg, int clientId){
-    // std::cout << "comme from : " <<clientId <<std::endl;
     std::vector<Client>::iterator iter;
     iter = getClient(clientId);
     if(iter == clients.end() || !iter->has_pass){
@@ -77,7 +75,6 @@ void Server::nick(std::string arg, int clientId){
 }
 
 void Server::user(std::string arg, int clientId){
-    // std::cout << "comme from : " <<clientId <<std::endl;
     std::vector<Client>::iterator iter;
     iter = getClient(clientId);
     if(iter == clients.end() || !iter->has_pass){

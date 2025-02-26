@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 14:20:39 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 16:08:34 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ class Server
         bool checkIsClientExistInChannel(std::string chName, int clientId);
         void privMsg(std::string arg, int clientId);
         void MsgToChannel(std::string channelName, std::string msg, int clientId);
-        void MsgToClient(std::string clientName, std::string msg);
+        void MsgToClient(std::string clientName, std::string msg, int clientId);
+        std::vector<Client>::iterator getClientByName(std::string name);
 };
 int Kick_func(Server *My_serv, std::string arg, int client_Fd);
 int Topic_func(Server *My_serv, std::string arg, int client_Fd);
