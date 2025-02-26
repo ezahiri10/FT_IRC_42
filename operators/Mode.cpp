@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/25 22:02:19 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:11:35 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,7 @@ void Server::Set_mode(std::string channel, std::string mode, std::string identif
 {
     (void)identify;
     int channel_pos = 0;
-    if (there_is_Fd(client_Fd)
-        && there_is_channel(channel, channel_pos, client_Fd)
+    if (there_is_channel(channel, channel_pos, client_Fd)
         && Check_valid_Mode(channel, mode, client_Fd))
     {
         Check_identify(mode, identify, channel_pos);
@@ -147,7 +146,7 @@ int  Server::Mode_func(std::string arg, int client_Fd)
     if (mode.empty() || channel.empty())
     {
         std::string str = ERR_NEEDMOREPARAMS(arg);
-        send(client_Fd, str.c_str(), str.length(), 0);
+        send(this->polls[client_Fd].fd, str.c_str(), str.length(), 0);
     }
     else
         Set_mode(channel, mode, identify, client_Fd);
