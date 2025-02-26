@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 11:05:23 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 14:58:15 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void Server::createChannel(std::string Ch_name, std::string Ch_pass, int clientI
     newChannel.addOperator(iter->getNickname());
     newChannel.addClient(this->clients[clientId - 1]);
     this->channels.push_back(newChannel);
+    std::cout << RPL_NAMREPLY(this->clients[clientId - 1].getNickname(), Ch_name, "@"+iter->getNickname());
+    std::cout << RPL_ENDOFNAMES(this->clients[clientId - 1].getNickname(), Ch_name);
 }
 
 std::vector<Channel>::iterator Server::getChannelByName(std::string name){
@@ -81,6 +83,7 @@ void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int cl
         iter->addClient(this->clients[clientId - 1]);
     }
     iter->incrChannelLimit();
+    std::cout << RPL_JOIN(this->clients[clientId - 1].getNickname(), Ch_name);
 }
 
 std::string getParts(std::string str, char x){
@@ -132,30 +135,13 @@ void Server::join(std::string arg, int clientId) {
         }
         i++;
     }
-    //!!!!!    TEST CHANNELS HERE : FOR ABDELLATIF OTATA ===============//
-    // COMPLATE YOUR WORK BASED ON THIS CHANNELS INFO
-    std::cout << "=============size: "<<this->channels.size()<<"=================="<<std::endl;
-    std::vector<Channel>::iterator iter;
-    std::vector<Client>::iterator iterc;
-    for(iter=channels.begin(); iter!=channels.end();iter++){
-        std::cout << "=======CHNNEL========"<<std::endl;
-        std::cout << "channel name  : "<<iter->getChannelName() <<std::endl;
-        std::cout << "channel pass  : "<<iter->getChannelPassword() <<std::endl;
-        std::cout << "channel isprv : "<<iter->getIsprivate() <<std::endl;
-        std::cout << "   client exist in the channel are:"<<std::endl;
-        for (iterc=iter->Channelclients.begin(); iterc!=iter->Channelclients.end();iterc++){
-            std::cout << "      ::::clientname : "<<iterc->getNickname() <<std::endl;
-            std::cout << "      ::::clientOper : "<<iterc->isOperator <<std::endl;
-        }
-    }
 }
 
 void Server::exec_cmds(std::string command, std::string arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient(clientId);
-    if (iter == this->clients.end() || !iter->Authontacated()){
+    if (iter == this->clients.end() || !iter->Authontacated())
         send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
-    }
     else if (command == "JOIN"){
         if (this->args.size() < 2){
             std::string err = ERR_NEEDMOREPARAMS(arg);
@@ -163,6 +149,8 @@ void Server::exec_cmds(std::string command, std::string arg, int clientId){
         }
         join(arg, clientId);
     }
+    else if (command == "PRIVMSG")
+        privMsg(arg, clientId);
     else if (command == "KICK")
         Kick_func(this, arg, this->polls[clientId].fd);
     else if (command == "INVITE")
@@ -171,6 +159,4 @@ void Server::exec_cmds(std::string command, std::string arg, int clientId){
         Mode_func(this, arg, this->polls[clientId].fd);
     else if (command == "TOPIC")
         Topic_func(this, arg, this->polls[clientId].fd);
-    else if (command == "PRIVMSG")
-        privMsg();
 }

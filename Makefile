@@ -5,6 +5,7 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98
 SRC = Authentication/Authentication.cpp Client.cpp main.cpp Server.cpp\
 		Authentication/exec_cmds.cpp \
 		Channel.cpp\
+		operators/privMsg.cpp\
 		operators/Kick.cpp\
 		operators/Mode.cpp\
 		operators/Invite.cpp\
