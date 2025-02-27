@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bot.hpp                                            :+:      :+:    :+:   */
+/*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:26:43 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/23 15:47:09 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/27 12:41:35 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,15 @@ class Bot
         std::array<std::array<char, 3>, 3> s;
     public :
         Bot();
+        bool setMove ();
+        int checkDiagonal(char XO);
+        int checkEdge(char XO, int n);
         void ticTacToe();
         void affichTable();
         bool isWin (char XO);
         void botMove();
         bool playerMove(bool &iseof);
+        int bestMove(char XO);
         bool isFall();
 };
 

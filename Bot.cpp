@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bot.cpp                                            :+:      :+:    :+:   */
+/*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/23 15:49:41 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/27 14:36:08 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,72 @@ Bot::Bot()
             this->s[i][j] = tmp[i][j];
 }
 
-void Bot::botMove()
+bool  Bot::setMove ()
 {
-    while (true)
+    int n;
+
+    n = bestMove('O');
+    if (n < 0)
+        n = bestMove('X');
+    n -= 1;
+    if (n > 0 && this->s[n / 3][n % 3] != 'O' && this->s[n / 3][n % 3] != 'X')
     {
+        std::cout << "n / 3  " << n / 3  << "  n % 3 " << n % 3 << std::endl;
+        this->s[n / 3][n % 3] = 'O';
+        return (true);
+    }
+    return(false);
+}
+
+int Bot::checkDiagonal(char XO)
+{
+    char _bot = (XO == 'O') ? 'X' : 'O';
+
+    for (int i = 0; i < 2 ; i++)
+    {
+        if (this->s[i][i] == XO  && this->s[i + 1][i + 1] == XO && this->s[2 * (i == 0)][2 * (i == 0)] != _bot)
+            return (1 + 8 * (i == 0));
+    }
+     if (this->s[0][0] == XO && this->s[2][2] == XO && this->s[1][1] != _bot)
+        return (5);
+    return (-1);
+}
+
+int Bot::checkEdge(char XO, int n)
+{
+    char _bot = (XO == 'O') ? 'X' : 'O';
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (this->s[n][i] == XO  && this->s[n][i + 1] == XO && this->s[n][2 * (i == 0)] != _bot)
+            return (1 + 2 * (i == 0)); 
+    }
+    if (this->s[n][0] == XO && this->s[n][2] == XO && this->s[n][1] != _bot)
+        return (2);
+    return (-1);
+}
+
+int Bot::bestMove(char XO)
+{
+    int r = -1;
+    int i = 0;
+
+    for ( ;i < 3; i++)
+    {
+        r = checkEdge (XO, i);
+        if (r > 0)
+            break ;
+    }
+    if (r > 0)
+        return (r + 3 * (i == 1) + 6 * (i == 2));
+    return (checkDiagonal (XO));
+}
+
+void Bot::botMove()
+{   
+    while (setMove() == false)
+    {
+        // std::cout << "salam" << std::endl;
         time_t r = time(NULL) % 8;
 
         if (s[r / 3][r % 3] != 'X' && s[r / 3][r % 3] != 'O')

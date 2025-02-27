@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 19:04:29 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/26 22:36:25 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void Server::acceptConnection()
     pollfd p;
     p.fd = clienfd;
     p.events= POLLIN;
-    this->polls.push_back(p);
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
+    this->polls.push_back(p);
 }
 
 void Server::recevMesseages(int i)
