@@ -6,19 +6,53 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/27 14:36:08 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/27 16:10:33 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
 
-Bot::Bot()
+void Bot::authentification()
 {
+    sockaddr_in add;
+
+    add.sin_family = AF_INET;
+    add.sin_port = htons(this->port);
+    add.sin_addr.s_addr = INADDR_ANY;
+    if (connect(this->botfd, (sockaddr *)&add, sizeof(add)) == -1)
+    {
+        perror("connect : ");
+        throw std::runtime_error ("connect failed");
+    }
+    std::string msg = "PASS " + this->serverpass + "\n";
+    if (send(this->botfd, msg.c_str(), msg.size(), 0) == -1)
+        throw std::runtime_error ("send failed");
+    msg = "NICK " + this->nick + "\n";
+    if (send(this->botfd, msg.c_str(), msg.size(), 0) == -1)
+        throw std::runtime_error ("send failed");
+    msg = "U U U U\n";
+    if (send(this->botfd, msg.c_str(), msg.size(), 0) == -1)
+        throw std::runtime_error ("send failed");
+}
+Bot::Bot(const std::string &port, const std::string &pass, const std::string &nick)
+{
+    if (port.find_first_not_of("0123456789") != std::string::npos)
+        throw std::invalid_argument("invalid port");
+    std::stringstream ss(port);
+    ss >> this->port;
+    if (this->port <= 0 || this->port > 65535)
+        throw std::invalid_argument("invalid port");
+    this->botfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (this->botfd == -1)
+        throw std::runtime_error ("socket failed");
+    this->serverpass = pass;
+    this->nick = nick;
     char tmp[3][3] =  {{'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'}};
 
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
             this->s[i][j] = tmp[i][j];
+    authentification();
 }
 
 bool  Bot::setMove ()
@@ -86,7 +120,6 @@ void Bot::botMove()
 {   
     while (setMove() == false)
     {
-        // std::cout << "salam" << std::endl;
         time_t r = time(NULL) % 8;
 
         if (s[r / 3][r % 3] != 'X' && s[r / 3][r % 3] != 'O')
