@@ -1,37 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Bot.hpp                                            :+:      :+:    :+:   */
+/*   Player.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/23 13:26:43 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/28 12:16:34 by ezahiri          ###   ########.fr       */
+/*   Created: 2025/02/28 11:22:18 by ezahiri           #+#    #+#             */
+/*   Updated: 2025/02/28 11:27:09 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BOT_HPP
-#define BOT_HPP
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
-#include <arpa/inet.h>
 #include "../Server.hpp"
 #include <array>
-#include <time.h>
 
-class Bot
+class Player
 {
     private :
-        int botfd;
-        int port;
-        std::vector<std::string> players;
-        std::string serverpass;
-        std::string nick;
-        void authentification();
-        void parseRequest(std::string msg);
-        
+        std::string nickname;
+        std::array<std::array<char, 3>, 3> s;
     public :
-        Bot(const std::string &port, const std::string &pass, const std::string &nick);
-        void recvMesseages(bool welcom );
+        Player(const std::string &nick);
+        bool setMove ();
+        int checkDiagonal(char XO);
+        int checkEdge(char XO, int n);
+        void ticTacToe();
+        void affichTable();
+        bool isWin (char XO);
+        void botMove();
+        bool playerMove(bool &iseof);
+        int bestMove(char XO);
+        bool isFall();
 };
 
 #endif

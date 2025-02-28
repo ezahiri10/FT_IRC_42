@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:06:22 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/27 16:24:17 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/28 12:16:48 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int main (int ac, char **av)
         if (ac != 4)
             throw std::invalid_argument("Usage: ./bot <port> <pass> <nick>");
         Bot b(av[1], av[2], av[3]);
-        b.ticTacToe();
+        while (1)
+        {
+            b.recvMesseages(false);
+        }
     }
     catch (std::exception &e)
     {
@@ -26,3 +29,4 @@ int main (int ac, char **av)
         return (1);
     }
 }
+
