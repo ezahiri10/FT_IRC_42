@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 16:28:33 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 18:22:00 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ void Server::join(std::string arg, int clientId) {
 void Server::exec_cmds(std::string command, std::string arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd);
+    std::cout << "==->> "<< iter->getFd() << std::endl;
     if (iter == this->clients.end() || !iter->Authontacated())
         send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
     else if (command == "JOIN"){

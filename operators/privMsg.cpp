@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 16:56:15 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 18:27:23 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void Server::MsgToChannel(std::string channelName, std::string msg, int clientId
     iter = getChannelByName(channelName);
     for(cIter = iter->Channelclients.begin(); cIter != iter->Channelclients.end(); cIter++){
         int id = cIter->getFd();
-        send(this->polls[id].fd, msg.c_str(), strlen(msg.c_str()), 0);
+        send(id, msg.c_str(), strlen(msg.c_str()), 0);
     }
 }
 
@@ -62,7 +62,7 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId){
     msg+="\n";
     iter = getClientByName(clientName);
     int id = iter->getFd();
-    send(this->polls[id].fd, msg.c_str(), strlen(msg.c_str()), 0);
+    send(id, msg.c_str(), strlen(msg.c_str()), 0);
 }
 
 void Server::privMsg(std::string arg, int clientId){
