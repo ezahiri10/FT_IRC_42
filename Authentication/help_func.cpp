@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   help_func.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:05:17 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 20:08:28 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:27:42 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ bool Server::checkIsClientExistInChannel(std::string chName, int clientId){
     std::vector<Client>::iterator clIter;
     std::vector<Client>::iterator iter;
     chIter = getChannelByName(chName);
-    clIter = getClient(clientId);
+    clIter = getClient(this->polls[clientId].fd);
     for(iter = chIter->Channelclients.begin(); iter != chIter->Channelclients.end(); iter++){
         if (iter->getNickname() == clIter->getNickname())
             return (true);

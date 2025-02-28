@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 20:08:23 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:26:52 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Server::createChannel(std::string Ch_name, std::string Ch_pass, int clientI
         newChannel.setPassword(Ch_pass);
     }
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient(this->polls[clientId].fd);
     iter->isOperator = true;
     newChannel.addOperator(iter->getNickname());
     newChannel.addClient(this->clients[clientId - 1]);
@@ -114,7 +114,7 @@ void Server::join(std::string arg, int clientId) {
 
 void Server::exec_cmds(std::string command, std::string arg, int clientId){
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient(this->polls[clientId].fd);
     if (iter == this->clients.end() || !iter->Authontacated())
         send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
     else if (command == "JOIN"){

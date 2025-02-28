@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/28 12:16:19 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/28 16:32:48 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,25 @@
 
 void Bot::parseRequest(std::string msg)
 {
-    std::string tmp;
-    std::stringstream ss(msg);
-    ss >> tmp;
-    if (tmp == "PLAY")
-    {
-        ss >> tmp;
-        this->players.push_back(tmp);
-    }
-    else if (tmp == "MOVE")
-    {
-        ss >> tmp;
-        std::cout << tmp << std::endl;
-    }
-    else if (tmp == "FINISH")
-    {
-        ss >> tmp;
-        std::cout << tmp << std::endl;
-    }
+    std::cout << "msg " << msg << std::endl;
+    // std::string tmp;
+    // std::stringstream ss(msg);
+    // ss >> tmp;
+    // if (tmp == "PLAY")
+    // {
+    //     ss >> tmp;
+    //     this->players.push_back(tmp);
+    // }
+    // else if (tmp == "MOVE")
+    // {
+    //     ss >> tmp;
+    //     std::cout << tmp << std::endl;
+    // }
+    // else if (tmp == "FINISH")
+    // {
+    //     ss >> tmp;
+    //     std::cout << tmp << std::endl;
+    // }
 }
 
 void Bot::recvMesseages(bool welcom = false)
@@ -48,7 +49,7 @@ void Bot::recvMesseages(bool welcom = false)
         numChar = 1023;
     buffer[numChar] = '\0';
     if (welcom)
-        std::cout << buffer << std::endl;
+        std::cout << "buffer :" <<  buffer << std::endl;
     else
         parseRequest(buffer);
 }

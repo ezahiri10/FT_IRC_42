@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 16:19:56 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/02/28 16:28:19 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,7 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId)
     msg+="\n";
     std::cout << "clientName : " << clientName << std::endl;
     iter = getClientByName(clientName); //! iter return end
-    int id = iter->getFd();
-    send(this->polls[id].fd, msg.c_str(), strlen(msg.c_str()), 0); //! heap-buffer-overflow  in int id = iter->getFd(); --> send
+    send(iter->getFd(), msg.c_str(), strlen(msg.c_str()), 0); //! heap-buffer-overflow  in int id = iter->getFd(); --> send
     std::cout << "setp 22" << std::endl;
 }
 
