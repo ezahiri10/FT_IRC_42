@@ -81,7 +81,8 @@ void Server::user(std::string arg, int clientId){
     }
 }
 
-void Server::Authentication(std::string message, int clientId){
+void Server::Authentication(std::string message, int clientId)
+{
     if (message[0] == '\n')return;
     std::string command, arg;
     getArgs(message);

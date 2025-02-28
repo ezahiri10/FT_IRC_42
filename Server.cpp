@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/26 21:19:15 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/27 22:16:27 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void Server::recevMesseages(int i)
         throw std::runtime_error ("recv failed");
     if (numChar == 0)
     {
-        std::cout << "Client " << this->polls[i].fd <<  " is disconnected" << std::endl;
+        std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
         return ;
