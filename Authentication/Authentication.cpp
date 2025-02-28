@@ -39,11 +39,15 @@ void Server::pass(std::string arg, int clientId){
         XRP = false;
     }
     if(checkPass(arg, this->serverpass, this->polls[clientId].fd, XRP)){
-        Client newClient;
-        newClient.setFd(clientId);
-        newClient.setPassword(arg);
-        newClient.has_pass = true;
-        this->clients.push_back(newClient);
+        // Client newClient;
+        // newClient.setPassword(arg);
+        // newClient.has_pass = true;
+        // newClient.setFd(clientId);
+        // this->clients.push_back(newClient);
+
+        this->clients[clientId - 1].setPassword(arg);
+        this->clients[clientId - 1].has_pass = true;
+        this->clients[clientId - 1].setFd(clientId);
     }
 }
 

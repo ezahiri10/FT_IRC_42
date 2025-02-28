@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 10:28:43 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/28 10:38:41 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class Channel {
         std::string getChannelName();
         void setChannelName(std::string name);
 
-        int getChannelLimit();
+        size_t getChannelLimit();
         void setChannelLimit(int limit);
         void incrChannelLimit();
 

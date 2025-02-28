@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/27 22:16:27 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 14:18:09 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void Server::acceptConnection()
     p.fd = clienfd;
     p.events= POLLIN;
     this->polls.push_back(p);
+    Client newClient;
+    this->clients.push_back(newClient);
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
 }
 
@@ -64,6 +66,7 @@ void Server::recevMesseages(int i)
         std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
+        // this->clients.erase(this->clients.begin() + i - 1);
         return ;
     }
     if (numChar == 1024)
@@ -83,7 +86,6 @@ Server::~Server()
 void Server::handler(int sig)
 {
     (void)sig;
-    std::cout << "signal is received " << std::endl;
     Server::isstop = true;
 }
 

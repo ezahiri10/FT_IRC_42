@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 20:08:23 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 15:24:59 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int cl
     std::vector<Channel>::iterator iter;
     iter = getChannelByName(Ch_name);
     if (checkIsClientExistInChannel(Ch_name, clientId))return;
+    std::cout << "size : " << iter->Channelclients.size() <<std::endl;
+    std::cout << "limt : " << iter->getChannelLimit() <<std::endl;
     if (iter->Channelclients.size() + 1 > iter->getChannelLimit()){
         std::string err = ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;

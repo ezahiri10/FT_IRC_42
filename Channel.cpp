@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 10:27:54 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/28 15:26:43 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 Channel::Channel(){
     this->invited = false;
     this->istopic = false;
-    this->limit = 0;
+    this->limit = 3;
     this->name = "";
     this->password = "";
     this->topic = "";
@@ -31,7 +31,7 @@ void Channel::setChannelName(std::string name){
     this->name = name;
 }
 
-int Channel::getChannelLimit(){
+size_t Channel::getChannelLimit(){
     return (this->limit);
 }
 void Channel::setChannelLimit(int limit){
