@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 10:02:55 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/28 19:33:22 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <set>
 #include <iostream>
 
-void Server::Print_Channel_Modes(std::string channel, int channel_pos, int client_Fd)
+void Server::Print_Channel_Modes(std::string channel, int channel_pos, int Client_id)
 {
     std::string msg = "+";
     std::vector<std::string>::iterator it;
@@ -34,11 +34,11 @@ void Server::Print_Channel_Modes(std::string channel, int channel_pos, int clien
     }
 
     std::string hostname = "hostname";
-    std::string str = RPL_UMODEIS(hostname, channel, msg, Get_client_nick(client_Fd, channel_pos));
-    send(this->polls[client_Fd].fd, str.c_str(), str.length(), 0);
+    std::string str = RPL_UMODEIS(hostname, channel, msg, Get_client_nick(Client_id, channel_pos));
+    send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
 
     // std::string str = ERR_UMODEUNKNOWNFLAG(client);
-    // send(client_Fd, str.c_str(), str.length(), 0);
+    // send(Client_id, str.c_str(), str.length(), 0);
 }
 
 void Add_Mode(Server *My_serv, std::string mode, int channel_pos)
@@ -141,7 +141,7 @@ bool ft_isdigits(std::string identify)
     return (true);
 }
 
-bool Check_valid_Mode(Server *My_serv,std::string client, std::string mode, int client_Fd){
+bool Check_valid_Mode(Server *My_serv,std::string client, std::string mode, int Client_id){
 
     const std::string modes[] = { 
         "+i", "+t", "+k", "+o", "+l", 
@@ -152,12 +152,12 @@ bool Check_valid_Mode(Server *My_serv,std::string client, std::string mode, int 
     if (valid_modes.find(mode) != valid_modes.end())
         return true;
     std::string str = ERR_UMODEUNKNOWNFLAG(client);
-    send(My_serv->polls[client_Fd].fd, str.c_str(), str.length(), 0);
+    send(My_serv->polls[Client_id].fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
 
-bool Server::Check_identify(std::string mode, std::string identify, int channel_pos, int FD){
+bool Server::Check_identify(std::string mode, std::string identify, int channel_pos, int Client_id){
     if (this->channels.empty())
         return (false);
 
@@ -166,7 +166,7 @@ bool Server::Check_identify(std::string mode, std::string identify, int channel_
         if (identify.empty())
         {
             std::string str = ERR_INVALIDMODEPARM(this->channels[channel_pos].getChannelName(), mode);
-            send(this->polls[FD].fd, str.c_str(), str.length(), 0);
+            send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
         }
         else{
             std::string op = identify;
@@ -197,14 +197,14 @@ bool Server::Check_identify(std::string mode, std::string identify, int channel_
     return (true);
 }
 
-void Server::Set_mode(std::string channel, std::string mode, std::string identify, int FD)
+void Server::Set_mode(std::string channel, std::string mode, std::string identify, int Client_id)
 {
     int channel_pos = 0;
-    if (there_is_channel(channel, channel_pos, FD)
-        && Check_valid_Mode(this, channel, mode, FD)
-        && Check_Channel_Op(Get_client_nick(FD, channel_pos), channel, channel_pos, FD))
+    if (there_is_channel(channel, channel_pos, Client_id)
+        && Check_valid_Mode(this, channel, mode, Client_id)
+        && Check_Channel_Op(Get_client_nick(Client_id, channel_pos), channel, channel_pos, Client_id))
     {
-        Check_identify(mode, identify, channel_pos, FD);
+        Check_identify(mode, identify, channel_pos, Client_id);
     }
 }
 
@@ -221,11 +221,8 @@ std::string getMood(std::string pass, int i) {
     return "";
 }
 
-int  Server::Mode_func(std::string arg, int FD)
+int  Server::Mode_func(std::string arg, int Client_id)
 {
-    if (this->polls.empty())
-        return (false);
-
     std::string namePart;
     std::string moodPart;
     std::string identify_Part;
@@ -242,16 +239,22 @@ int  Server::Mode_func(std::string arg, int FD)
     std::string channel;
     int i = 0;
     while (getline(ss, channel, ',')) {
+        if (this->channels.empty())
+        {
+            std::string str = ERR_NOSUCHCHANNEL(channel);
+            send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
+            continue ;
+        }
         std::string mode = getMood(moodPart, i);
         std::string identify = getMood(identify_Part, i);
         if (!channel.empty() && mode.empty())
         {
             int channel_pos = 0;
-            if (there_is_channel(channel, channel_pos, FD))
-                Print_Channel_Modes(channel, channel_pos, FD);
+            if (there_is_channel(channel, channel_pos, Client_id))
+                Print_Channel_Modes(channel, channel_pos, Client_id);
         }
         else
-            Set_mode(channel, mode, identify, FD);
+            Set_mode(channel, mode, identify, Client_id);
         i++;
     }
     return (0);

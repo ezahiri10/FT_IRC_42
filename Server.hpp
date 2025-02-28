@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 10:27:29 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/28 19:26:56 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,23 @@ class Server
         std::vector<Client>::iterator getClientByName(std::string name);
 
         bool there_is_Fd(int fd);
-        int Mode_func(std::string arg, int FD);
-        int Invite_func(std::string arg, int FD);
-        int Kick_func(std::string arg, int FD);
-        bool there_is_user(std::string client, int FD);
-        int Topic_func(std::string arg, int FD);
-        std::string Get_client_nick(int FD, int channel_pos);
+        int Mode_func(std::string arg, int Client_id);
+        int Invite_func(std::string arg, int Client_id);
+        int Kick_func(std::string arg, int Client_id);
+        bool there_is_user(std::string client, int Client_id);
+        int Topic_func(std::string arg, int Client_id);
+        std::string Get_client_nick(int Client_id, int channel_pos);
         void Add_Remove_OP(std::string mode, std::string op, int channel_pos);
         int Get_Channel_client_pos(const std::string& nickname, int channel_pos);
         bool there_is_channel(std::string channel, int &channel_pos, int clientFD);
-        bool Check_identify(std::string mode, std::string identify, int channel_pos, int FD);
-        void Add_topic(std::string channel, std::string topic, int FD);
-        void Set_mode(std::string channel, std::string mode, std::string identify, int FD);
-        int Invite_client(std::string arg, std::string invit_client, std::string channel, int FD);
-        bool Check_kick(std::string channel, std::string client, std::string reasen, int FD);
-        void Print_Channel_Modes(std::string channel, int channel_pos, int FD);
-        bool already_on_channel(std::string client, std::string channel, int FD, int channel_pos, int check);
-        bool Check_Channel_Op(std::string client_nick, std::string channel, int channel_pos, int FD);
+        bool Check_identify(std::string mode, std::string identify, int channel_pos, int Client_id);
+        void Add_topic(std::string channel, std::string topic, int Client_id);
+        void Set_mode(std::string channel, std::string mode, std::string identify, int Client_id);
+        int Invite_client(std::string arg, std::string invit_client, std::string channel, int Client_id);
+        bool Check_kick(std::string channel, std::string client, std::string reasen, int Client_id);
+        void Print_Channel_Modes(std::string channel, int channel_pos, int Client_id);
+        bool already_on_channel(std::string client, std::string channel, int Client_id, int channel_pos, int check);
+        bool Check_Channel_Op(std::string client_nick, std::string channel, int channel_pos, int Client_id);
 };
 
 
