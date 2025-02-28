@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/28 14:18:09 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:51:41 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void Server::recevMesseages(int i)
         std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
-        // this->clients.erase(this->clients.begin() + i - 1);
+        this->clients.erase(this->clients.begin() + i - 1);
         return ;
     }
     if (numChar == 1024)

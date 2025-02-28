@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 15:24:59 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:28:33 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Server::createChannel(std::string Ch_name, std::string Ch_pass, int clientI
         newChannel.setPassword(Ch_pass);
     }
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient( this->polls[clientId].fd );
     iter->isOperator = true;
     newChannel.addOperator(iter->getNickname());
     newChannel.addClient(this->clients[clientId - 1]);
@@ -44,8 +44,6 @@ void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int cl
     std::vector<Channel>::iterator iter;
     iter = getChannelByName(Ch_name);
     if (checkIsClientExistInChannel(Ch_name, clientId))return;
-    std::cout << "size : " << iter->Channelclients.size() <<std::endl;
-    std::cout << "limt : " << iter->getChannelLimit() <<std::endl;
     if (iter->Channelclients.size() + 1 > iter->getChannelLimit()){
         std::string err = ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
@@ -116,7 +114,7 @@ void Server::join(std::string arg, int clientId) {
 
 void Server::exec_cmds(std::string command, std::string arg, int clientId){
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient( this->polls[clientId].fd);
     if (iter == this->clients.end() || !iter->Authontacated())
         send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
     else if (command == "JOIN"){

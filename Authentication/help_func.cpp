@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:05:17 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 13:36:23 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:35:36 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ std::vector<Client>::iterator Server::getClient(int fd){
     std::vector<Client>::iterator iter;
     for(iter = clients.begin(); iter != clients.end(); iter++){
         if (iter->getFd() == fd){
-            // std::cout << "fd : "<< iter->getFd()<<std::endl;
-            // std::cout << "id : "<< fd<<std::endl;
             return (iter);
         }
     }
@@ -61,7 +59,7 @@ bool Server::checkIsClientExistInChannel(std::string chName, int clientId){
     std::vector<Client>::iterator clIter;
     std::vector<Client>::iterator iter;
     chIter = getChannelByName(chName);
-    clIter = getClient(clientId);
+    clIter = getClient( this->polls[clientId].fd );
     for(iter = chIter->Channelclients.begin(); iter != chIter->Channelclients.end(); iter++){
         if (iter->getNickname() == clIter->getNickname())
             return (true);
