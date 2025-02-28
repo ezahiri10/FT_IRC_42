@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/26 17:49:16 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/27 17:48:32 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,6 @@
 #include "../Replies.hpp"
 #include <set>
 #include <iostream>
-
-
-bool Check_Channel_Op(Server *My_serv, std::string client_nick, std::string channel, int channel_pos, int client_Fd)
-{
-    std::vector<std::string>::iterator it;
-    for (it = My_serv->channels[channel_pos].getOperators().begin(); it != My_serv->channels[channel_pos].getOperators().end(); it++){
-        std::cout << "Was here" << std::endl;
-        if (client_nick == (*it))
-            return (true);
-    }
-    std::string str = ERR_CHANOPRIVSNEEDED(channel);
-    send(My_serv->polls[client_Fd].fd, str.c_str(), str.length(), 0);
-    return (false);
-}
 
 int ADD_client(Server *My_serv, std::string invit_client, std::string channel, int channel_pos)
 {
@@ -65,7 +51,7 @@ int Server::Invite_client(std::string arg, std::string invit_client, std::string
         && there_is_user(invit_client, FD)
         && already_on_channel(Get_client_nick(FD, channel_pos), channel, FD, channel_pos, 0)
         && !already_on_channel(invit_client, channel, FD, channel_pos, 1)
-        && Check_Channel_Op(this, Get_client_nick(FD, channel_pos), channel, channel_pos, FD))
+        && Check_Channel_Op(Get_client_nick(FD, channel_pos), channel, channel_pos, FD))
     {
         ADD_client(this, invit_client, channel, channel_pos);
     }  
@@ -74,6 +60,9 @@ int Server::Invite_client(std::string arg, std::string invit_client, std::string
 
 int Server::Invite_func(std::string arg, int FD)
 {
+    if (this->polls.empty())
+        return (false);
+
     std::string channel;
     std::string invit_client;
 

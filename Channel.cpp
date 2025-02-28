@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/26 20:16:25 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/28 10:27:54 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 Channel::Channel(){
     this->invited = false;
-    this->limit = 10;
+    this->istopic = false;
+    this->limit = 0;
     this->name = "";
     this->password = "";
     this->topic = "";
@@ -30,11 +31,15 @@ void Channel::setChannelName(std::string name){
     this->name = name;
 }
 
-size_t Channel::getChannelLimit(){
+int Channel::getChannelLimit(){
     return (this->limit);
 }
 void Channel::setChannelLimit(int limit){
     this->limit = limit;
+}
+
+void Channel::incrChannelLimit(){
+    this->limit++;
 }
 
 bool Channel::geInvited(){
@@ -86,11 +91,20 @@ void Channel::removeClient(int pos){
 void Channel::addOperator(const std::string op){
     this->operators.push_back(op);
 }
+void Channel::addMode(const std::string mode){
+    this->modes.push_back(mode);
+}
 void Channel::setIsprivate(bool isPrivate){
     this->isPrivate = isPrivate;
 }
 bool Channel::getIsprivate(){
     return this->isPrivate;
+}
+void Channel::setIstopic(bool istopic){
+    this->istopic = istopic;
+}
+bool Channel::getistopic(){
+    return this->istopic;
 }
 // void Channel::clearChannel() {
 //     this->clients.clear();

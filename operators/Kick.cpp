@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/26 17:45:08 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/02/27 18:07:59 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ bool Server::Check_kick(std::string channel, std::string client, std::string rea
             msg += '\n';
         send(this->polls[FD].fd, msg.c_str(), msg.length(), 0);
         int Client_index = Get_Channel_client_pos(client, channel_pos);
-        std::cout << "Clien index = " << Client_index << std::endl;
         if (Client_index != -1)
             this->channels[channel_pos].removeClient(Client_index);
         if(this->channels[channel_pos].getClients().empty())
@@ -49,6 +48,9 @@ bool Server::Check_kick(std::string channel, std::string client, std::string rea
 
 int Server::Kick_func(std::string arg, int FD)
 {
+    if (this->polls.empty())
+        return (false);
+
     std::string client;
     std::string channel;
     std::string reasen;
@@ -61,7 +63,6 @@ int Server::Kick_func(std::string arg, int FD)
         if (i == 3)
             reasen = this->args[3];
     }
-    // std::cout << "Channel = " << channel << " Client = " << client << " Reasen = " << reasen << std::endl;
     if (channel.empty() || client.empty())
     {
         std::string str = ERR_NEEDMOREPARAMS(arg);

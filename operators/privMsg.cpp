@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 22:25:03 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/02/26 16:56:15 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,20 +72,6 @@ void Server::privMsg(std::string arg, int clientId){
     }
     std::string namesPart = getPartss(arg, 'N');
     std::string msgPart = getPartss(arg, 'X');
-    // if (msgPart == " game"){
-    //     std::string str;
-    //         str = "|----|----|----|\n";
-    //         for (int i = 0; i < 3; i++)
-    //         {
-    //             for (int j = 0; j < 3; j++)
-    //             {
-    //                 str+= "| x " ;
-    //             }
-    //             str+= "|\n";
-    //             str+= "|----|----|----| \n";
-    //         }
-    //     send(this->polls[clientId].fd, str.c_str(), strlen(str.c_str()), 0);
-    // }
     std::stringstream ss(namesPart);
     std::string buffer;
     while(getline(ss, buffer, ',')){
