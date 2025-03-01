@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/28 16:51:41 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/01 14:20:42 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void Server::ifFailed(const std::string &e)
     throw std::runtime_error(e.c_str());
 }
 
-Server::Server(const std::string &port, const std::string &pass) 
+Server::Server(const std::string &port, const std::string &pass)
 {
     if (pass.find_first_of(" \t") != std::string::npos || pass.empty())
         throw std::invalid_argument("invalid password");

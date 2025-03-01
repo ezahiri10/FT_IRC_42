@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 18:22:00 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:09:39 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void Server::join(std::string arg, int clientId) {
 }
 
 void Server::exec_cmds(std::string command, std::string arg, int clientId){
+    Operators op;
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd);
     std::cout << "==->> "<< iter->getFd() << std::endl;
@@ -128,11 +129,11 @@ void Server::exec_cmds(std::string command, std::string arg, int clientId){
     else if (command == "PRIVMSG")
         privMsg(arg, clientId);
     else if (command == "KICK")
-        Kick_func(arg, clientId);
+        op.Kick_func(*this, arg, clientId);
     else if (command == "INVITE")
-        Invite_func(arg, clientId);
+        op.Invite_func(*this, arg, clientId);
     else if (command == "MODE")
-        Mode_func(arg, clientId);
+        op.Mode_func(*this, arg, clientId);
     else if (command == "TOPIC")
-        Topic_func(arg, clientId);
+        op.Topic_func(*this, arg, clientId);
 }

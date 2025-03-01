@@ -11,7 +11,7 @@ SRC = Authentication/Authentication.cpp Client.cpp main.cpp Server.cpp\
 		operators/Mode.cpp\
 		operators/Invite.cpp\
 		operators/Topic.cpp\
-		operators/utils.cpp
+		operators/Operators.cpp
 HEADER = Client.hpp Replies.hpp Server.hpp 
 
 OBJ = $(SRC:.cpp=.o)

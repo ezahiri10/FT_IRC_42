@@ -6,21 +6,17 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 12:42:31 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:08:31 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Channel.hpp"
-#include "../Server.hpp"
-#include "../Replies.hpp"
-#include <set>
-#include <iostream>
+#include "Operators.hpp"
 
-void Server::Print_Channel_Modes(std::string channel, int channel_pos, int Client_id)
+void Operators::Print_Channel_Modes(Server &My_serv, std::string channel, int channel_pos, int Client_id)
 {
     std::string msg = "+";
     std::vector<std::string>::iterator it;
-    for (it = this->channels[channel_pos].getModes().begin(); it != this->channels[channel_pos].getModes().end(); it++){
+    for (it = My_serv.channels[channel_pos].getModes().begin(); it != My_serv.channels[channel_pos].getModes().end(); it++){
         if ((*it) == "+t")
             msg += "t";
         else if ((*it) == "+k")
@@ -33,14 +29,14 @@ void Server::Print_Channel_Modes(std::string channel, int channel_pos, int Clien
             msg += "i";
     }
 
-    std::string str = RPL_UMODEIS(Get_client_nick(Client_id, channel_pos), msg);
-    send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
+    std::string str = RPL_UMODEIS(Get_client_nick(My_serv, Client_id, channel_pos), msg);
+    send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
 
-    str = RPL_CREATIONTIME(Get_client_nick(Client_id, channel_pos), channel, "creationtime");
+    str = RPL_CREATIONTIME(Get_client_nick(My_serv, Client_id, channel_pos), channel, "creationtime");
     send(Client_id, str.c_str(), str.length(), 0);
 }
 
-void Add_Mode(Server &My_serv, std::string mode, int channel_pos)
+void Operators::Add_Mode(Server &My_serv, std::string mode, int channel_pos)
 {
     std::vector<std::string> Modes = My_serv.channels[channel_pos].getModes();
     if (std::find(Modes.begin(), Modes.end(), mode) != Modes.end())
@@ -48,7 +44,7 @@ void Add_Mode(Server &My_serv, std::string mode, int channel_pos)
     else
         My_serv.channels[channel_pos].addMode(mode);
 }
-void Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
+void Operators::Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
 {
     std::vector<std::string> Modes = My_serv.channels[channel_pos].getModes();
 
@@ -58,7 +54,7 @@ void Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
         Modes.erase(it);
 }
 
-void Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos){//k
+void Operators::Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos){//k
     if (mode == "+k")
     {
         if (!pass.empty())
@@ -73,23 +69,23 @@ void Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int ch
     }
 }
 
-void Server::Add_Remove_OP(std::string mode, std::string op, int channel_pos){//o
+void Operators::Add_Remove_OP(Server &My_serv, std::string mode, std::string op, int channel_pos){//o
     if (mode == "+o") {
-        if (there_is_user(op, channel_pos))
+        if (there_is_user(My_serv, op, channel_pos))
         {
-            std::vector<std::string> ops = this->channels[channel_pos].getOperators();
+            std::vector<std::string> ops = My_serv.channels[channel_pos].getOperators();
             if (std::find(ops.begin(), ops.end(), op) == ops.end())
-                this->channels[channel_pos].addOperator(op);
-            Add_Mode(*this, mode, channel_pos);
+                My_serv.channels[channel_pos].addOperator(op);
+            Add_Mode(My_serv, mode, channel_pos);
         }
     } else {
-        std::vector<std::string> ops = this->channels[channel_pos].getOperators();
-        this->channels[channel_pos].getOperators().erase(std::remove(ops.begin(), ops.end(), op), ops.end());
-        Remove_Mode(*this, mode, channel_pos);
+        std::vector<std::string> ops = My_serv.channels[channel_pos].getOperators();
+        My_serv.channels[channel_pos].getOperators().erase(std::remove(ops.begin(), ops.end(), op), ops.end());
+        Remove_Mode(My_serv, mode, channel_pos);
     }
 }
 
-void Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_limit, int channel_pos){//l
+void Operators::Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_limit, int channel_pos){//l
     if (mode == "+l")
     {
         My_serv.channels[channel_pos].setChannelLimit(user_limit);
@@ -102,7 +98,7 @@ void Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_limit, int cha
     }
 }
 
-void Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_pos){//t
+void Operators::Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_pos){//t
     if (mode == "+t")
     {
         My_serv.channels[channel_pos].setIstopic(true);
@@ -115,7 +111,7 @@ void Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_pos){//t
     }
 }
 
-void Add_Remove_INVITE(Server &My_serv, std::string mode, int channel_pos){//i
+void Operators::Add_Remove_INVITE(Server &My_serv, std::string mode, int channel_pos){//i
     if (mode == "+i")
     {
         My_serv.channels[channel_pos].setInvited(true);
@@ -127,21 +123,21 @@ void Add_Remove_INVITE(Server &My_serv, std::string mode, int channel_pos){//i
         Remove_Mode(My_serv, mode, channel_pos);
     }
 }
-bool Server::ft_isdigits(std::string identify, std::string client, std::string channel, int Client_id)
+bool Operators::ft_isdigits(Server &My_serv, std::string identify, std::string client, std::string channel, int Client_id)
 {
     for (size_t i = 0; i < identify.length(); i++)
     {
         if (!isdigit(identify[i]))
         {
             std::string str = ERR_INVALIDKEY(client, channel);
-            send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
+            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
             return (false);
         }
     }
     return (true);
 }
 
-bool Check_valid_Mode(Server &My_serv, std::string client, std::string mode, int Client_id){
+bool Operators::Check_valid_Mode(Server &My_serv, std::string client, std::string mode, int Client_id){
 
     const std::string modes[] = { 
         "+i", "+t", "+k", "+o", "+l", 
@@ -157,54 +153,54 @@ bool Check_valid_Mode(Server &My_serv, std::string client, std::string mode, int
 }
 
 
-bool Server::Check_identify(std::string mode, std::string identify, std::string channel_name, int channel_pos, int Client_id){
-    if (this->channels.empty())
+bool Operators::Check_identify(Server &My_serv, std::string mode, std::string identify, std::string channel_name, int channel_pos, int Client_id){
+    if (My_serv.channels.empty())
         return (false);
 
     if (mode == "+o" || mode == "-o")
     {
         if (identify.empty())
         {
-            std::string str = ERR_INVALIDMODEPARM(this->channels[channel_pos].getChannelName(), mode);
-            send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
+            std::string str = ERR_INVALIDMODEPARM(My_serv.channels[channel_pos].getChannelName(), mode);
+            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
         }
         else{
             std::string op = identify;
-            Add_Remove_OP(mode, op, channel_pos);
+            Add_Remove_OP(My_serv, mode, op, channel_pos);
         }
     }
     else if (mode == "+i" || mode == "-i")//movet
     {
-        Add_Remove_INVITE(*this, mode, channel_pos);
+        Add_Remove_INVITE(My_serv, mode, channel_pos);
     }
     else if (mode == "+k" || mode == "-k")//moved
     {
         std::string pass = identify;
-        Add_Remove_PASS(*this, mode, pass, channel_pos);
+        Add_Remove_PASS(My_serv, mode, pass, channel_pos);
     }
     else if (mode == "+t" || mode == "-t")////movet
     {
-        Add_Remove_TOPIC(*this, mode, channel_pos);
+        Add_Remove_TOPIC(My_serv, mode, channel_pos);
     }
     else if (mode == "+l" || mode == "-l")//moved
     {
-        if (ft_isdigits(identify, Get_client_nick(Client_id, channel_pos), channel_name, Client_id))
+        if (ft_isdigits(My_serv, identify, Get_client_nick(My_serv, Client_id, channel_pos), channel_name, Client_id))
         {
             int user_limit = std::atoi(identify.c_str());
-            Add_Remove_LIMIT(*this, mode, user_limit, channel_pos);
+            Add_Remove_LIMIT(My_serv, mode, user_limit, channel_pos);
         }
     }
     return (true);
 }
 
-void Server::Set_mode(std::string channel, std::string mode, std::string identify, int Client_id)
+void Operators::Set_mode(Server &My_serv, std::string channel, std::string mode, std::string identify, int Client_id)
 {
     int channel_pos = 0;
-    if (there_is_channel(channel, channel_pos, Client_id)
-        && Check_valid_Mode(*this, channel, mode, Client_id)
-        && Check_Channel_Op(Get_client_nick(Client_id, channel_pos), channel, channel_pos, Client_id))
+    if (there_is_channel(My_serv, channel, channel_pos, Client_id)
+        && Check_valid_Mode(My_serv, channel, mode, Client_id)
+        && Check_Channel_Op(My_serv, Get_client_nick(My_serv, Client_id, channel_pos), channel, channel_pos, Client_id))
     {
-        Check_identify(mode, identify, channel, channel_pos, Client_id);
+        Check_identify(My_serv, mode, identify, channel, channel_pos, Client_id);
     }
 }
 
@@ -221,28 +217,29 @@ std::string getMood(std::string pass, int i) {
     return "";
 }
 
-int  Server::Mode_func(std::string arg, int Client_id)
+int  Operators::Mode_func(Server &My_serv, std::string arg, int Client_id)
 {
+    Operators op;
     std::string namePart;
     std::string moodPart;
     std::string identify_Part;
     (void)arg;
-    for (size_t i = 0; i < this->args.size(); i++){
+    for (size_t i = 0; i < My_serv.args.size(); i++){
         if (i == 1)
-            namePart = this->args[1];
+            namePart = My_serv.args[1];
         if (i == 2)
-            moodPart = this->args[2];
+            moodPart = My_serv.args[2];
         if (i == 3)
-            identify_Part = this->args[3];
+            identify_Part = My_serv.args[3];
     }
     std::stringstream ss(namePart);
     std::string channel;
     int i = 0;
     while (getline(ss, channel, ',')) {
-        if (this->channels.empty())
+        if (My_serv.channels.empty())
         {
             std::string str = ERR_NOSUCHCHANNEL(channel);
-            send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
+            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
             continue ;
         }
         std::string mode = getMood(moodPart, i);
@@ -250,11 +247,11 @@ int  Server::Mode_func(std::string arg, int Client_id)
         if (!channel.empty() && mode.empty())
         {
             int channel_pos = 0;
-            if (there_is_channel(channel, channel_pos, Client_id))
-                Print_Channel_Modes(channel, channel_pos, Client_id);
+            if (op.there_is_channel(My_serv, channel, channel_pos, Client_id))
+                op.Print_Channel_Modes(My_serv, channel, channel_pos, Client_id);
         }
         else
-            Set_mode(channel, mode, identify, Client_id);
+            op.Set_mode(My_serv, channel, mode, identify, Client_id);
         i++;
     }
     return (0);
