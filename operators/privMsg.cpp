@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/01 18:26:09 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 22:16:41 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId)
     }
     send(iter->getFd(), msg.c_str(), strlen(msg.c_str()), 0); //! heap-buffer-overflow  in int id = iter->getFd(); --> send
 }
-
+ 
 bool Server::messageToBot(const std::string &msgpart, int clientId) //! add functiom to check if the message is for the bot
 {
     std::vector<Client>::iterator iter;
@@ -83,14 +83,14 @@ bool Server::messageToBot(const std::string &msgpart, int clientId) //! add func
                 throw std::runtime_error("send field");
         return (true);
     }
-    if (strncmp(msgpart.c_str() + 1, "MOVE", 4) == 0 && iter != this->clients.end())
+    else if (strncmp(msgpart.c_str() + 1, "MOVE", 4) == 0 && iter != this->clients.end())
     {
         nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(5);
         if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
                 throw std::runtime_error("send field");
         return (true);
     }
-    if (msgpart == "QUIT" && iter != this->clients.end())
+    else if (msgpart == " QUIT" && iter != this->clients.end())
     {
         nick = "QUIT " + this->clients[clientId - 1].getNickname();
         if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
@@ -108,7 +108,7 @@ void Server::privMsg(std::string arg, int clientId)
     }
     std::string namesPart = getPartss(arg, 'N');
     std::string msgPart = getPartss(arg, 'X');
-    if (messageToBot(msgPart, clientId))
+    if (namesPart == "BOT" && messageToBot(msgPart, clientId))
         return ;
     std::stringstream ss(namesPart);
     std::string buffer;

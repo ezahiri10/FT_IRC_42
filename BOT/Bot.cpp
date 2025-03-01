@@ -6,15 +6,13 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 17:26:52 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 22:26:37 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
-// request form : GAME 
-// form of the message :  MOVE <position> 
 
-
+bool Bot::isRunning = true;
 
 int Bot::getPlayerByName(const std::string &name)
 {
@@ -25,6 +23,7 @@ int Bot::getPlayerByName(const std::string &name)
     }
     return (-1);
 }
+
 void Bot::parseRequest(std::string msg)
 {
     int player;
@@ -60,7 +59,6 @@ void Bot::parseRequest(std::string msg)
         player = getPlayerByName(tmp);
         if (player == -1)
             return ;
-        std::cout << "Player " << this->players[player].getNickname() << " has left the game" << std::endl;
         this->players.erase(this->players.begin() + player);
         Player::sendRequest("PRIVMSG " + tmp + " has left the game", this->botfd);
     }
@@ -73,6 +71,8 @@ void Bot::recvMesseages(bool welcom )
     int numChar = recv(this->botfd, buffer, sizeof(buffer), 0);
     if (numChar == -1)
         throw std::runtime_error ("recv failed");
+    if (numChar == 0)
+        throw std::runtime_error ("connection closed");
     if (numChar == BUFFER_SIZE)
         numChar = 1023;
     buffer[numChar] = '\0';
@@ -120,4 +120,14 @@ Bot::Bot(const std::string &port, const std::string &pass, const std::string &ni
     authentification();
 }
 
+void Bot::handler(int signum)
+{
+    (void)signum;
+    std::cout << "Exiting..." << std::endl;
+    exit(0);
+}
 
+Bot::~Bot()
+{
+    close(this->botfd);
+}

@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:20:31 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 16:34:42 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 22:15:36 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ bool  Player::setMove ()
     n -= 1;
     if (n > 0 && this->s[n / 3][n % 3] != 'O' && this->s[n / 3][n % 3] != 'X')
     {
-        std::cout << "n / 3  " << n / 3  << "  n % 3 " << n % 3 << std::endl;
         this->s[n / 3][n % 3] = 'O';
         return (true);
     }
