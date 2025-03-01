@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 19:46:06 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 11:27:08 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ bool Server::there_is_Fd(int fd)
 
 std::string Server::Get_client_nick(int clientId, int channel_pos)
 {
-    std::cout << "Clientid = " << clientId << std::endl;
     for (std::vector<Client>::iterator it = this->channels[channel_pos].getClients().begin(); it != this->channels[channel_pos].getClients().end(); it++){
         if (this->polls[clientId].fd == it->getFd())
             return (it->getNickname());

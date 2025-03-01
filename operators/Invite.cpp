@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 19:34:13 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 12:37:36 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,37 @@
 #include <set>
 #include <iostream>
 
-int ADD_client(Server *My_serv, std::string invit_client, std::string channel, int channel_pos)
+void send_message(Server &My_serv, std::string str, int channel_pos)
+{
+    std::vector<Client>::iterator it;
+    std::vector<Client> clients_it = My_serv.channels[channel_pos].getClients();
+    for (it = clients_it.begin(); it != clients_it.end(); it++){
+        int fd = (*it).getFd();
+        send(fd, str.c_str(), str.length(), 0);
+    }
+}
+
+int ADD_client(Server &My_serv, std::string nick_name, std::string invit_client, std::string channel, int channel_pos, int Client_id)
 {
     Client* tmp = NULL;
 
-    for (std::vector<Client>::iterator it = My_serv->clients.begin(); it != My_serv->clients.end(); it++){
+    for (std::vector<Client>::iterator it = My_serv.clients.begin(); it != My_serv.clients.end(); it++){
         if (invit_client == it->getNickname())
         {
             tmp = &(*it);
             break;
         }
     }
+    std::string str;
     if (tmp)
     {
-        My_serv->channels[channel_pos].addClient(*tmp);
+        My_serv.channels[channel_pos].addClient(*tmp);
+        str = RPL_INVITING(nick_name, invit_client, channel);
+        send_message(My_serv, str, channel_pos);
         return (true);
     }
-    std::cerr << invit_client << " " << channel << ":There was no such nickname" << std::endl;
+    str = ERR_NOSUCHNICK(invit_client);
+    send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
@@ -45,7 +59,6 @@ int Server::Invite_client(std::string arg, std::string invit_client, std::string
         return (false);
     }
     int channel_pos = 0;
-    //print all users in the channel
     
     if (there_is_channel(channel, channel_pos, Client_id)
         && there_is_user(invit_client, Client_id)
@@ -53,7 +66,7 @@ int Server::Invite_client(std::string arg, std::string invit_client, std::string
         && !already_on_channel(invit_client, channel, Client_id, channel_pos, 1)
         && Check_Channel_Op(Get_client_nick(Client_id, channel_pos), channel, channel_pos, Client_id))
     {
-        ADD_client(this, invit_client, channel, channel_pos);
+        ADD_client(*this, Get_client_nick(Client_id, channel_pos), invit_client, channel, channel_pos, Client_id);
     }  
     return(false);
 }

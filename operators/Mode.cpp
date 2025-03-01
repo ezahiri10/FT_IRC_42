@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 19:33:22 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 12:42:31 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,25 +33,24 @@ void Server::Print_Channel_Modes(std::string channel, int channel_pos, int Clien
             msg += "i";
     }
 
-    std::string hostname = "hostname";
-    std::string str = RPL_UMODEIS(hostname, channel, msg, Get_client_nick(Client_id, channel_pos));
+    std::string str = RPL_UMODEIS(Get_client_nick(Client_id, channel_pos), msg);
     send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
 
-    // std::string str = ERR_UMODEUNKNOWNFLAG(client);
-    // send(Client_id, str.c_str(), str.length(), 0);
+    str = RPL_CREATIONTIME(Get_client_nick(Client_id, channel_pos), channel, "creationtime");
+    send(Client_id, str.c_str(), str.length(), 0);
 }
 
-void Add_Mode(Server *My_serv, std::string mode, int channel_pos)
+void Add_Mode(Server &My_serv, std::string mode, int channel_pos)
 {
-    std::vector<std::string> Modes = My_serv->channels[channel_pos].getModes();
+    std::vector<std::string> Modes = My_serv.channels[channel_pos].getModes();
     if (std::find(Modes.begin(), Modes.end(), mode) != Modes.end())
         return ;
     else
-        My_serv->channels[channel_pos].addMode(mode);
+        My_serv.channels[channel_pos].addMode(mode);
 }
-void Remove_Mode(Server *My_serv, std::string mode, int channel_pos)
+void Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
 {
-    std::vector<std::string> Modes = My_serv->channels[channel_pos].getModes();
+    std::vector<std::string> Modes = My_serv.channels[channel_pos].getModes();
 
     std::vector<std::string>::iterator it = std::find(Modes.begin(), Modes.end(), mode);
 
@@ -59,17 +58,17 @@ void Remove_Mode(Server *My_serv, std::string mode, int channel_pos)
         Modes.erase(it);
 }
 
-void Add_Remove_PASS(Server *My_serv, std::string mode, std::string pass, int channel_pos){//k
+void Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos){//k
     if (mode == "+k")
     {
         if (!pass.empty())
-            My_serv->channels[channel_pos].setPassword(pass);
-        My_serv->channels[channel_pos].setIsprivate(true);
+            My_serv.channels[channel_pos].setPassword(pass);
+        My_serv.channels[channel_pos].setIsprivate(true);
         Add_Mode(My_serv, mode, channel_pos);
     }
     else
     {
-        My_serv->channels[channel_pos].setIsprivate(false);
+        My_serv.channels[channel_pos].setIsprivate(false);
         Remove_Mode(My_serv, mode, channel_pos);
     }
 }
@@ -80,68 +79,69 @@ void Server::Add_Remove_OP(std::string mode, std::string op, int channel_pos){//
         {
             std::vector<std::string> ops = this->channels[channel_pos].getOperators();
             if (std::find(ops.begin(), ops.end(), op) == ops.end())
-                ops.push_back(op);
-            Add_Mode(this, mode, channel_pos);
+                this->channels[channel_pos].addOperator(op);
+            Add_Mode(*this, mode, channel_pos);
         }
     } else {
         std::vector<std::string> ops = this->channels[channel_pos].getOperators();
-        ops.erase(std::remove(ops.begin(), ops.end(), op), ops.end());
-        Remove_Mode(this, mode, channel_pos);
+        this->channels[channel_pos].getOperators().erase(std::remove(ops.begin(), ops.end(), op), ops.end());
+        Remove_Mode(*this, mode, channel_pos);
     }
 }
 
-void Add_Remove_LIMIT(Server *My_serv, std::string mode, int user_limit, int channel_pos){//l
+void Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_limit, int channel_pos){//l
     if (mode == "+l")
     {
-        My_serv->channels[channel_pos].setChannelLimit(user_limit);
+        My_serv.channels[channel_pos].setChannelLimit(user_limit);
         Add_Mode(My_serv, mode, channel_pos);
     }
     else
     {
-        My_serv->channels[channel_pos].setChannelLimit(10);
+        My_serv.channels[channel_pos].setChannelLimit(10);
         Remove_Mode(My_serv, mode, channel_pos);
     }
 }
 
-void Add_Remove_TOPIC(Server *My_serv, std::string mode, int channel_pos){//t
+void Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_pos){//t
     if (mode == "+t")
     {
-        My_serv->channels[channel_pos].setIstopic(true);
+        My_serv.channels[channel_pos].setIstopic(true);
         Add_Mode(My_serv, mode, channel_pos);
     }
     else
     {
-        My_serv->channels[channel_pos].setIstopic(false);
+        My_serv.channels[channel_pos].setIstopic(false);
         Remove_Mode(My_serv, mode, channel_pos);
     }
 }
 
-void Add_Remove_INVITE(Server *My_serv, std::string mode, int channel_pos){//i
+void Add_Remove_INVITE(Server &My_serv, std::string mode, int channel_pos){//i
     if (mode == "+i")
     {
-        My_serv->channels[channel_pos].setInvited(true);
+        My_serv.channels[channel_pos].setInvited(true);
         Add_Mode(My_serv, mode, channel_pos);
     }
     else
     {
-        My_serv->channels[channel_pos].setInvited(false);
+        My_serv.channels[channel_pos].setInvited(false);
         Remove_Mode(My_serv, mode, channel_pos);
     }
 }
-bool ft_isdigits(std::string identify)
+bool Server::ft_isdigits(std::string identify, std::string client, std::string channel, int Client_id)
 {
     for (size_t i = 0; i < identify.length(); i++)
     {
         if (!isdigit(identify[i]))
         {
-            // ERR_INVALIDKEY (525)
+            std::string str = ERR_INVALIDKEY(client, channel);
+            send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
             return (false);
         }
     }
     return (true);
 }
 
-bool Check_valid_Mode(Server *My_serv,std::string client, std::string mode, int Client_id){
+bool Check_valid_Mode(Server &My_serv, std::string client, std::string mode, int Client_id){
 
     const std::string modes[] = { 
         "+i", "+t", "+k", "+o", "+l", 
@@ -152,12 +152,12 @@ bool Check_valid_Mode(Server *My_serv,std::string client, std::string mode, int 
     if (valid_modes.find(mode) != valid_modes.end())
         return true;
     std::string str = ERR_UMODEUNKNOWNFLAG(client);
-    send(My_serv->polls[Client_id].fd, str.c_str(), str.length(), 0);
+    send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
 
-bool Server::Check_identify(std::string mode, std::string identify, int channel_pos, int Client_id){
+bool Server::Check_identify(std::string mode, std::string identify, std::string channel_name, int channel_pos, int Client_id){
     if (this->channels.empty())
         return (false);
 
@@ -175,23 +175,23 @@ bool Server::Check_identify(std::string mode, std::string identify, int channel_
     }
     else if (mode == "+i" || mode == "-i")//movet
     {
-        Add_Remove_INVITE(this, mode, channel_pos);
+        Add_Remove_INVITE(*this, mode, channel_pos);
     }
     else if (mode == "+k" || mode == "-k")//moved
     {
         std::string pass = identify;
-        Add_Remove_PASS(this, mode, pass, channel_pos);
+        Add_Remove_PASS(*this, mode, pass, channel_pos);
     }
     else if (mode == "+t" || mode == "-t")////movet
     {
-        Add_Remove_TOPIC(this, mode, channel_pos);
+        Add_Remove_TOPIC(*this, mode, channel_pos);
     }
     else if (mode == "+l" || mode == "-l")//moved
     {
-        if (ft_isdigits(identify))
+        if (ft_isdigits(identify, Get_client_nick(Client_id, channel_pos), channel_name, Client_id))
         {
             int user_limit = std::atoi(identify.c_str());
-            Add_Remove_LIMIT(this, mode, user_limit, channel_pos);
+            Add_Remove_LIMIT(*this, mode, user_limit, channel_pos);
         }
     }
     return (true);
@@ -201,10 +201,10 @@ void Server::Set_mode(std::string channel, std::string mode, std::string identif
 {
     int channel_pos = 0;
     if (there_is_channel(channel, channel_pos, Client_id)
-        && Check_valid_Mode(this, channel, mode, Client_id)
+        && Check_valid_Mode(*this, channel, mode, Client_id)
         && Check_Channel_Op(Get_client_nick(Client_id, channel_pos), channel, channel_pos, Client_id))
     {
-        Check_identify(mode, identify, channel_pos, Client_id);
+        Check_identify(mode, identify, channel, channel_pos, Client_id);
     }
 }
 

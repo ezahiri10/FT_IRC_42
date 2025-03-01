@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 19:26:56 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 10:34:49 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Server
         std::vector<Client>::iterator getClientByName(std::string name);
 
         bool there_is_Fd(int fd);
+        bool ft_isdigits(std::string identify, std::string client, std::string channel, int Client_id);
         int Mode_func(std::string arg, int Client_id);
         int Invite_func(std::string arg, int Client_id);
         int Kick_func(std::string arg, int Client_id);
@@ -69,7 +70,7 @@ class Server
         void Add_Remove_OP(std::string mode, std::string op, int channel_pos);
         int Get_Channel_client_pos(const std::string& nickname, int channel_pos);
         bool there_is_channel(std::string channel, int &channel_pos, int clientFD);
-        bool Check_identify(std::string mode, std::string identify, int channel_pos, int Client_id);
+        bool Check_identify(std::string mode, std::string identify, std::string channel_name, int channel_pos, int Client_id);
         void Add_topic(std::string channel, std::string topic, int Client_id);
         void Set_mode(std::string channel, std::string mode, std::string identify, int Client_id);
         int Invite_client(std::string arg, std::string invit_client, std::string channel, int Client_id);

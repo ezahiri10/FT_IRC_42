@@ -28,6 +28,7 @@
 #define ERR_NOTREGISTERED								PREFIX "Error: You are not registered." POSTFIX
 #define ERR_CHANNELISFULL(client, channel)				PREFIX " 471 " + client + " " + channel + " :Cannot join channel (+l)" POSTFIX
 #define ERR_INVITEONLYCHAN(client, channel)				PREFIX " 473 " + client + " " + channel + " :Cannot join channel (+i)" POSTFIX
+#define ERR_INVALIDKEY(client, channelname)            PREFIX "525 " + client + " " + channelname + " :Key is not well-formed" POSTFIX
 #define ERR_NEEDMODEPARM(channelname, mode)				(std::string(": 696 ") + channelname + " * You must specify a parameter for the key mode. " + mode + POSTFIX)
 #define ERR_INVALIDMODEPARM(channelname, mode)			(std::string(": 696 ") + channelname + " Invalid mode parameter. " + mode + POSTFIX)
 #define ERR_UNKNOWNMODE(nickname, channelname, mode)	(std::string(": 472 ") + nickname + " " + channelname + " " + mode + " :is not a recognised channel mode" + POSTFIX)
@@ -41,10 +42,10 @@
 #define RPL_PRIVMSG(sender, target, msg)				":" + sender + " PRIVMSG " + target + " :" + msg + POSTFIX 
 #define RPL_NICK(sender, nick)							":" + sender + " NICK " + nick + POSTFIX
 #define RPL_NOTOPIC(sender, channel)					PREFIX " 331 " + sender + " " + channel + " :No topic is set" + POSTFIX
-#define RPL_INVITING(nickname, targnick, targchan)  	": 341 " + nickname + " " + targnick + " " + targchan + POSTFIX
+#define RPL_INVITING(nickname, targnick, targchan)  	": 341 " + nickname + " " + targnick + " has been invited to " + targchan + POSTFIX
 #define RPL_INVITE(sender, target, channel)				":" + sender + " INVITE " + target + " " + channel + POSTFIX
-#define RPL_INVITING(nickname, targnick, targchan) 	 	": 341 " + nickname + " " + targnick + " " + targchan + POSTFIX
 #define RPL_JOINMSG(hostname, ipaddress, channelname)	(":" + hostname + "@" + ipaddress + " JOIN " + channelname + POSTFIX)
 #define RPL_JOIN(sender, channel)						":" + sender + " JOIN :" + channel + POSTFIX
 #define RPL_CHANGEMODE(hostname, channelname, mode)		(":" + hostname + " MODE " + channelname + " " + mode + POSTFIX)
-#define RPL_UMODEIS(hostname, channelname, mode, user)	":" + hostname + " MODE " + channelname + " " + mode + " " + user + POSTFIX
+#define RPL_UMODEIS(client, modes)	                    PREFIX "221 " + client + " " + modes + POSTFIX
+#define RPL_CREATIONTIME(client, channel, creationtime) PREFIX "329 " + client + " " + channel + " " + std::string(creationtime) + POSTFIX

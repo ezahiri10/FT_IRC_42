@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 19:33:53 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 13:09:30 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ bool Server::Check_kick(std::string channel, std::string client, std::string rea
     int channel_pos = 0;
     if (there_is_channel(channel, channel_pos, Client_id)
         && already_on_channel(Get_client_nick(Client_id, channel_pos), channel, Client_id, channel_pos, 0)
-        && there_is_user(client, Client_id))
+        && there_is_user(client, Client_id)
+        && Check_Channel_Op(Get_client_nick(Client_id, channel_pos), channel, channel_pos, Client_id))
     {
         std::string msg = client + " Kick The Channell " + channel;
         if (!reasen.empty())
@@ -37,13 +38,7 @@ bool Server::Check_kick(std::string channel, std::string client, std::string rea
         if(this->channels[channel_pos].getClients().empty())
             this->channels.erase(this->channels.begin() + channel_pos);
     }
-    else
-    {
-        std::string str = ERR_NOSUCHCHANNEL(channel);
-        send(this->polls[Client_id].fd, str.c_str(), str.length(), 0);
-    }
-
-    return (false);
+    return (true);
 }
 
 int Server::Kick_func(std::string arg, int Client_id)
