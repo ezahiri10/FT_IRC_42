@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:44:48 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 16:07:58 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:52:27 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ void Operators::Set_New_topic(Server &My_serv, std::string channel, std::string 
     if (!My_serv.clients.empty())
     {
         std::string str = RPL_TOPIC(My_serv.clients[Client_id].getNickname(), channel, topic);
-        send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+        send_message(My_serv, str, channel_pos);
         My_serv.channels[channel_pos].setTopic(topic);
     }
 }
 
-void Operators::Desplay_topic(Server &My_serv, std::string channel, int channel_pos, int Client_id){
+void Desplay_topic(Server &My_serv, std::string channel, int channel_pos, int Client_id){
 
     if (My_serv.channels.empty() || My_serv.clients.empty())
         return ;
@@ -59,8 +59,6 @@ void Operators::Add_topic(Server &My_serv, std::string channel, std::string topi
 int Operators::Topic_func(Server &My_serv, std::string arg, int Client_id)
 {
     Operators op;
-    if (My_serv.polls.empty())
-        return (false);
 
     std::string channel;
     std::string topic;

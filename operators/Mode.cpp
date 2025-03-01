@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 16:08:31 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:53:25 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void Operators::Print_Channel_Modes(Server &My_serv, std::string channel, int ch
     send(Client_id, str.c_str(), str.length(), 0);
 }
 
-void Operators::Add_Mode(Server &My_serv, std::string mode, int channel_pos)
+void Add_Mode(Server &My_serv, std::string mode, int channel_pos)
 {
     std::vector<std::string> Modes = My_serv.channels[channel_pos].getModes();
     if (std::find(Modes.begin(), Modes.end(), mode) != Modes.end())
@@ -44,7 +44,7 @@ void Operators::Add_Mode(Server &My_serv, std::string mode, int channel_pos)
     else
         My_serv.channels[channel_pos].addMode(mode);
 }
-void Operators::Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
+void Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
 {
     std::vector<std::string> Modes = My_serv.channels[channel_pos].getModes();
 
@@ -54,7 +54,7 @@ void Operators::Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
         Modes.erase(it);
 }
 
-void Operators::Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos){//k
+void Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos){//k
     if (mode == "+k")
     {
         if (!pass.empty())
@@ -69,23 +69,27 @@ void Operators::Add_Remove_PASS(Server &My_serv, std::string mode, std::string p
     }
 }
 
-void Operators::Add_Remove_OP(Server &My_serv, std::string mode, std::string op, int channel_pos){//o
-    if (mode == "+o") {
-        if (there_is_user(My_serv, op, channel_pos))
+void Operators::Add_Remove_OP(Server &My_serv, std::string mode, std::string op, int channel_pos, int clientId){//o
+    (void)clientId;
+    if (mode == "+o")
+    {
+        if (there_is_user(My_serv, op, channel_pos)
+            && already_on_channel(My_serv, op, My_serv.channels[channel_pos].getChannelName(), clientId, channel_pos, 0))
         {
             std::vector<std::string> ops = My_serv.channels[channel_pos].getOperators();
             if (std::find(ops.begin(), ops.end(), op) == ops.end())
                 My_serv.channels[channel_pos].addOperator(op);
             Add_Mode(My_serv, mode, channel_pos);
         }
-    } else {
+    } else
+    {
         std::vector<std::string> ops = My_serv.channels[channel_pos].getOperators();
         My_serv.channels[channel_pos].getOperators().erase(std::remove(ops.begin(), ops.end(), op), ops.end());
         Remove_Mode(My_serv, mode, channel_pos);
     }
 }
 
-void Operators::Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_limit, int channel_pos){//l
+void Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_limit, int channel_pos){//l
     if (mode == "+l")
     {
         My_serv.channels[channel_pos].setChannelLimit(user_limit);
@@ -98,7 +102,7 @@ void Operators::Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_lim
     }
 }
 
-void Operators::Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_pos){//t
+void Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_pos){//t
     if (mode == "+t")
     {
         My_serv.channels[channel_pos].setIstopic(true);
@@ -111,7 +115,7 @@ void Operators::Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_
     }
 }
 
-void Operators::Add_Remove_INVITE(Server &My_serv, std::string mode, int channel_pos){//i
+void Add_Remove_INVITE(Server &My_serv, std::string mode, int channel_pos){//i
     if (mode == "+i")
     {
         My_serv.channels[channel_pos].setInvited(true);
@@ -123,7 +127,7 @@ void Operators::Add_Remove_INVITE(Server &My_serv, std::string mode, int channel
         Remove_Mode(My_serv, mode, channel_pos);
     }
 }
-bool Operators::ft_isdigits(Server &My_serv, std::string identify, std::string client, std::string channel, int Client_id)
+bool ft_isdigits(Server &My_serv, std::string identify, std::string client, std::string channel, int Client_id)
 {
     for (size_t i = 0; i < identify.length(); i++)
     {
@@ -137,7 +141,7 @@ bool Operators::ft_isdigits(Server &My_serv, std::string identify, std::string c
     return (true);
 }
 
-bool Operators::Check_valid_Mode(Server &My_serv, std::string client, std::string mode, int Client_id){
+bool Check_valid_Mode(Server &My_serv, std::string client, std::string mode, int Client_id){
 
     const std::string modes[] = { 
         "+i", "+t", "+k", "+o", "+l", 
@@ -166,7 +170,8 @@ bool Operators::Check_identify(Server &My_serv, std::string mode, std::string id
         }
         else{
             std::string op = identify;
-            Add_Remove_OP(My_serv, mode, op, channel_pos);
+            std::cout << "operator = " << op << std::endl;
+            Add_Remove_OP(My_serv, mode, op, channel_pos, Client_id);
         }
     }
     else if (mode == "+i" || mode == "-i")//movet
@@ -184,7 +189,12 @@ bool Operators::Check_identify(Server &My_serv, std::string mode, std::string id
     }
     else if (mode == "+l" || mode == "-l")//moved
     {
-        if (ft_isdigits(My_serv, identify, Get_client_nick(My_serv, Client_id, channel_pos), channel_name, Client_id))
+        if (identify.empty())
+        {
+            std::string str = ERR_INVALIDMODEPARM(My_serv.channels[channel_pos].getChannelName(), mode);
+            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+        }
+        else if (ft_isdigits(My_serv, identify, Get_client_nick(My_serv, Client_id, channel_pos), channel_name, Client_id))
         {
             int user_limit = std::atoi(identify.c_str());
             Add_Remove_LIMIT(My_serv, mode, user_limit, channel_pos);

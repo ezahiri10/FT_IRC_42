@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 16:08:20 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:47:50 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool Operators::Check_kick(Server &My_serv, std::string channel, std::string cli
             msg += " : " + reasen + '\n';
         else
             msg += '\n';
-        send(My_serv.polls[Client_id].fd, msg.c_str(), msg.length(), 0);
+        send_message(My_serv, msg, channel_pos);
         int Client_index = Get_Channel_client_pos(My_serv, client, channel_pos);
         if (Client_index != -1)
             My_serv.channels[channel_pos].removeClient(Client_index);

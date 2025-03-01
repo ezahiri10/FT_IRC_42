@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 15:29:46 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:53:33 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@ Operators::Operators(){
 }
 Operators::~Operators(){
     
+}
+
+void Operators::send_message(Server &My_serv, std::string str, int channel_pos)
+{
+    std::vector<Client>::iterator it;
+    std::vector<Client> clients_it = My_serv.channels[channel_pos].getClients();
+    for (it = clients_it.begin(); it != clients_it.end(); it++){
+        int fd = (*it).getFd();
+        send(fd, str.c_str(), str.length(), 0);
+    }
 }
 bool Operators::there_is_Fd(Server &My_serv, int fd)
 {

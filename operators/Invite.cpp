@@ -6,21 +6,11 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 16:09:20 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:46:24 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Operators.hpp"
-
-void Operators::send_message(Server &My_serv, std::string str, int channel_pos)
-{
-    std::vector<Client>::iterator it;
-    std::vector<Client> clients_it = My_serv.channels[channel_pos].getClients();
-    for (it = clients_it.begin(); it != clients_it.end(); it++){
-        int fd = (*it).getFd();
-        send(fd, str.c_str(), str.length(), 0);
-    }
-}
 
 int Operators::ADD_client(Server &My_serv, std::string nick_name, std::string invit_client, std::string channel, int channel_pos, int Client_id)
 {
