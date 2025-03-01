@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/01 17:12:12 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 18:13:27 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class Server
         std::vector<std::string> splitByCRLF(const std::string& str);
         int getBotFd();
     public :
+        bool clientExist(int fd); 
         void printFd();
         bool messageToBot(const std::string &msg, int clineFd);
         Server();

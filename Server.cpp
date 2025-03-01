@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 16:52:27 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 19:15:30 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,19 @@ void Server::acceptConnection()
     p.fd = clienfd;
     p.events= POLLIN;
     this->polls.push_back(p);
+    Client newClient;
+    this->clients.push_back(newClient);
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
+}
+
+bool Server::clientExist(int fd) // ! check if the client exist
+{
+    for (size_t i = 0; i < this->clients.size(); i++)
+    {
+        if (this->clients[i].getFd() == fd)
+            return true;
+    }
+    return false;
 }
 
 void Server::recevMesseages(int i)
@@ -62,6 +74,11 @@ void Server::recevMesseages(int i)
     if (numChar == 0)
     {
         std::cout << "Client " << this->polls[i].fd <<  " is disconnected" << std::endl;
+        if (clientExist(this->polls[i].fd) == true)
+        {
+            this->messageToBot("QUIT", i);
+            this->clients.erase(this->clients.begin() + i - 1);
+        }
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
         return ;
@@ -138,7 +155,9 @@ std::vector<std::string> Server::splitByCRLF(const std::string& str)
 }
 
 void Server::Parse(std::string msg, int clientId)
-{
+{   if(msg == "\n"){
+        std::cout << msg;return;
+    }
     if (msg.size() > 512)
     {
         msg.resize(510);
