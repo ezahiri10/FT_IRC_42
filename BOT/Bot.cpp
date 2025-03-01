@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 16:56:40 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 17:26:52 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Bot::parseRequest(std::string msg)
         Player p(tmp);
         this->players.push_back(p);
         Player::sendRequest("PRIVMSG " + tmp + " for palaying with me\nsend : MOVE <position> to play", this->botfd);
-        Player::sendRequest("PRIVMSG " + tmp + " Select number 1 ~ 9 :\n\n\n", this->botfd);
+        Player::sendRequest("PRIVMSG " + tmp + " Select number 1 ~ 9 :\n\n\n\n", this->botfd);
         Player::sendRequest(("PRIVMSG " + p.getNickname() + " "+ p.getBoard()).c_str(), botfd);
     }
     else if (tmp == "MOVE")
@@ -60,7 +60,9 @@ void Bot::parseRequest(std::string msg)
         player = getPlayerByName(tmp);
         if (player == -1)
             return ;
+        std::cout << "Player " << this->players[player].getNickname() << " has left the game" << std::endl;
         this->players.erase(this->players.begin() + player);
+        Player::sendRequest("PRIVMSG " + tmp + " has left the game", this->botfd);
     }
 }
 
@@ -88,10 +90,7 @@ void Bot::authentification()
     add.sin_port = htons(this->port);
     add.sin_addr.s_addr = INADDR_ANY;
     if (connect(this->botfd, (sockaddr *)&add, sizeof(add)) == -1)
-    {
-        perror("connect : ");
         throw std::runtime_error ("connect failed");
-    }
     std::string msg = "PASS " + this->serverpass + "\r\n";
     if (send(this->botfd, msg.c_str(), msg.size(), 0) == -1)
         throw std::runtime_error ("send failed");
