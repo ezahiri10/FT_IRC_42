@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/01 16:09:39 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 22:54:57 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void Server::exec_cmds(std::string command, std::string arg, int clientId){
     Operators op;
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd);
-    std::cout << "==->> "<< iter->getFd() << std::endl;
     if (iter == this->clients.end() || !iter->Authontacated())
         send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
     else if (command == "JOIN"){

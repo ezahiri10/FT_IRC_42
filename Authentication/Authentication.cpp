@@ -32,7 +32,6 @@ std::string getArg(std::string str){
 void Server::pass(std::string arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd );
-    std::cout << ":::: " << this->polls[clientId].fd<<std::endl;
     bool XRP = true;
     if (iter != clients.end() && iter->clientExist){
         std::string err = ERR_ALREADYREGISTRED(iter->getNickname());
@@ -40,12 +39,6 @@ void Server::pass(std::string arg, int clientId){
         XRP = false;
     }
     if(checkPass(arg, this->serverpass, this->polls[clientId].fd, XRP)){
-        // Client newClient;
-        // newClient.setPassword(arg);
-        // newClient.has_pass = true;
-        // newClient.setFd(clientId);
-        // this->clients.push_back(newClient);
-
         this->clients[clientId - 1].setPassword(arg);
         this->clients[clientId - 1].has_pass = true;
         this->clients[clientId - 1].setFd( this->polls[clientId].fd );

@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 18:27:23 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/01 22:59:04 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ std::string getPartss(std::string str, char x){
 void Server::MsgToChannel(std::string channelName, std::string msg, int clientId){
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator cIter;
-    msg += "\n";
     if (!checkChannelExist(channelName)){
         std::string err = ERR_NOSUCHCHANNEL(channelName);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
@@ -59,10 +58,16 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId){
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
         std::cout << ERR_NOSUCHNICK(clientName);return;
     }
-    msg+="\n";
     iter = getClientByName(clientName);
     int id = iter->getFd();
     send(id, msg.c_str(), strlen(msg.c_str()), 0);
+}
+
+std::string trim(const std::string & source) {
+    std::string s(source);
+    s.erase(0,s.find_first_not_of(" \n\r\t"));
+    s.erase(s.find_last_not_of(" \n\r\t")+1);
+    return s;
 }
 
 void Server::privMsg(std::string arg, int clientId){
@@ -72,12 +77,14 @@ void Server::privMsg(std::string arg, int clientId){
     }
     std::string namesPart = getPartss(arg, 'N');
     std::string msgPart = getPartss(arg, 'X');
+    msgPart = trim(msgPart);
     std::stringstream ss(namesPart);
-    std::string buffer;
-    while(getline(ss, buffer, ',')){
-        if (buffer[0] == '#')
-            MsgToChannel(buffer, msgPart, clientId);
+    std::string name;
+    while(getline(ss, name, ',')){
+        msgPart += "\r\n";
+        if (name[0] == '#')
+            MsgToChannel(name, msgPart, clientId);
         else
-            MsgToClient(buffer, msgPart, clientId);
+            MsgToClient(name, msgPart, clientId);
     }
 }
