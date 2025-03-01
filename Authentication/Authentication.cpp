@@ -31,7 +31,7 @@ std::string getArg(std::string str){
 
 void Server::pass(std::string arg, int clientId){
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient(this->polls[clientId].fd);
     bool XRP = true;
     if (iter != clients.end() && iter->clientExist){
         std::string err = ERR_ALREADYREGISTRED(iter->getNickname());
@@ -40,7 +40,7 @@ void Server::pass(std::string arg, int clientId){
     }
     if(checkPass(arg, this->serverpass, this->polls[clientId].fd, XRP)){
         Client newClient;
-        newClient.setFd(clientId);
+        newClient.setFd(this->polls[clientId].fd); //! ERRset the fd of the client not the index
         newClient.setPassword(arg);
         newClient.has_pass = true;
         this->clients.push_back(newClient);
@@ -49,7 +49,7 @@ void Server::pass(std::string arg, int clientId){
 
 void Server::nick(std::string arg, int clientId){
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient(this->polls[clientId].fd);
     if(iter == clients.end() || !iter->has_pass){
         send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
         return;
@@ -66,7 +66,7 @@ void Server::nick(std::string arg, int clientId){
 
 void Server::user(std::string arg, int clientId){
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient(this->polls[clientId].fd);
     if(iter == clients.end() || !iter->has_pass){
         send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
         return;
@@ -79,6 +79,21 @@ void Server::user(std::string arg, int clientId){
         this->clients[clientId - 1].setUsername(arg);
         this->clients[clientId - 1].has_user = true;
     }
+}
+
+void Server::printFd() // for debugging
+{
+    std::cout << " ----------------- Fd ----------------- " << std::endl;
+    for (int i = 0; i < (int)this->polls.size(); i++)
+    {
+        std::cout << " Fd : " << this->polls[i].fd << std::endl;
+    }
+    std::cout << " ----------------- Fd Clients ----------------- " << std::endl;
+    for (int i = 0; i < (int)this->clients.size(); i++)
+    {
+        std::cout << "Nick : " << this->clients[i].getNickname() << " fd : " << this->clients[i].getFd() << std::endl;
+    }
+    std::cout << "----------------------------------------" << std::endl;
 }
 
 void Server::Authentication(std::string message, int clientId){
@@ -104,8 +119,9 @@ void Server::Authentication(std::string message, int clientId){
         user(this->args[1], clientId);
     else
         this->exec_cmds(command,arg, clientId);
+
     std::vector<Client>::iterator iter;
-    iter = getClient(clientId);
+    iter = getClient(this->polls[clientId].fd);
     if (iter != clients.end() && iter->Authontacated() && !iter->clientExist){
         this->clients[clientId - 1].clientExist = true;
         std::string welc = RPL_WELCOME(this->clients[clientId - 1].getNickname(), "Welcome To The Irc Server");

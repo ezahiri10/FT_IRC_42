@@ -6,11 +6,23 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:20:31 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/28 11:30:29 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 16:34:42 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Player.hpp"
+
+void Player::sendRequest(std::string msg, int botfd)
+{
+    msg += "\r\n";
+    if (send(botfd, msg.c_str(), msg.size(), 0) == -1)
+        throw std::runtime_error ("send failed");
+}
+
+std::string Player::getNickname()
+{
+    return (this->nickname);
+}
 
 Player::Player(const std::string &nick)
 {
@@ -20,6 +32,23 @@ Player::Player(const std::string &nick)
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
             this->s[i][j] = tmp[i][j];
+}
+
+std::string Player::getBoard()
+{
+    std::string board = "|----|----|----| \n";
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            board += "|  ";
+            board += s[i][j];
+            board += " ";
+        }
+        board += "|";
+        board += "\n|----|----|----| \n";
+    }
+    return (board);
 }
 
 bool  Player::setMove ()
@@ -97,28 +126,15 @@ void Player::botMove()
     }
 }
 
-void Player::affichTable()
-{
-    std::cout << "|----|----|----|" << std::endl;
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            std::cout << "|  "  << s[i][j] << " " ;
-        }
-        std::cout << "|" << std::endl;
-        std::cout << "|----|----|----| " << std::endl;
-    }
-}
 
-bool Player::isWin (char XO)
+bool Player::isWin (char XO, int botfd)
 {
     int j = 0;
     std::string msg;
     if (XO == 'X')
-        msg = "You Wiiiin";
+        msg = "You Win";
     else if (XO == 'O')
-        msg = "You  Lose" ;
+        msg = "You Lose";
     for (int i =0; i < 3 && j == 0; i++)
     {
         j = 0;
@@ -133,35 +149,26 @@ bool Player::isWin (char XO)
             j = 1;
     if (j == 1)
     {
-        this->affichTable();
-        std::cout << msg << std::endl;
+        sendRequest(("PRIVMSG " + this->nickname + " "+ getBoard()).c_str(), botfd);
+        sendRequest("PRIVMSG " + this->nickname + " " + msg, botfd);
         return true;
     }
     return (false);
 }
 
-bool Player::playerMove(bool &iseof)
+bool Player::playerMove(const std::string &move, int botfd)
 {
-    std::string line;
     int r;
 
-    std::cout << "select numbet 1 ~ 9 : ";
-    getline(std::cin, line);
-    if (std::cin.eof())
+    if (move.empty() || move.size() != 1 || !std::isdigit(move[0]))
     {
-        iseof = true;
-        std::cout << "\nBye" << std::endl;
+        sendRequest(("PRIVMSG " + this->nickname + " invalid move").c_str(), botfd);
         return (false);
     }
-    if (line.empty() || line.size() != 1 || !std::isdigit(line[0]))
-    {
-        std::cout << "invalid argement" << std::endl;
-        return (false);
-    }
-    r = std::atoi(line.c_str()) - 1;
+    r = std::atoi(move.c_str()) - 1;
     if (r < 0 || s[r / 3][r % 3] == 'X' || s[r / 3][r % 3] == 'O')
     {
-        std::cout << "invalid argement" << std::endl;
+        sendRequest(("PRIVMSG " + this->nickname + " invalid move").c_str(), botfd);
         return (false);
     }
     s[r / 3][r % 3] = 'X';
@@ -169,7 +176,7 @@ bool Player::playerMove(bool &iseof)
 }
 
 
-bool Player::isFall()
+bool Player::isFall(int botfd)
 {
     for (int i = 0; i < 3; i++)
     {
@@ -177,30 +184,24 @@ bool Player::isFall()
             if (s[i][j] >= '1' && s[i][j] <= '9')
                 return (false);
     }
-    this->affichTable();
-    std::cout << "Draw" << std::endl;
+    sendRequest("PRIVMSG " + this->nickname + " Game Over", botfd);
     return (true);
 }
 
-void Player::ticTacToe()
- {
-    bool iseof = false;
-    std::cout << "select numbet 1 ~ 9 : " << std::endl;
-    this->affichTable();
-    while (iseof == false)
-    {
-        if (this->isFall())
-            break ;
-        if (!this->playerMove(iseof))
-            continue;
-        if (this->isWin('X') == true)
-            break ;
-        if (this->isFall())
-            break ;
-        this->botMove();
-        if (this->isWin('O') == true)
-            break ;
-        this->affichTable();
-    }
-    
- }
+
+bool Player::ticTacToe(const std::string &move, int botfd)
+{
+    if (this->isFall(botfd) == true)
+        return (true);
+    if (this->playerMove(move, botfd) == false)
+        return (false);
+    if (this->isWin('X', botfd) == true)
+        return  (true);
+    if (this->isFall(botfd) == true)
+        return (true);
+    this->botMove();
+    if (this->isWin('O', botfd) == true)
+        return (true);
+    sendRequest(("PRIVMSG " + this->nickname + " "+ getBoard()).c_str(), botfd);
+    return (false);
+}

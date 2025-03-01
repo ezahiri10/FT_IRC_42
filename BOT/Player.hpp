@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:22:18 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/28 11:27:09 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 16:33:40 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,27 @@
 #include "../Server.hpp"
 #include <array>
 
+
 class Player
 {
     private :
-        std::string nickname;
         std::array<std::array<char, 3>, 3> s;
-    public :
-        Player(const std::string &nick);
-        bool setMove ();
-        int checkDiagonal(char XO);
+        std::string nickname;
+    
+        bool playerMove(const std::string &move, int botfd);
+        bool isWin (char XO, int botfd);
         int checkEdge(char XO, int n);
-        void ticTacToe();
-        void affichTable();
-        bool isWin (char XO);
-        void botMove();
-        bool playerMove(bool &iseof);
+        int checkDiagonal(char XO);
+        bool isFall(int botfd);
         int bestMove(char XO);
-        bool isFall();
+        bool setMove ();
+        void botMove();
+    public :
+        std::string getNickname();
+        Player(const std::string &nick);
+        bool ticTacToe(const std::string &move, int botfd);
+        std::string getBoard();
+        static void sendRequest(std::string msg, int botfd);
 };
 
 #endif

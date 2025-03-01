@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/26 17:32:28 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:40:12 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 #include "Client.hpp"
 #include "Channel.hpp"
+# include <iomanip>
 
 class Server
 {
@@ -29,8 +30,13 @@ class Server
         void acceptConnection ();
         void recevMesseages(int i);
         void ifFailed(const std::string &e);
+        std::vector<std::string> splitByCRLF(const std::string& str);
+        int getBotFd();
     public :
+        void printFd();
+        bool messageToBot(const std::string &msg, int clineFd);
         Server();
+        void Parse(std::string msg, int clientId);
         std::vector<pollfd> polls;
         std::vector<Client> clients;
         std::vector<Channel> channels;

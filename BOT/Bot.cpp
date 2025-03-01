@@ -6,38 +6,65 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/28 12:16:19 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/01 16:53:42 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
-// request form : PLAY <NICK>
-// form of the message : <NICK> MOVE <position>
-// form of the message : <NICK> FINISH
+// request form : GAME 
+// form of the message :  MOVE <position> 
 
+
+
+int Bot::getPlayerByName(const std::string &name)
+{
+    for (size_t i = 0; i < this->players.size(); i++)
+    {
+        if (this->players[i].getNickname() == name)
+            return (i);
+    }
+    return (-1);
+}
 void Bot::parseRequest(std::string msg)
 {
+    int player;
     std::string tmp;
     std::stringstream ss(msg);
+
     ss >> tmp;
-    if (tmp == "PLAY")
+    if (tmp == "GAME")
     {
         ss >> tmp;
-        this->players.push_back(tmp);
+        int player = getPlayerByName(tmp);
+        if (player > 0)
+            return ;
+        Player p(tmp);
+        this->players.push_back(p);
+        Player::sendRequest("PRIVMSG " + tmp + " for palaying with me\nsend : MOVE <position> to play", this->botfd);
+        Player::sendRequest("PRIVMSG " + tmp + " Select number 1 ~ 9 :\n\n\n", this->botfd);
+        Player::sendRequest(("PRIVMSG " + p.getNickname() + " "+ p.getBoard()).c_str(), botfd);
     }
     else if (tmp == "MOVE")
     {
         ss >> tmp;
-        std::cout << tmp << std::endl;
+        player = getPlayerByName(tmp);
+        if (player == -1)
+            return ;
+        ss >> tmp;
+        if (this->players[player].ticTacToe(tmp, this->botfd) == true)
+            this->players.erase(this->players.begin() + player);
     }
-    else if (tmp == "FINISH")
+    else if (tmp == "QUIT")
     {
         ss >> tmp;
-        std::cout << tmp << std::endl;
+        player = getPlayerByName(tmp);
+        if (player == -1)
+            return ;
+        this->players.erase(this->players.begin() + player);
     }
 }
 
-void Bot::recvMesseages(bool welcom = false)
+void Bot::recvMesseages(bool welcom )
 {
     char buffer[BUFFER_SIZE];
 
@@ -48,7 +75,7 @@ void Bot::recvMesseages(bool welcom = false)
         numChar = 1023;
     buffer[numChar] = '\0';
     if (welcom)
-        std::cout << buffer << std::endl;
+        std::cout <<  buffer << std::endl;
     else
         parseRequest(buffer);
 }

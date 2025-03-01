@@ -2,8 +2,8 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC = Bot.cpp main.cpp 
-HEADER = Bot.hpp 
+SRC = Bot.cpp main.cpp Player.cpp 
+HEADER = Bot.hpp Player.hpp 
 
 OBJ = $(SRC:.cpp=.o)
 
