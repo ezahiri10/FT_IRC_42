@@ -6,13 +6,17 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/01 22:54:57 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/02 14:27:57 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Server.hpp"
 #include "../Client.hpp"
 #include "../Channel.hpp"
+
+void Server::response(const std::string &str, int clientId){
+    send(this->polls[clientId].fd, str.c_str(), strlen(str.c_str()), 0);
+}
 
 void Server::createChannel(std::string Ch_name, std::string Ch_pass, int clientId){
     Channel newChannel;
@@ -22,7 +26,7 @@ void Server::createChannel(std::string Ch_name, std::string Ch_pass, int clientI
         newChannel.setPassword(Ch_pass);
     }
     std::vector<Client>::iterator iter;
-    iter = getClient( this->polls[clientId].fd );
+    iter = getClient(this->polls[clientId].fd);
     iter->isOperator = true;
     newChannel.addOperator(iter->getNickname());
     newChannel.addClient(this->clients[clientId - 1]);
@@ -42,21 +46,24 @@ std::vector<Channel>::iterator Server::getChannelByName(std::string name){
 
 void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int clientId){
     std::vector<Channel>::iterator iter;
+    std::vector<Client>::iterator it;
     iter = getChannelByName(Ch_name);
     if (checkIsClientExistInChannel(Ch_name, clientId))return;
     if (iter->Channelclients.size() + 1 > iter->getChannelLimit()){
-        std::string err = ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name);
-        send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
+        response(ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
     if (iter->getIsprivate()){
         if(iter->getChannelPassword() == Ch_pass)
             iter->addClient(this->clients[clientId - 1]);
         else{
-            std::string err = ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name);
-            send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
+            response(ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
         }
     }else{
         iter->addClient(this->clients[clientId - 1]);
+    }
+    for(it = iter->Channelclients.begin(); it != iter->Channelclients.end(); it++){
+        std::string str = RPL_JOIN(it->getNickname(), Ch_name);
+        send(it->getFd(), str.c_str(), strlen(str.c_str()), 0);
     }
     std::cout << RPL_JOIN(this->clients[clientId - 1].getNickname(), Ch_name);
 }
@@ -102,12 +109,10 @@ void Server::join(std::string arg, int clientId) {
             send(this->polls[clientId].fd, err.c_str(), err.length(), 0);
             continue;
         }
-        if (!checkChannelExist(channel)) {
+        if (!checkChannelExist(channel))
             createChannel(channel, pass, clientId);
-        }
-        else{
+        else
             addClientToChannel(channel, pass, clientId);
-        }
         i++;
     }
 }
@@ -117,11 +122,10 @@ void Server::exec_cmds(std::string command, std::string arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd);
     if (iter == this->clients.end() || !iter->Authontacated())
-        send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
+        response(ERR_NOTREGISTERED, clientId);
     else if (command == "JOIN"){
         if (this->args.size() < 2){
-            std::string err = ERR_NEEDMOREPARAMS(arg);
-            send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
+            response(ERR_NEEDMOREPARAMS(arg), clientId);return;
         }
         join(arg, clientId);
     }

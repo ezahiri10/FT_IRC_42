@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/01 16:09:50 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/02 14:02:37 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class Server
         void MsgToChannel(std::string channelName, std::string msg, int clientId);
         void MsgToClient(std::string clientName, std::string msg, int clientId);
         std::vector<Client>::iterator getClientByName(std::string name);
+        void response(const std::string &str, int clientId);
 
 };
 

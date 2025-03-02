@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/26 09:57:30 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/02 13:28:37 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ Client::Client()
     this->password = "";
     this->nickname = "";
     this->username = "";
+    this->ip = "";
     this->has_pass = false;
     this->has_nick = false;
     this->has_user = false;
@@ -45,10 +46,19 @@ std::string Client::getPassword( void ) const
     return (this->password);
 }
 
+std::string Client::getIp ( void ) const{
+    return this->ip;
+}
+
+void Client::setIp (const std::string &ip){
+    this->ip = ip;
+}
+
 void Client::setFd (int fd)
 {
     this->Clientfd = fd;
 }
+
 
 void Client::setNickname (const std::string &nickname)
 {

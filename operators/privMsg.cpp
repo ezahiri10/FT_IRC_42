@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/01 22:59:04 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/02 12:34:15 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void Server::MsgToChannel(std::string channelName, std::string msg, int clientId
     iter = getChannelByName(channelName);
     for(cIter = iter->Channelclients.begin(); cIter != iter->Channelclients.end(); cIter++){
         int id = cIter->getFd();
-        send(id, msg.c_str(), strlen(msg.c_str()), 0);
+        std::string str = RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), cIter->getNickname(), msg);
+        send(id, str.c_str(), strlen(str.c_str()), 0);
     }
 }
 
@@ -60,7 +61,8 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId){
     }
     iter = getClientByName(clientName);
     int id = iter->getFd();
-    send(id, msg.c_str(), strlen(msg.c_str()), 0);
+    std::string str = RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), iter->getNickname(), msg);
+    send(id, str.c_str(), strlen(str.c_str()), 0);
 }
 
 std::string trim(const std::string & source) {
@@ -81,7 +83,6 @@ void Server::privMsg(std::string arg, int clientId){
     std::stringstream ss(namesPart);
     std::string name;
     while(getline(ss, name, ',')){
-        msgPart += "\r\n";
         if (name[0] == '#')
             MsgToChannel(name, msgPart, clientId);
         else

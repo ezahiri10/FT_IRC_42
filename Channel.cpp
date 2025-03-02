@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 15:26:43 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/02 14:25:59 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 Channel::Channel(){
     this->invited = false;
     this->istopic = false;
-    this->limit = 3;
+    this->limit = 12;
     this->name = "";
     this->password = "";
     this->topic = "";
