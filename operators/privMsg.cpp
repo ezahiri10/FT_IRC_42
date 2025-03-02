@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/01 22:16:41 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/02 15:28:05 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void Server::MsgToChannel(std::string channelName, std::string msg, int clientId
     }
 }
 
+// l = "PRIVMSG LAME :Hello! Want to play Tic-Tac-Toe?\r\n";
 void Server::MsgToClient(std::string clientName, std::string msg, int clientId)
 {
     std::vector<Client>::iterator iter;
@@ -60,14 +61,26 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId)
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
         std::cout << ERR_NOSUCHNICK(clientName);return;
     }
-    msg+="\n";
-    iter = getClientByName(clientName); //! iter return end
-    if (iter == this->clients.end()){
-        std::string err = ERR_NOSUCHNICK(clientName);
-        send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
-        std::cout << ERR_NOSUCHNICK(clientName);return;
+    if (msg.substr(msg.size() - 2) != "\r\n")
+        msg += "\r\n";
+    size_t fin = msg.find(" ");
+    if (fin != std::string::npos)
+        msg = msg.substr(fin + 1);
+    std::string forsend = "PRIVMSG " + clientName + " :" + msg;
+    for (size_t i = 0; i < forsend.size(); i++)
+    {
+        if (forsend[i] == '\r')
+            std::cout << "\\r";
+        else if (forsend[i] == '\n')
+            std::cout << "\\n"; 
+        else  
+            std::cout << forsend[i];
     }
-    send(iter->getFd(), msg.c_str(), strlen(msg.c_str()), 0); //! heap-buffer-overflow  in int id = iter->getFd(); --> send
+    std::cout << std::endl;
+    iter = getClientByName(clientName); //! iter return end
+    if (iter != this->clients.end())
+        std::cout << "ClientName: " << clientName << std::endl;
+    send(iter->getFd(), forsend.c_str(), strlen(forsend.c_str()), 0); //! heap-buffer-overflow  in int id = iter->getFd(); --> send
 }
  
 bool Server::messageToBot(const std::string &msgpart, int clientId) //! add functiom to check if the message is for the bot

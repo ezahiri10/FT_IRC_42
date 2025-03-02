@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 22:26:37 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/02 16:34:29 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Bot::parseRequest(std::string msg)
         this->players.push_back(p);
         Player::sendRequest("PRIVMSG " + tmp + " for palaying with me\nsend : MOVE <position> to play", this->botfd);
         Player::sendRequest("PRIVMSG " + tmp + " Select number 1 ~ 9 :\n\n\n\n", this->botfd);
-        Player::sendRequest(("PRIVMSG " + p.getNickname() + " "+ p.getBoard()).c_str(), botfd);
+        p.getBoard(this->botfd);
     }
     else if (tmp == "MOVE")
     {

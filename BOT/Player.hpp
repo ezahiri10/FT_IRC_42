@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:22:18 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 16:33:40 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/02 15:48:03 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class Player
         std::string getNickname();
         Player(const std::string &nick);
         bool ticTacToe(const std::string &move, int botfd);
-        std::string getBoard();
+        void getBoard(int botfd);
         static void sendRequest(std::string msg, int botfd);
 };
 

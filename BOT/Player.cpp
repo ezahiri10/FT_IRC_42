@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:20:31 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 22:15:36 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/02 17:44:11 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Player::Player(const std::string &nick)
             this->s[i][j] = tmp[i][j];
 }
 
-std::string Player::getBoard()
+void  Player::getBoard(int botfd)
 {
     std::string board = "|----|----|----| \n";
     for (int i = 0; i < 3; i++)
@@ -48,7 +48,12 @@ std::string Player::getBoard()
         board += "|";
         board += "\n|----|----|----| \n";
     }
-    return (board);
+    std::string buffer;
+    std::stringstream boardStream(board);
+    while (getline(boardStream, buffer, '\n'))
+    {
+        sendRequest("PRIVMSG " + this->nickname + " " + buffer, botfd);
+    }
 }
 
 bool  Player::setMove ()
@@ -148,7 +153,7 @@ bool Player::isWin (char XO, int botfd)
             j = 1;
     if (j == 1)
     {
-        sendRequest(("PRIVMSG " + this->nickname + " "+ getBoard()).c_str(), botfd);
+        getBoard(botfd);
         sendRequest("PRIVMSG " + this->nickname + " " + msg, botfd);
         return true;
     }
@@ -201,6 +206,6 @@ bool Player::ticTacToe(const std::string &move, int botfd)
     this->botMove();
     if (this->isWin('O', botfd) == true)
         return (true);
-    sendRequest(("PRIVMSG " + this->nickname + " "+ getBoard()).c_str(), botfd);
+    getBoard(botfd);
     return (false);
 }
