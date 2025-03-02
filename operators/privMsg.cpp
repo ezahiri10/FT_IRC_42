@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/02 12:34:15 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/02 18:16:57 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,15 @@ std::string getPartss(std::string str, char x){
 void Server::MsgToChannel(std::string channelName, std::string msg, int clientId){
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator cIter;
+    cIter = getClient(this->polls[clientId].fd);
     if (!checkChannelExist(channelName)){
         std::string err = ERR_NOSUCHCHANNEL(channelName);
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
         std::cout << ERR_NOSUCHCHANNEL(channelName);return;
     }
     if(!checkIsClientExistInChannel(channelName, clientId)){
-        std::string err = ERR_NOTONCHANNEL(clients[clientId].getNickname(), channelName);
-        send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);return;
+        std::string err = ERR_NOTONCHANNEL(cIter->getNickname(), channelName);
+        send(cIter->getFd(), err.c_str(), strlen(err.c_str()), 0);return;
     }
     iter = getChannelByName(channelName);
     for(cIter = iter->Channelclients.begin(); cIter != iter->Channelclients.end(); cIter++){
@@ -80,6 +81,10 @@ void Server::privMsg(std::string arg, int clientId){
     std::string namesPart = getPartss(arg, 'N');
     std::string msgPart = getPartss(arg, 'X');
     msgPart = trim(msgPart);
+    if (msgPart[0] != ':')
+        msgPart = this->args[2];
+    else
+        msgPart.erase(0,msgPart.find_first_not_of(":"));
     std::stringstream ss(namesPart);
     std::string name;
     while(getline(ss, name, ',')){
