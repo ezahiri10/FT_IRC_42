@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/03 17:05:38 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 23:46:27 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ void Operators::Add_Mode(Server &My_serv, std::string mode, int channel_pos, int
         return ;
     else
     {
-        std::string str = RPL_UMODEIS(Get_client_nick(My_serv, Client_id, channel_pos), mode);
-        send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+        std::string channel_name = My_serv.channels[channel_pos].getChannelName();
+        std::string server_name = ":IRCServer";
+        std::string str = RPL_UMODEIS(server_name, channel_name, mode, Get_client_nick(My_serv, Client_id, channel_pos));
+        send_message(My_serv, str, channel_pos);
         My_serv.channels[channel_pos].addMode(mode);
     }
 }
-void Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
+void Operators::Remove_Mode(Server &My_serv, std::string mode, int channel_pos, int Client_id)
 {
     std::vector<std::string> Modes = My_serv.channels[channel_pos].getModes();
 
@@ -32,6 +34,10 @@ void Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
 
     if (it != Modes.end())
         Modes.erase(it);
+    std::string channel_name = My_serv.channels[channel_pos].getChannelName();
+    std::string server_name = ":IRCServer";
+    std::string str = RPL_UMODEIS(server_name, channel_name, mode, Get_client_nick(My_serv, Client_id, channel_pos));
+    send_message(My_serv, str, channel_pos);
 }
 
 void Operators::Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos, int Client_id){//k
@@ -51,7 +57,7 @@ void Operators::Add_Remove_PASS(Server &My_serv, std::string mode, std::string p
     else
     {
         My_serv.channels[channel_pos].setIsprivate(false);
-        Remove_Mode(My_serv, mode, channel_pos);
+        Remove_Mode(My_serv, mode, channel_pos, Client_id);
     }
 }
 
@@ -69,7 +75,7 @@ void Operators::Add_Remove_OP(Server &My_serv, std::string mode, std::string op,
     {
         std::vector<std::string> ops = My_serv.channels[channel_pos].getOperators();
         My_serv.channels[channel_pos].getOperators().erase(std::remove(ops.begin(), ops.end(), op), ops.end());
-        Remove_Mode(My_serv, mode, channel_pos);
+        Remove_Mode(My_serv, mode, channel_pos, clientId);
     }
 }
 
@@ -82,7 +88,7 @@ void Operators::Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_lim
     else
     {
         My_serv.channels[channel_pos].setChannelLimit(10);
-        Remove_Mode(My_serv, mode, channel_pos);
+        Remove_Mode(My_serv, mode, channel_pos, clientId);
     }
 }
 
@@ -95,7 +101,7 @@ void Operators::Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_
     else
     {
         My_serv.channels[channel_pos].setIstopic(false);
-        Remove_Mode(My_serv, mode, channel_pos);
+        Remove_Mode(My_serv, mode, channel_pos, clientId);
     }
 }
 
@@ -108,7 +114,7 @@ void Operators::Add_Remove_INVITE(Server &My_serv, std::string mode, int channel
     else
     {
         My_serv.channels[channel_pos].setInvited(false);
-        Remove_Mode(My_serv, mode, channel_pos);
+        Remove_Mode(My_serv, mode, channel_pos, clientId);
     }
 }
 bool ft_isdigits(Server &My_serv, std::string identify, std::string client, std::string channel, int Client_id)

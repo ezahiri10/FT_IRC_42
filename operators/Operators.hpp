@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Operators.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/03 17:13:22 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 23:45:41 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "../Replies.hpp"
 #include <iostream>
 #include <iterator>
+#include <algorithm>
 #include <vector>
 #include <set>
 class Server;
@@ -37,6 +38,7 @@ class Operators {
         void Add_Remove_LIMIT(Server &My_serv, std::string mode, int user_limit, int channel_pos, int clientId);
         void Add_Remove_TOPIC(Server &My_serv, std::string mode, int channel_pos, int clientId);
         void Add_Remove_INVITE(Server &My_serv, std::string mode, int channel_pos, int clientId);
+        void Remove_Mode(Server &My_serv, std::string mode, int channel_pos, int Client_id);
     public:
         Operators();
         ~Operators();

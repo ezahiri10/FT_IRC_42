@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/03 01:38:36 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 22:27:14 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ bool Operators::Check_kick(Server &My_serv, std::string channel, std::string cli
         && there_is_user(My_serv, client, Client_id)
         && Check_Channel_Op(My_serv, Get_client_nick(My_serv, Client_id, channel_pos), channel, channel_pos, Client_id))
     {
-        std::string msg = client + ": Kick The Channell " + channel;
-        if (!reasen.empty())
-            msg += " : " + reasen + "\r\n";
+        std::string msg = ":IRCServer KICK " + channel + " " + client;
+        if (reasen.empty())
+            msg += POSTFIX;
         else
-            msg += "\r\n";
+            msg += ": " + reasen + POSTFIX;
         send_message(My_serv, msg, channel_pos);
         int Client_index = Get_Channel_client_pos(My_serv, client, channel_pos);
         if (Client_index != -1)
