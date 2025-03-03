@@ -82,7 +82,7 @@ void Server::user(std::string arg, int clientId){
         return;
     }
     else if (this->args.size() < 5){
-        response(ERR_NEEDMOREPARAMS(arg), clientId);return;
+        responseId(ERR_NEEDMOREPARAMS(arg), clientId);return;
     }
     else{
         this->clients[clientId - 1].setUsername(arg);
@@ -99,10 +99,10 @@ void Server::Authentication(std::string message, int clientId)
     if (!this->args.empty())
     command = this->args[0];
     if (this->args.size() < 2){
-        response(ERR_NEEDMOREPARAMS(command), clientId);return;
+        responseId(ERR_NEEDMOREPARAMS(command), clientId);return;
     }
     if(!checkCommand(command)){
-        response(ERR_UNKNOWNCOMMAND(command), clientId);return;
+        responseId(ERR_UNKNOWNCOMMAND(command), clientId);return;
     }
     else if (command == "PASS")
         pass(arg, clientId);
@@ -116,6 +116,6 @@ void Server::Authentication(std::string message, int clientId)
     iter = getClient( this->polls[clientId].fd );
     if (iter != clients.end() && iter->Authontacated() && !iter->clientExist){
         this->clients[clientId - 1].clientExist = true;
-        response(RPL_WELCOME(this->clients[clientId - 1].getNickname(), "Welcome To The Irc Server"), clientId);return;
+        responseId(RPL_WELCOME(this->clients[clientId - 1].getNickname(), "Welcome To The Irc Server"), clientId);return;
     }
 }

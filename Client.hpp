@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/02 13:14:54 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:18:33 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ class Client
         bool has_nick;
         bool has_user;
         bool clientExist;
-        bool isOperator;
         int getFd( void ) const;
         Client();
         std::string getNickname( void ) const;

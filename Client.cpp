@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:24:17 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/02 13:28:37 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:14:49 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ Client::Client()
     this->has_nick = false;
     this->has_user = false;
     this->clientExist = false;
-    this->isOperator = false;
 }
 
 int Client::getFd( void ) const 

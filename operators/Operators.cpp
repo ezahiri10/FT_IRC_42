@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/02 22:16:59 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 17:06:19 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ bool Operators::Check_Channel_Op(Server &My_serv, std::string client_nick, std::
 {
     if (channel_pos == -1)
         return (false);
-    std::cout << "client_nick = " << client_nick<< std::endl;
     std::vector<std::string>::iterator it;
     std::vector<std::string> operators = My_serv.channels[channel_pos].getOperators();
     if (operators.empty())
