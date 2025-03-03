@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 16:46:24 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/02 22:01:49 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int Operators::Invite_client(Server &My_serv, std::string arg, std::string invit
         send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
         return (false);
     }
-    int channel_pos = 0;
+    int channel_pos = -1;
     
     if (there_is_channel(My_serv, channel, channel_pos, Client_id)
         && there_is_user(My_serv, invit_client, Client_id)

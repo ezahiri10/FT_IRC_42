@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/01 17:53:25 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/03 00:42:31 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,28 @@
 
 void Operators::Print_Channel_Modes(Server &My_serv, std::string channel, int channel_pos, int Client_id)
 {
+    (void)channel;
     std::string msg = "+";
     std::vector<std::string>::iterator it;
-    for (it = My_serv.channels[channel_pos].getModes().begin(); it != My_serv.channels[channel_pos].getModes().end(); it++){
-        if ((*it) == "+t")
-            msg += "t";
-        else if ((*it) == "+k")
-            msg += "k";
-        else if ((*it) == "+o")
-            msg += "o";
-        else if ((*it) == "+l")
-            msg += "l";
-        else if ((*it) == "+i")
-            msg += "i";
+    std::vector<std::string> MODES = My_serv.channels[channel_pos].getModes();
+    if (!MODES.empty())
+    {
+        for (it = MODES.begin(); it != MODES.end(); it++){
+            if ((*it) == "+t")
+                msg += "t";
+            else if ((*it) == "+k")
+                msg += "k";
+            else if ((*it) == "+o")
+                msg += "o";
+            else if ((*it) == "+l")
+                msg += "l";
+            else if ((*it) == "+i")
+                msg += "i";
+        }
     }
 
     std::string str = RPL_UMODEIS(Get_client_nick(My_serv, Client_id, channel_pos), msg);
     send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
-
-    str = RPL_CREATIONTIME(Get_client_nick(My_serv, Client_id, channel_pos), channel, "creationtime");
-    send(Client_id, str.c_str(), str.length(), 0);
 }
 
 void Add_Mode(Server &My_serv, std::string mode, int channel_pos)
@@ -54,13 +56,19 @@ void Remove_Mode(Server &My_serv, std::string mode, int channel_pos)
         Modes.erase(it);
 }
 
-void Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos){//k
+void Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int channel_pos, int Client_id){//k
     if (mode == "+k")
     {
-        if (!pass.empty())
+        if (pass.empty())
+        {
+            std::string str = ERR_INVALIDMODEPARM(My_serv.channels[channel_pos].getChannelName(), mode);
+            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+        }
+        else{
             My_serv.channels[channel_pos].setPassword(pass);
-        My_serv.channels[channel_pos].setIsprivate(true);
-        Add_Mode(My_serv, mode, channel_pos);
+            My_serv.channels[channel_pos].setIsprivate(true);
+            Add_Mode(My_serv, mode, channel_pos);
+        }
     }
     else
     {
@@ -70,7 +78,6 @@ void Add_Remove_PASS(Server &My_serv, std::string mode, std::string pass, int ch
 }
 
 void Operators::Add_Remove_OP(Server &My_serv, std::string mode, std::string op, int channel_pos, int clientId){//o
-    (void)clientId;
     if (mode == "+o")
     {
         if (there_is_user(My_serv, op, channel_pos)
@@ -181,7 +188,7 @@ bool Operators::Check_identify(Server &My_serv, std::string mode, std::string id
     else if (mode == "+k" || mode == "-k")//moved
     {
         std::string pass = identify;
-        Add_Remove_PASS(My_serv, mode, pass, channel_pos);
+        Add_Remove_PASS(My_serv, mode, pass, channel_pos, Client_id);
     }
     else if (mode == "+t" || mode == "-t")////movet
     {
@@ -205,7 +212,7 @@ bool Operators::Check_identify(Server &My_serv, std::string mode, std::string id
 
 void Operators::Set_mode(Server &My_serv, std::string channel, std::string mode, std::string identify, int Client_id)
 {
-    int channel_pos = 0;
+    int channel_pos = -1;
     if (there_is_channel(My_serv, channel, channel_pos, Client_id)
         && Check_valid_Mode(My_serv, channel, mode, Client_id)
         && Check_Channel_Op(My_serv, Get_client_nick(My_serv, Client_id, channel_pos), channel, channel_pos, Client_id))

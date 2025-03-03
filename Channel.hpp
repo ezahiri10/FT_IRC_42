@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/28 10:38:41 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 00:19:40 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class Channel {
 
         std::string getChannelPassword();
         void setPassword(std::string password);
+        std::string getPassword();
 
         std::vector<std::string> getOperators();
         void setOperators(std::vector<std::string> operators);
