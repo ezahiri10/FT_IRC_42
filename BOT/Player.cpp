@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:20:31 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/02 17:44:11 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/03 14:32:02 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void  Player::getBoard(int botfd)
     std::stringstream boardStream(board);
     while (getline(boardStream, buffer, '\n'))
     {
-        sendRequest("PRIVMSG " + this->nickname + " " + buffer, botfd);
+        sendRequest("PRIVMSG " + this->nickname + " :" + buffer, botfd);
     }
 }
 
@@ -136,9 +136,9 @@ bool Player::isWin (char XO, int botfd)
     int j = 0;
     std::string msg;
     if (XO == 'X')
-        msg = "You Win";
+        msg = " You Win";
     else if (XO == 'O')
-        msg = "You Lose";
+        msg = " You Lose";
     for (int i =0; i < 3 && j == 0; i++)
     {
         j = 0;
@@ -154,7 +154,7 @@ bool Player::isWin (char XO, int botfd)
     if (j == 1)
     {
         getBoard(botfd);
-        sendRequest("PRIVMSG " + this->nickname + " " + msg, botfd);
+        sendRequest("PRIVMSG " + this->nickname + " : " + msg, botfd);
         return true;
     }
     return (false);
@@ -166,13 +166,13 @@ bool Player::playerMove(const std::string &move, int botfd)
 
     if (move.empty() || move.size() != 1 || !std::isdigit(move[0]))
     {
-        sendRequest(("PRIVMSG " + this->nickname + " invalid move").c_str(), botfd);
+        sendRequest(("PRIVMSG " + this->nickname + " : invalid move").c_str(), botfd);
         return (false);
     }
     r = std::atoi(move.c_str()) - 1;
     if (r < 0 || s[r / 3][r % 3] == 'X' || s[r / 3][r % 3] == 'O')
     {
-        sendRequest(("PRIVMSG " + this->nickname + " invalid move").c_str(), botfd);
+        sendRequest(("PRIVMSG " + this->nickname + " : invalid move").c_str(), botfd);
         return (false);
     }
     s[r / 3][r % 3] = 'X';
@@ -188,7 +188,7 @@ bool Player::isFall(int botfd)
             if (s[i][j] >= '1' && s[i][j] <= '9')
                 return (false);
     }
-    sendRequest("PRIVMSG " + this->nickname + " Game Over", botfd);
+    sendRequest("PRIVMSG " + this->nickname + " : Game Over", botfd);
     return (true);
 }
 

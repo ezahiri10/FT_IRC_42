@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/02 15:28:05 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/03 14:29:59 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,21 @@ std::vector<Client>::iterator Server::getClientByName(std::string name){
 }
 
 std::string getPartss(std::string str, char x){
-    int pos = 0;
-    std::string namesPart;
-    std::string msgPart;
+    size_t pos = 0;
     pos = str.find(' ');
     if (x == 'N')
         return (str.substr(0,pos));
-    return (str.substr(pos));
+    str = str.substr(pos + 1);
+    pos = str.find_first_not_of(' ');
+    if (str[pos] == ':')
+    {
+        pos++;
+        return (str.substr(pos));
+    }
+    pos = str.find(' ');
+    if (pos == std::string::npos)
+        return (str);
+    return (str.substr(0, pos));
 }
 
 void Server::MsgToChannel(std::string channelName, std::string msg, int clientId){
@@ -67,19 +75,17 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId)
     if (fin != std::string::npos)
         msg = msg.substr(fin + 1);
     std::string forsend = "PRIVMSG " + clientName + " :" + msg;
-    for (size_t i = 0; i < forsend.size(); i++)
-    {
-        if (forsend[i] == '\r')
-            std::cout << "\\r";
-        else if (forsend[i] == '\n')
-            std::cout << "\\n"; 
-        else  
-            std::cout << forsend[i];
-    }
-    std::cout << std::endl;
+    // for (size_t i = 0; i < forsend.size(); i++)
+    // {
+    //     if (forsend[i] == '\r')
+    //         std::cout << "\\r";
+    //     else if (forsend[i] == '\n')
+    //         std::cout << "\\n"; 
+    //     else  
+    //         std::cout << forsend[i];
+    // }
+    // std::cout << std::endl;
     iter = getClientByName(clientName); //! iter return end
-    if (iter != this->clients.end())
-        std::cout << "ClientName: " << clientName << std::endl;
     send(iter->getFd(), forsend.c_str(), strlen(forsend.c_str()), 0); //! heap-buffer-overflow  in int id = iter->getFd(); --> send
 }
  
@@ -89,21 +95,21 @@ bool Server::messageToBot(const std::string &msgpart, int clientId) //! add func
     std::string nick;
 
     iter = getClientByName("BOT");
-    if (msgpart == " GAME" && iter != this->clients.end())
+    if (msgpart == "GAME" && iter != this->clients.end())
     {
         nick =  "GAME " + this->clients[clientId - 1].getNickname();
         if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
                 throw std::runtime_error("send field");
         return (true);
     }
-    else if (strncmp(msgpart.c_str() + 1, "MOVE", 4) == 0 && iter != this->clients.end())
+    else if (strncmp(msgpart.c_str(), "MOVE", 4) == 0 && iter != this->clients.end())
     {
-        nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(5);
+        nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(4);
         if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
                 throw std::runtime_error("send field");
         return (true);
     }
-    else if (msgpart == " QUIT" && iter != this->clients.end())
+    else if (msgpart == "QUIT" && iter != this->clients.end())
     {
         nick = "QUIT " + this->clients[clientId - 1].getNickname();
         if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)

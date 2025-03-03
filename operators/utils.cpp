@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/02/26 17:24:27 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:30:33 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ bool Server::there_is_Fd(int fd)
 std::string Server::Get_client_nick(int client_Fd, int channel_pos)
 {
     for (std::vector<Client>::iterator it = this->channels[channel_pos].getClients().begin(); it != this->channels[channel_pos].getClients().end(); it++){
-        std::cout << "client_Fd = " << client_Fd << "getFd() = "  << it->getFd() << std::endl;
         if (client_Fd == it->getFd())
             return (it->getNickname());
     }
