@@ -6,13 +6,12 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/03 00:54:11 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 01:38:36 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Operators.hpp"
 
-//KICK #&food nickname reason
 
 bool Operators::Check_kick(Server &My_serv, std::string channel, std::string client, std::string reasen, int Client_id)
 {
