@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/03 15:10:36 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/04 01:17:20 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ class Server
         void exec_cmds(std::string command, std::string arg, int i);
         void join(std::string arg, int clientId);
         bool checkChannelExist(std::string channelName);
-        void createChannel(std::string Ch_name, std::string Ch_pass, int clientId);
+        void createChannel(std::string Ch_name, int clientId);
         void addClientToChannel(std::string Ch_name, std::string Ch_pass, int clientId);
         std::vector<Channel>::iterator getChannelByName(std::string name);
         bool checkIsClientExistInChannel(std::string chName, int clientId);
@@ -60,7 +60,8 @@ class Server
         std::vector<Client>::iterator getClientByName(std::string name);
         void responseId(const std::string &str, int clientId);
         void responseFd(const std::string &str, int fd);
-        std::vector<std::string>getAllUsers(std::string channel);
+        std::string getAllUsers(std::string channel);
+        void sendReponse(std::string reponse, int fdclient);
 };
 
 
