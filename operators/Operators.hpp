@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Operators.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/03 23:45:41 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/05 02:31:58 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@
 #include <vector>
 #include <set>
 class Server;
-class Operators {
+
+class Operators 
+{
     private:
         void Set_New_topic(Server &My_serv, std::string channel, std::string topic, int channel_pos, int Client_id);
         void send_message(Server &My_serv, std::string str, int channel_pos);

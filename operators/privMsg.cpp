@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/05 00:06:20 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/05 02:34:21 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ std::string trim(const std::string & source) {
     return s;
 }
 
-bool Server::messageToBot(const std::string &msgpart, int clientId) //! add functiom to check if the message is for the bot
+bool Server::messageToBot(const std::string &msgpart, int clientId)
 {
     std::vector<Client>::iterator iter;
     std::string nick;
@@ -89,8 +89,9 @@ bool Server::messageToBot(const std::string &msgpart, int clientId) //! add func
     }
     else if (strncmp(msgpart.c_str(), "MOVE", 4) == 0 && iter != this->clients.end())
     {
+        if (msgpart.at(4) != ' ')
+            return (false);
         nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(4);
-        std::cout << "MOOOOOOOOOOOVVVVVVEEEEE" << std::endl;
         if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
                 throw std::runtime_error("send field");
         return (true);
@@ -123,9 +124,9 @@ void Server::privMsg(std::string arg, int clientId){
     std::stringstream ss(namesPart);
     std::string name;
     while(getline(ss, name, ',')){
-        if (name[0] == '#')
-            MsgToChannel(name, msgPart, clientId);
-        else
+        // if (name[0] == '#')
+        //     MsgToChannel(name, msgPart, clientId);
+        // else
             MsgToClient(name, msgPart, clientId);
     }
 }

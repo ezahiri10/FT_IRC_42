@@ -6,7 +6,14 @@ bool is_valid(std::string arg){
     return (pos == -1 && !arg.empty()) ? true : false;
 }
 
-bool checkCommand(std::string cmd){
+bool checkCommand(std::string cmd)
+{
+    if (cmd == "PRIVMSG")
+        std::cout << "trueeeeeeeeeee: " << cmd << std::endl;
+    else
+        std::cout << "fallllllseeeee: " << cmd << std::endl;
+
+        
     return (cmd == "PASS" || cmd == "NICK" || cmd == "USER"
         || cmd == "JOIN" || cmd == "KICK" || cmd == "INVITE"
         || cmd == "TOPIC" || cmd == "MODE" || cmd == "PRIVMSG") ? true: false;
