@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/02 15:28:58 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/04 23:07:02 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void Server::recevMesseages(int i)
     if (numChar == 1024)
         numChar +=-1;
     buffer[numChar] = '\0';
-    Authentication(buffer, i);
+    Parse(buffer, i);
 }
 
 Server::~Server()
@@ -123,4 +123,39 @@ void Server::creatServer()
             }
         }
     }
+}
+
+
+
+std::vector<std::string> Server::splitByCRLF(const std::string& str) 
+{
+    std::vector<std::string> result;
+    size_t start = 0, end;
+
+    while ((end = str.find("\r\n", start)) != std::string::npos) {
+        result.push_back(str.substr(start, end - start));
+        start = end + 2;
+    }
+    if (start < str.size()) {
+        result.push_back(str.substr(start));
+    }
+    return result;
+}
+
+void Server::Parse(std::string msg, int clientId)
+{   if(msg == "\n"){
+        std::cout << msg;return;
+    }
+    if (msg.size() > 512)
+    {
+        msg.resize(510);
+        msg += "\r\n";
+    }
+    if (msg.substr(msg.size() - 2) != "\r\n")
+        msg += "\r\n";
+    std::vector<std::string> tokns = splitByCRLF(msg);
+    for (size_t i = 0; i < tokns.size(); i++)
+    {
+        Authentication(tokns[i], clientId);
+    }        
 }

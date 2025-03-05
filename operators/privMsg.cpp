@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/02 18:16:57 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/05 00:06:20 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void Server::MsgToClient(std::string clientName, std::string msg, int clientId){
         send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
         std::cout << ERR_NOSUCHNICK(clientName);return;
     }
+
     iter = getClientByName(clientName);
     int id = iter->getFd();
     std::string str = RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), iter->getNickname(), msg);
@@ -71,6 +72,37 @@ std::string trim(const std::string & source) {
     s.erase(0,s.find_first_not_of(" \n\r\t"));
     s.erase(s.find_last_not_of(" \n\r\t")+1);
     return s;
+}
+
+bool Server::messageToBot(const std::string &msgpart, int clientId) //! add functiom to check if the message is for the bot
+{
+    std::vector<Client>::iterator iter;
+    std::string nick;
+
+    iter = getClientByName("BOT");
+    if (msgpart == "GAME" && iter != this->clients.end())
+    {
+        nick =  "GAME " + this->clients[clientId - 1].getNickname();
+        if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
+                throw std::runtime_error("send field");
+        return (true);
+    }
+    else if (strncmp(msgpart.c_str(), "MOVE", 4) == 0 && iter != this->clients.end())
+    {
+        nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(4);
+        std::cout << "MOOOOOOOOOOOVVVVVVEEEEE" << std::endl;
+        if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
+                throw std::runtime_error("send field");
+        return (true);
+    }
+    else if (msgpart == "QUIT" && iter != this->clients.end())
+    {
+        nick = "QUIT " + this->clients[clientId - 1].getNickname();
+        if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
+                throw std::runtime_error("send field");
+        return (true);
+    }
+    return (false);
 }
 
 void Server::privMsg(std::string arg, int clientId){
@@ -85,6 +117,9 @@ void Server::privMsg(std::string arg, int clientId){
         msgPart = this->args[2];
     else
         msgPart.erase(0,msgPart.find_first_not_of(":"));
+    if (namesPart == "BOT" && messageToBot(msgPart, clientId))
+        return ;
+    std::cout << "msgPart :" << msgPart << std::endl;
     std::stringstream ss(namesPart);
     std::string name;
     while(getline(ss, name, ',')){

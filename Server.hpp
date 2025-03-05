@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/04 01:17:20 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/04 23:11:28 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ class Server
         void acceptConnection ();
         void recevMesseages(int i);
         void ifFailed(const std::string &e);
+        std::vector<std::string> splitByCRLF(const std::string& str);
+        void Parse(std::string msg, int clientId);
+        bool messageToBot(const std::string &msgpart, int clientId);
+
+
     public :
         Server();
         std::vector<pollfd> polls;
