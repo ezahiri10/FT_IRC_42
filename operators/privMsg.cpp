@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/05 02:34:21 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/05 22:25:04 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,28 +79,22 @@ bool Server::messageToBot(const std::string &msgpart, int clientId)
     std::vector<Client>::iterator iter;
     std::string nick;
 
+    nick.clear();
     iter = getClientByName("BOT");
     if (msgpart == "GAME" && iter != this->clients.end())
-    {
         nick =  "GAME " + this->clients[clientId - 1].getNickname();
-        if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
-                throw std::runtime_error("send field");
-        return (true);
-    }
     else if (strncmp(msgpart.c_str(), "MOVE", 4) == 0 && iter != this->clients.end())
     {
         if (msgpart.at(4) != ' ')
             return (false);
         nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(4);
-        if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
-                throw std::runtime_error("send field");
-        return (true);
     }
     else if (msgpart == "QUIT" && iter != this->clients.end())
-    {
         nick = "QUIT " + this->clients[clientId - 1].getNickname();
+    if (nick.empty() == false)
+    {
         if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
-                throw std::runtime_error("send field");
+            throw std::runtime_error("send field");
         return (true);
     }
     return (false);
@@ -120,13 +114,12 @@ void Server::privMsg(std::string arg, int clientId){
         msgPart.erase(0,msgPart.find_first_not_of(":"));
     if (namesPart == "BOT" && messageToBot(msgPart, clientId))
         return ;
-    std::cout << "msgPart :" << msgPart << std::endl;
     std::stringstream ss(namesPart);
     std::string name;
     while(getline(ss, name, ',')){
-        // if (name[0] == '#')
-        //     MsgToChannel(name, msgPart, clientId);
-        // else
+        if (name[0] == '#')
+            MsgToChannel(name, msgPart, clientId);
+        else
             MsgToClient(name, msgPart, clientId);
     }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/04 23:30:02 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:11:29 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ void Bot::parseRequest(std::string msg)
     {
         ss >> tmp;
         int player = getPlayerByName(tmp);
-        if (player != -1)
+        if (player > 0)
             return ;
         Player p(tmp);
         this->players.push_back(p);
-        Player::sendRequest("PRIVMSG " + tmp + " :for palaying with me", this->botfd);
-        Player::sendRequest("PRIVMSG " + tmp + " :send : MOVE <position> to play", this->botfd);
-        Player::sendRequest("PRIVMSG " + tmp + " :send : QUIT to leave the game", this->botfd);
-        Player::sendRequest("PRIVMSG " + tmp + " :Select number 1 ~ 9 :", this->botfd);
+        Player::sendRequest("PRIVMSG " + tmp + " : for palaying with me", this->botfd);
+        Player::sendRequest("PRIVMSG " + tmp + " : send : MOVE <position> to play", this->botfd);
+        Player::sendRequest("PRIVMSG " + tmp + " : send : QUIT to leave the game", this->botfd);
+        Player::sendRequest("PRIVMSG " + tmp + " : Select number 1 ~ 9 :", this->botfd);
         p.getBoard(this->botfd);
     }
     else if (tmp == "MOVE")

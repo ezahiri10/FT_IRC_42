@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/04 23:07:02 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/05 22:10:50 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void Server::recevMesseages(int i)
     {
         std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
         close(this->polls[i].fd);
+        this->messageToBot("QUIT", i);
         this->polls.erase(this->polls.begin() + i);
         this->clients.erase(this->clients.begin() + i - 1);
         return ;
