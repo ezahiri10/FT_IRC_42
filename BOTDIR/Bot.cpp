@@ -3,16 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 01:02:43 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 21:48:41 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
 
-bool Bot::isRunning = true;
+int Bot::forclose = -1;
+void Bot::ifFailed(const std::string &e)
+{
+    close(this->botfd);
+    throw std::runtime_error(e.c_str());
+}
 
 int Bot::getPlayerByName(const std::string &name)
 {
@@ -72,9 +77,9 @@ void Bot::recvMesseages(bool welcom )
 
     int numChar = recv(this->botfd, buffer, sizeof(buffer), 0);
     if (numChar == -1)
-        throw std::runtime_error ("recv failed");
+        ifFailed ("recv failed");
     if (numChar == 0)
-        throw std::runtime_error ("connection closed");
+        ifFailed ("connection closed");
     if (numChar == BUFFER_SIZE)
         numChar = 1023;
     buffer[numChar] = '\0';
@@ -92,16 +97,16 @@ void Bot::authentification()
     add.sin_port = htons(this->port);
     add.sin_addr.s_addr = INADDR_ANY;
     if (connect(this->botfd, (sockaddr *)&add, sizeof(add)) == -1)
-        throw std::runtime_error ("connect failed");
+        ifFailed ("connect failed");
     std::string msg = "PASS " + this->serverpass + "\r\n";
     if (send(this->botfd, msg.c_str(), msg.size(), 0) == -1)
-        throw std::runtime_error ("send failed");
+        ifFailed ("send failed");
     msg = "NICK " + this->nick + "\r\n";
     if (send(this->botfd, msg.c_str(), msg.size(), 0) == -1)
-        throw std::runtime_error ("send failed");
+        ifFailed ("send failed");
     msg = "USER U U U U \r\n";
     if (send(this->botfd, msg.c_str(), msg.size(), 0) == -1)
-        throw std::runtime_error ("send failed");
+        ifFailed ("send failed");
     recvMesseages(true);
 }
 
@@ -111,11 +116,12 @@ Bot::Bot(const std::string &port, const std::string &pass)
         throw std::invalid_argument("invalid port");
     std::stringstream ss(port);
     ss >> this->port;
-    if (this->port <= 0 || this->port > 65535)
+    if (this->port <= 1023 || this->port > 65535)
         throw std::invalid_argument("invalid port");
     this->botfd = socket(AF_INET, SOCK_STREAM, 0);
     if (this->botfd == -1)
         throw std::runtime_error ("socket failed");
+    forclose = this->botfd;
     this->serverpass = pass;
     this->nick = "BOT";
     authentification();
@@ -125,7 +131,8 @@ void Bot::handler(int signum)
 {
     (void)signum;
     std::cout << "Exiting..." << std::endl;
-    exit(0);
+    close(forclose);
+    exit (0);
 }
 
 Bot::~Bot()

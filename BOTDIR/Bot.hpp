@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:26:43 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 01:04:59 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 21:44:22 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,13 @@ class Bot
         void sendRequest(std::string msg);
         int getPlayerByName(const std::string &name);
         void parseRequest(const std::string &msg);
-    
+
     public :
-        static bool isRunning;
+        static int forclose;
         Bot(const std::string &port, const std::string &pass);
         void recvMesseages(bool welcom );
         static void handler(int signum);
+        void ifFailed(const std::string &e);
         ~Bot();
 };
 

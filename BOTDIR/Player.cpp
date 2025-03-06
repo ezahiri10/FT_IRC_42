@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Player.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:20:31 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/03 14:32:02 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 21:32:54 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ void Player::sendRequest(std::string msg, int botfd)
 {
     msg += "\r\n";
     if (send(botfd, msg.c_str(), msg.size(), 0) == -1)
+    {
+        close (botfd);
         throw std::runtime_error ("send failed");
+    }
 }
 
 std::string Player::getNickname()

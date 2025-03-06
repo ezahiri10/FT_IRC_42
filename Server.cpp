@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 00:48:14 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/06 21:58:31 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@ bool Server::isstop = false;
 
 void Server::ifFailed(const std::string &e)
 {
-    close(this->servfd);
+    close (this->servfd);
+    for (size_t i = 1; i < this->polls.size(); i++)
+    {
+        close (this->polls[i].fd);
+    }
     throw std::runtime_error(e.c_str());
 }
 

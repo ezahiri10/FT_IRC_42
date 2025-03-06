@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:06:22 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 00:57:00 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 21:49:02 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main (int ac, char **av)
         if (ac != 3)
             throw std::invalid_argument("Usage: ./bot <port> <pass>");
         Bot b(av[1], av[2]);
-        while (Bot::isRunning)
+        while (true)
         {
             b.recvMesseages(false);
         }
