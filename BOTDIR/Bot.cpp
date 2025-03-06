@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 00:56:19 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 01:02:43 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int Bot::getPlayerByName(const std::string &name)
     return (-1);
 }
 
-void Bot::parseRequest(std::string msg)
+void Bot::parseRequest(const std::string& msg)
 {
     int player;
     std::string tmp;
