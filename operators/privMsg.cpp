@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 11:18:12 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/06 00:35:06 by yakazdao         ###   ########.fr       */
+/*   Created: 2025/03/06 03:16:23 by ezahiri           #+#    #+#             */
+/*   Updated: 2025/03/06 03:16:27 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ bool Server::messageToBot(const std::string &msgpart, int clientId)
         nick =  "GAME " + this->clients[clientId - 1].getNickname();
     else if (strncmp(msgpart.c_str(), "MOVE", 4) == 0 && iter != this->clients.end())
     {
-        if (msgpart.at(4) != ' ')
+        if (msgpart.size() < 5)
             return (false);
         nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(4);
     }
