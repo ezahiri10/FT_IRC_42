@@ -6,16 +6,23 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:22:18 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/02 15:48:03 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 23:27:49 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "../Server.hpp"
+#include <arpa/inet.h>
 #include <array>
+#include <sstream>
+#include <vector>
+#include <cstdlib>
+#include <iostream>
+#include <unistd.h>
+#include <sys/socket.h>
 
+#define BUFFER_SIZE 1024
 
 class Player
 {
