@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/04 20:43:38 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/06 00:42:32 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 #include "../Client.hpp"
 #include "../Channel.hpp"
 
-void Server::responseId(const std::string &str, int clientId){
-    send(this->polls[clientId].fd, str.c_str(), strlen(str.c_str()), 0);
-}
-
-void Server::responseFd(const std::string &str, int fd){
-    send(fd, str.c_str(), strlen(str.c_str()), 0);
-}
 
 std::string Server::getAllUsers(std::string channel){
     std::vector<std::string> allUsers;
@@ -65,7 +58,6 @@ void Server::createChannel(std::string Ch_name, int clientId){
         responseFd(RPL_JOINMSG(str, this->clients[clientId - 1].getIp(), Ch_name), it->getFd());
         responseFd(RPL_NAMREPLY(this->clients[clientId - 1].getNickname(), Ch_name, users), it->getFd());
     }
-    // responseId( RPL_ENDOFNAMES(this->clients[clientId - 1].getNickname(), Ch_name), clientId);
     std::cout << RPL_ENDOFNAMES(this->clients[clientId - 1].getNickname(), Ch_name);
 }
 
@@ -99,12 +91,10 @@ void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int cl
         iter->addClient(this->clients[clientId - 1]);
     std::string users = getAllUsers(Ch_name);
     for(it = iter->Channelclients.begin(); it != iter->Channelclients.end(); it++){
-        std::string str;
-        str = this->clients[clientId - 1].getNickname()+ "!" + it->getUsername();
+        std::string str = this->clients[clientId - 1].getNickname()+ "!" + it->getUsername();
         responseFd(RPL_JOINMSG(str, this->clients[clientId - 1].getIp(), Ch_name), it->getFd());
         responseFd(RPL_NAMREPLY(it->getNickname(), Ch_name, users), it->getFd());
     }
-    // responseId( RPL_ENDOFNAMES(this->clients[clientId - 1].getNickname(), Ch_name), clientId);
     std::cout << RPL_JOIN(this->clients[clientId - 1].getNickname(), Ch_name);
 }
 

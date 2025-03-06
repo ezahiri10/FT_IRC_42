@@ -16,7 +16,7 @@ bool checkCommand(std::string cmd)
 bool checkPass(std::string clientPass, std::string serverPass, int clientId, bool XRP){
     if((XRP && ((clientPass != serverPass) || !is_valid(clientPass)))){
         std::string err = ERR_PASSWDMISMATCH(clientPass);
-        send(clientId, err.c_str(), strlen(err.c_str()), 0);
+        send(clientId, err.c_str(), err.size(), 0);
         return (false);
     }
     return (true);
@@ -26,7 +26,7 @@ std::string getClientIP(int client_fd) {
     struct sockaddr_in addr;
     socklen_t addr_len = sizeof(addr);
 
-    if (getpeername(client_fd, (struct sockaddr*)&addr, &addr_len) == -1) {
+    if (getpeername(client_fd, (struct sockaddr*)&addr, &addr_len) == -1){
         std::cerr << "Error: Could not retrieve client IP!" << std::endl;
         return "UNKNOWN";
     }
@@ -47,7 +47,7 @@ void Server::pass(std::string arg, int clientId){
     bool XRP = true;
     if (iter != clients.end() && iter->clientExist){
         std::string err = ERR_ALREADYREGISTRED(iter->getNickname());
-        send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
+        send(this->polls[clientId].fd, err.c_str(), err.size(), 0);
         XRP = false;
     }
     if(checkPass(arg, this->serverpass, this->polls[clientId].fd, XRP)){
@@ -67,7 +67,7 @@ void Server::nick(std::string arg, int clientId){
     }
     else if (checkNickAvailability(arg)){
         std::string err = ERR_NICKNAMEINUSE(arg);
-        send(this->polls[clientId].fd, err.c_str(), strlen(err.c_str()), 0);
+        send(this->polls[clientId].fd, err.c_str(), err.size(), 0);
     }
     else{
         this->clients[clientId - 1].setNickname(arg);

@@ -6,13 +6,29 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:05:17 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/02/28 16:35:36 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/06 00:35:11 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Client.hpp"
 #include "../Server.hpp"
 
+void Server::responseId(const std::string &str, int clientId){
+    send(this->polls[clientId].fd, str.c_str(), str.size(), 0);
+}
+
+void Server::responseFd(const std::string &str, int fd){
+    send(fd, str.c_str(), str.size(), 0);
+}
+
+std::vector<Client>::iterator Server::getClientByName(std::string name){
+    std::vector<Client>::iterator iter;
+    for(iter = clients.begin(); iter != clients.end(); iter++){
+        if (iter->getNickname() == name)
+            return (iter);
+    }
+    return clients.end();
+}
 
 void Server::getArgs(std::string message) {
     this->args.clear();
