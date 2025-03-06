@@ -1,12 +1,12 @@
 #include "../Client.hpp"
 #include "../Server.hpp"
 
-bool is_valid(std::string arg){
+bool is_valid(std::string &arg){
     int pos = arg.find(' ');
     return (pos == -1 && !arg.empty()) ? true : false;
 }
 
-bool checkCommand(std::string cmd)
+bool checkCommand(std::string &cmd)
 {
     return (cmd == "PASS" || cmd == "NICK" || cmd == "USER"
         || cmd == "JOIN" || cmd == "KICK" || cmd == "INVITE"
@@ -41,7 +41,7 @@ std::string getArg(std::string str){
     return str;
 }
 
-void Server::pass(std::string arg, int clientId){
+void Server::pass(const std::string &arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd );
     bool XRP = true;
@@ -58,7 +58,7 @@ void Server::pass(std::string arg, int clientId){
     }
 }
 
-void Server::nick(std::string arg, int clientId){
+void Server::nick(const std::string &arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd );
     if(iter == clients.end() || !iter->has_pass){
@@ -75,7 +75,7 @@ void Server::nick(std::string arg, int clientId){
     }
 }
 
-void Server::user(std::string arg, int clientId){
+void Server::user(const std::string &arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd );
     if(iter == clients.end() || !iter->has_pass){
@@ -92,7 +92,7 @@ void Server::user(std::string arg, int clientId){
 }
 
 
-void Server::Authentication(std::string message, int clientId)
+void Server::Authentication(const std::string &message, int clientId)
 {
     if (message[0] == '\n')return;
     std::string command, arg;

@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/06 00:42:32 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:12:10 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../Channel.hpp"
 
 
-std::string Server::getAllUsers(std::string channel){
+std::string Server::getAllUsers(const std::string &channel){
     std::vector<std::string> allUsers;
     std::vector<std::string> operators;
     std::vector<Client>::iterator iter;
@@ -39,7 +39,7 @@ std::string Server::getAllUsers(std::string channel){
     return usersList;
 }
 
-void Server::createChannel(std::string Ch_name, int clientId){
+void Server::createChannel(const std::string &Ch_name, int clientId){
     Channel newChannel;
     std::vector<Client>::iterator iter;
     std::vector<Channel>::iterator chIter;
@@ -61,7 +61,7 @@ void Server::createChannel(std::string Ch_name, int clientId){
     std::cout << RPL_ENDOFNAMES(this->clients[clientId - 1].getNickname(), Ch_name);
 }
 
-std::vector<Channel>::iterator Server::getChannelByName(std::string name){
+std::vector<Channel>::iterator Server::getChannelByName(const std::string &name){
     std::vector<Channel>::iterator iter;
     for(iter = this->channels.begin(); iter != this->channels.end(); iter++){
         if(name == iter->getChannelName())
@@ -70,14 +70,14 @@ std::vector<Channel>::iterator Server::getChannelByName(std::string name){
     return iter;
 }
 
-void Server::addClientToChannel(std::string Ch_name, std::string Ch_pass, int clientId){
+void Server::addClientToChannel(const std::string &Ch_name, const std::string &Ch_pass, int clientId){
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator it;
     iter = getChannelByName(Ch_name);
     if (iter->geInvited()){
         responseId(ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
-    if (checkIsClientExistInChannel(Ch_name, clientId))return;
+    if (clientExistInChannel(Ch_name, clientId))return;
     if (iter->Channelclients.size() + 1 > iter->getChannelLimit()){
         responseId(ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
@@ -126,7 +126,7 @@ std::string getPass(std::string pass, int i) {
     return "";
 }
 
-void Server::join(std::string arg, int clientId) {
+void Server::join(const std::string &arg, int clientId) {
     std::string namePart = getParts(arg, 'N');
     std::string passPart = getParts(arg, 'O');
     std::stringstream ss(namePart);
@@ -147,7 +147,7 @@ void Server::join(std::string arg, int clientId) {
     }
 }
 
-void Server::exec_cmds(std::string command, std::string arg, int clientId){
+void Server::exec_cmds(const std::string &command, const std::string &arg, int clientId){
     Operators op;
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd);

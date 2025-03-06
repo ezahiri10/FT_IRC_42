@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 03:16:23 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 03:16:27 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 14:10:45 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ std::string getPartss(std::string str, char x){
     return (str.substr(pos));
 }
 
-void Server::MsgToChannel(std::string channelName, std::string msg, int clientId){
+void Server::MsgToChannel(const std::string &channelName, const std::string &msg, int clientId){
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator cIter;
     cIter = getClient(this->polls[clientId].fd);
@@ -31,7 +31,7 @@ void Server::MsgToChannel(std::string channelName, std::string msg, int clientId
         responseFd(ERR_NOSUCHCHANNEL(channelName), this->polls[clientId].fd);
         std::cout << ERR_NOSUCHCHANNEL(channelName);return;
     }
-    if(!checkIsClientExistInChannel(channelName, clientId)){
+    if(!clientExistInChannel(channelName, clientId)){
         responseFd(ERR_NOTONCHANNEL(cIter->getNickname(), channelName), cIter->getFd());
         return;
     }
@@ -42,7 +42,7 @@ void Server::MsgToChannel(std::string channelName, std::string msg, int clientId
     }
 }
 
-void Server::MsgToClient(std::string clientName, std::string msg, int clientId){
+void Server::MsgToClient(const std::string &clientName, const std::string &msg, int clientId){
     std::vector<Client>::iterator iter;
     if (!checkNickAvailability(clientName)){
         responseFd(ERR_NOSUCHNICK(clientName), this->polls[clientId].fd);
@@ -87,7 +87,7 @@ bool Server::messageToBot(const std::string &msgpart, int clientId)
     return (false);
 }
 
-void Server::privMsg(std::string arg, int clientId){
+void Server::privMsg(const std::string &arg, int clientId){
     if (this->args.size() < 3){
         responseFd( ERR_NEEDMOREPARAMS(arg), this->polls[clientId].fd);
         return;

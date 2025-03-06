@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/05 02:24:00 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 14:12:43 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,27 +46,27 @@ class Server
         Server(const std::string &port, const std::string &pass);
         void creatServer();
         ~Server ();
-        void Authentication(std::string message, int clientId);
+        void Authentication(const std::string &message, int clientId);
         bool checkNickAvailability(const std::string& nick);
-        void pass(std::string arg, int clientId);
-        void nick(std::string arg, int clientId);
-        void user(std::string arg, int clientId);
+        void pass(const std::string &arg, int clientId);
+        void nick(const std::string &arg, int clientId);
+        void user(const std::string &arg, int clientId);
         void getArgs(std::string message);
         std::vector<Client>::iterator getClient(int fd);
-        void exec_cmds(std::string command, std::string arg, int i);
-        void join(std::string arg, int clientId);
-        bool checkChannelExist(std::string channelName);
-        void createChannel(std::string Ch_name, int clientId);
-        void addClientToChannel(std::string Ch_name, std::string Ch_pass, int clientId);
-        std::vector<Channel>::iterator getChannelByName(std::string name);
-        bool checkIsClientExistInChannel(std::string chName, int clientId);
-        void privMsg(std::string arg, int clientId);
-        void MsgToChannel(std::string channelName, std::string msg, int clientId);
-        void MsgToClient(std::string clientName, std::string msg, int clientId);
-        std::vector<Client>::iterator getClientByName(std::string name);
+        void exec_cmds(const std::string &command, const std::string &arg, int i);
+        void join(const std::string &arg, int clientId);
+        bool checkChannelExist(const std::string &channelName);
+        void createChannel(const std::string &Ch_name, int clientId);
+        void addClientToChannel(const std::string &Ch_name, const std::string &Ch_pass, int clientId);
+        std::vector<Channel>::iterator getChannelByName(const std::string &name);
+        bool clientExistInChannel(const std::string &chName, int clientId);
+        void privMsg(const std::string &arg, int clientId);
+        void MsgToChannel(const std::string &channelName, const std::string &msg, int clientId);
+        void MsgToClient(const std::string &clientName, const std::string &msg, int clientId);
+        std::vector<Client>::iterator getClientByName(const std::string &name);
         void responseId(const std::string &str, int clientId);
         void responseFd(const std::string &str, int fd);
-        std::string getAllUsers(std::string channel);
+        std::string getAllUsers(const std::string &channel);
         void sendReponse(std::string reponse, int fdclient);
 };
 

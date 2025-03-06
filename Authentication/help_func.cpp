@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:05:17 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/06 00:35:11 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:02:19 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void Server::responseFd(const std::string &str, int fd){
     send(fd, str.c_str(), str.size(), 0);
 }
 
-std::vector<Client>::iterator Server::getClientByName(std::string name){
+std::vector<Client>::iterator Server::getClientByName(const std::string &name){
     std::vector<Client>::iterator iter;
     for(iter = clients.begin(); iter != clients.end(); iter++){
         if (iter->getNickname() == name)
@@ -61,7 +61,7 @@ std::vector<Client>::iterator Server::getClient(int fd){
     return clients.end();
 }
 
-bool Server::checkChannelExist(std::string channelName){
+bool Server::checkChannelExist(const std::string &channelName){
     std::vector<Channel>::iterator iter;
     for(iter = channels.begin(); iter != channels.end(); iter++){
         if (channelName == iter->getChannelName())
@@ -70,7 +70,7 @@ bool Server::checkChannelExist(std::string channelName){
     return (false);
 }
 
-bool Server::checkIsClientExistInChannel(std::string chName, int clientId){
+bool Server::clientExistInChannel(const std::string &chName, int clientId){
     std::vector<Channel>::iterator chIter;
     std::vector<Client>::iterator clIter;
     std::vector<Client>::iterator iter;
