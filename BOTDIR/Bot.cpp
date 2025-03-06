@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:33:21 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/03 14:11:29 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 00:56:19 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void Bot::authentification()
     recvMesseages(true);
 }
 
-Bot::Bot(const std::string &port, const std::string &pass, const std::string &nick)
+Bot::Bot(const std::string &port, const std::string &pass)
 {
     if (port.find_first_not_of("0123456789") != std::string::npos)
         throw std::invalid_argument("invalid port");
@@ -114,11 +114,10 @@ Bot::Bot(const std::string &port, const std::string &pass, const std::string &ni
     if (this->port <= 0 || this->port > 65535)
         throw std::invalid_argument("invalid port");
     this->botfd = socket(AF_INET, SOCK_STREAM, 0);
-    fcntl(this->botfd, O_NONBLOCK);
     if (this->botfd == -1)
         throw std::runtime_error ("socket failed");
     this->serverpass = pass;
-    this->nick = nick;
+    this->nick = "BOT";
     authentification();
 }
 

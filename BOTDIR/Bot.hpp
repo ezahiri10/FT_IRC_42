@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:26:43 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/01 22:25:14 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/06 00:56:36 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class Bot
     public :
         static bool isRunning;
         void parseRequest(std::string msg);
-        Bot(const std::string &port, const std::string &pass, const std::string &nick);
+        Bot(const std::string &port, const std::string &pass);
         void recvMesseages(bool welcom );
         static void handler(int signum);
         ~Bot();
