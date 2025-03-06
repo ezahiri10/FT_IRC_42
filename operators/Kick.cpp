@@ -6,32 +6,27 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/03 22:27:14 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:09:35 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Operators.hpp"
 
-
-bool Operators::Check_kick(Server &My_serv, std::string channel, std::string client, std::string reasen, int Client_id)
+bool Operators::Check_kick(Server &My_serv, Channel &channel, std::string client, std::string reasen, int Client_id)
 {
-    int channel_pos = -1;
-    if (there_is_channel(My_serv, channel, channel_pos, Client_id)
-        && already_on_channel(My_serv, Get_client_nick(My_serv, Client_id, channel_pos), channel, Client_id, channel_pos, 0)
+    if (already_on_channel(My_serv, channel, Get_client_nick(My_serv, channel, Client_id), Client_id, 0)
         && there_is_user(My_serv, client, Client_id)
-        && Check_Channel_Op(My_serv, Get_client_nick(My_serv, Client_id, channel_pos), channel, channel_pos, Client_id))
+        && Check_Channel_Op(My_serv, channel, Get_client_nick(My_serv, channel, Client_id), Client_id))
     {
-        std::string msg = ":IRCServer KICK " + channel + " " + client;
+        std::string msg = ":IRCServer KICK " + channel.getChannelName() + " " + client;
         if (reasen.empty())
             msg += POSTFIX;
         else
             msg += ": " + reasen + POSTFIX;
-        send_message(My_serv, msg, channel_pos);
-        int Client_index = Get_Channel_client_pos(My_serv, client, channel_pos);
+        send_message(channel, msg);
+        int Client_index = Get_Channel_client_pos(channel, client);
         if (Client_index != -1)
-            My_serv.channels[channel_pos].removeClient(Client_index);
-        if(My_serv.channels[channel_pos].getClients().empty())
-            My_serv.channels.erase(My_serv.channels.begin() + channel_pos);
+            channel.removeClient(Client_index);
     }
     return (true);
 }
@@ -66,7 +61,16 @@ int Operators::Kick_func(Server &My_serv, std::string arg, int Client_id)
         send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
     }
     else
-        op.Check_kick(My_serv, channel, client, reasen, Client_id);
+    {
+        int channel_pos = -1;
+        if (op.there_is_channel(My_serv, channel, channel_pos, Client_id)){
+            if (channel_pos == -1)
+                return (1);
+            op.Check_kick(My_serv, My_serv.channels[channel_pos], client, reasen, Client_id);
+            if(My_serv.channels[channel_pos].getClients().empty())
+                My_serv.channels.erase(My_serv.channels.begin() + channel_pos);
+        }
+    }
 
     return (0);
 }
