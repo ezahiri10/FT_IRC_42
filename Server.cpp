@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/07 01:37:08 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 01:39:40 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,6 @@ void Server::recevMesseages(int i)
     Parse(buffer, i);
 }
 
-Server::~Server()
-{
-    for (size_t i = 0;i < this->polls.size(); i++)
-    {
-        close (this->polls[i].fd);
-    }
-}
 
 void Server::handler(int sig)
 {
