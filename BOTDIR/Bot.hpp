@@ -3,20 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:26:43 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 21:44:22 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/06 23:09:13 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BOT_HPP
 #define BOT_HPP
 
-#include <arpa/inet.h>
-#include "../Server.hpp"
-#include <array>
-#include <time.h>
 #include "Player.hpp"
 
 class Bot

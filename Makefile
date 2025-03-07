@@ -19,6 +19,8 @@ BOTHPP = BOTDIR/Bot.hpp BOTDIR/Player.hpp
 
 HEADER = Client.hpp Replies.hpp Server.hpp 
 
+BOTOBJ = $(BOTCPP:.cpp=.o)
+
 OBJ = $(SRC:.cpp=.o)
 
 NAME = ircserv
@@ -30,7 +32,7 @@ all: $(BOT) $(NAME)
 BOTDIR/%.o: BOTDIR/%.cpp $(BOTHPP)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BOT): $(BOTCPP)
+$(BOT): $(BOTOBJ)
 	$(CC) $(CFLAGS) $(BOTCPP) -o $(BOT)
 
 $(NAME): $(OBJ)
@@ -40,7 +42,7 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(BOT)
+	rm -f $(OBJ) $(BOTOBJ)
 
 fclean: clean
 	rm -f $(NAME) $(BOT)
