@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/06 19:40:15 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 01:33:53 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Server;
 class Operators 
 {
     private:
-        bool there_is_user(Server &My_serv, std::string client, int Client_id);
+        bool there_is_user(Server &My_serv, std::string client_nick, int Client_id);
         int Get_Channel_client_pos(Channel &channel, const std::string& nickname);
         std::string Get_client_nick(Server &My_serv, Channel &channel, int clientId);
         void Set_New_topic(Server &My_serv, Channel  &channel, std::string topic, int Client_id);

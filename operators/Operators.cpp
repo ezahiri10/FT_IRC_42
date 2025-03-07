@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/06 19:22:08 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 01:35:41 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void send_message(Channel &channel, std::string str)
 std::string Operators::Get_client_nick(Server &My_serv, Channel &channel, int clientId)
 {
     for (std::vector<Client>::iterator it = channel.getClients().begin(); it != channel.getClients().end(); it++){
-        if (My_serv.polls[clientId].fd == it->getFd())
+        if (My_serv.getPolls()[clientId].fd == it->getFd())
             return (it->getNickname());
     }
     return ("");
@@ -42,16 +42,17 @@ std::string Operators::Get_client_nick(Server &My_serv, Channel &channel, int cl
 
 bool Operators::there_is_channel(Server &My_serv, std::string channel, int &channel_pos, int clientId)
 {
-    for (std::vector<Channel>::iterator it = My_serv.channels.begin(); it != My_serv.channels.end(); it++)
+    std::vector<Channel> Channels = My_serv.getChannels();
+    for (std::vector<Channel>::iterator it = Channels.begin(); it != Channels.end(); it++)
     {
         if (channel == it->getChannelName())
         {
-            channel_pos = std::distance(My_serv.channels.begin(), it);
+            channel_pos = std::distance(Channels.begin(), it);
             return (true);
         }
     }
     std::string str = ERR_NOSUCHCHANNEL(channel);
-    send(My_serv.polls[clientId].fd, str.c_str(), str.length(), 0);
+    send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
@@ -65,7 +66,7 @@ bool Operators::already_on_channel(Server &My_serv, Channel &channel, std::strin
             if (check == 1)
             {
                 std::string str = ERR_USERONCHANNEL(client, client, channel.getChannelName());
-                send(My_serv.polls[clientId].fd, str.c_str(), str.length(), 0);
+                send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
             }
             return (true);
         }
@@ -73,7 +74,7 @@ bool Operators::already_on_channel(Server &My_serv, Channel &channel, std::strin
     if (!check)
     {
         std::string str = ERR_USERNOTINCHANNEL(client, channel.getChannelName());
-        send(My_serv.polls[clientId].fd, str.c_str(), str.length(), 0);
+        send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
     }
     return (false);
 }
@@ -90,14 +91,15 @@ int Operators::Get_Channel_client_pos(Channel &channel, const std::string& nickn
     return -1; 
 }
 
-bool Operators::there_is_user(Server &My_serv, std::string client, int clientId)
+bool Operators::there_is_user(Server &My_serv, std::string client_nick, int clientId)
 {
-    for (std::vector<Client>::iterator it = My_serv.clients.begin(); it < My_serv.clients.end(); it++) {
-        if (client == it->getNickname())
+    std::vector<Client> client = My_serv.getClients();
+    for (std::vector<Client>::iterator it = client.begin(); it < client.end(); it++) {
+        if (client_nick == it->getNickname())
             return true;
     }
-    std::string str = ERR_NOSUCHNICK(client);
-    send(My_serv.polls[clientId].fd, str.c_str(), str.length(), 0);
+    std::string str = ERR_NOSUCHNICK(client_nick);
+    send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
     return false;
 }
 
@@ -112,6 +114,6 @@ bool Operators::Check_Channel_Op(Server &My_serv, Channel &channel, std::string 
             return (true);
     }
     std::string str = ERR_CHANOPRIVSNEEDED(channel.getChannelName());
-    send(My_serv.polls[clientId].fd, str.c_str(), str.length(), 0);
+    send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
     return (false);
 }

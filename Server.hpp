@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/06 14:12:43 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/06 22:16:01 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@ class Server
     private :
         int servfd;
         int port;
+        std::vector<pollfd> polls;
+        std::vector<Client> clients;
+        std::vector<Channel> channels;
+        std::vector<std::string> args;
         std::string serverpass;
 
         void acceptConnection ();
@@ -36,16 +40,17 @@ class Server
 
 
     public :
-        Server();
-        std::vector<pollfd> polls;
-        std::vector<Client> clients;
-        std::vector<Channel> channels;
         static bool isstop;
-        std::vector<std::string>args;
         static void handler(int sig);
+
+        Server();
         Server(const std::string &port, const std::string &pass);
+
+        std::vector<pollfd> getPolls () const;
+        std::vector<Client> getClients () const;
+        std::vector<Channel> getChannels() const;
+        std::vector<std::string> getArgs () const ;
         void creatServer();
-        ~Server ();
         void Authentication(const std::string &message, int clientId);
         bool checkNickAvailability(const std::string& nick);
         void pass(const std::string &arg, int clientId);
@@ -68,6 +73,7 @@ class Server
         void responseFd(const std::string &str, int fd);
         std::string getAllUsers(const std::string &channel);
         void sendReponse(std::string reponse, int fdclient);
+        ~Server ();
 };
 
 

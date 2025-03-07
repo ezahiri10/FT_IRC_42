@@ -6,17 +6,21 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/06 19:39:41 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 01:31:01 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Operators.hpp"
 
+
 int ADD_client(Server &My_serv, Channel &channel, std::string nick_name, std::string invit_client, int Client_id)
 {
-    Client* tmp = NULL;
+    Client* tmp = NULL
+    ;
+    std::vector<Client> client = My_serv.getClients();
 
-    for (std::vector<Client>::iterator it = My_serv.clients.begin(); it != My_serv.clients.end(); it++){
+
+    for (std::vector<Client>::iterator it = client.begin(); it != client.end(); it++){
         if (invit_client == it->getNickname())
         {
             tmp = &(*it);
@@ -32,7 +36,7 @@ int ADD_client(Server &My_serv, Channel &channel, std::string nick_name, std::st
         return (true);
     }
     str = ERR_NOSUCHNICK(invit_client);
-    send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+    send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
@@ -54,16 +58,16 @@ int Operators::Invite_func(Server &My_serv, std::string arg, int Client_id)
     std::string channel;
     std::string invit_client;
 
-    for (size_t i = 0; i < My_serv.args.size(); i++){
+    for (size_t i = 0; i < My_serv.getArgs().size(); i++){
         if (i == 1)
-            invit_client = My_serv.args[1];
+            invit_client = My_serv.getArgs()[1];
         if (i == 2)
-            channel = My_serv.args[2];
+            channel = My_serv.getArgs()[2];
     }
-    if (My_serv.channels.empty())
+    if (My_serv.getChannels().empty())
     {
         std::string str = ERR_NOSUCHCHANNEL(channel);
-        send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+        send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
         return (0);
     }
     else
@@ -71,14 +75,14 @@ int Operators::Invite_func(Server &My_serv, std::string arg, int Client_id)
         if (invit_client.empty() || channel.empty())
         {
             std::string str = ERR_NEEDMOREPARAMS(arg);
-            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+            send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
             return (false);
         }
         int channel_pos = -1;
         if (op.there_is_channel(My_serv, channel, channel_pos, Client_id)){
             if (channel_pos == -1)
                 return (1);
-            op.Invite_client(My_serv, My_serv.channels[channel_pos], invit_client, Client_id);
+            op.Invite_client(My_serv, My_serv.getChannels()[channel_pos], invit_client, Client_id);
         }
     }
     return 0;

@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/06 20:59:13 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/06 22:22:52 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool ft_isdigits(Server &My_serv, Channel &channel, std::string identify, std::s
         if (!isdigit(identify[i]))
         {
             std::string str = ERR_INVALIDKEY(client, channel.getChannelName());
-            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+            send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
             return (false);
         }
     }
@@ -37,7 +37,7 @@ bool Check_valid_Mode(Server &My_serv, std::string client, std::string mode, int
     if (valid_modes.find(mode) != valid_modes.end())
         return true;
     std::string str = ERR_UMODEUNKNOWNFLAG(client);
-    send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+    send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
@@ -115,7 +115,7 @@ void Operators::Add_Remove_PASS(Server &My_serv, Channel &channel, std::string m
         if (pass.empty())
         {
             std::string str = ERR_INVALIDMODEPARM(channel.getChannelName(), mode);
-            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+            send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
         }
         else{
             channel.setPassword(pass);
@@ -151,7 +151,7 @@ void Operators::Add_Remove_OP(Server &My_serv, Channel &channel, std::string mod
 
 
 bool Operators::Check_identify(Server &My_serv, Channel &channel, std::string mode, std::string identify, int Client_id){
-    if (My_serv.channels.empty())
+    if (My_serv.getChannels().empty())
         return (false);
 
     if (mode == "+o" || mode == "-o")
@@ -159,7 +159,7 @@ bool Operators::Check_identify(Server &My_serv, Channel &channel, std::string mo
         if (identify.empty())
         {
             std::string str = ERR_INVALIDMODEPARM(channel.getChannelName(), mode);
-            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+            send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
         }
         else{
             std::string op = identify;
@@ -184,7 +184,7 @@ bool Operators::Check_identify(Server &My_serv, Channel &channel, std::string mo
         if (identify.empty())
         {
             std::string str = ERR_INVALIDMODEPARM(channel.getChannelName(), mode);
-            send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+            send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
         }
         else if (ft_isdigits(My_serv, channel, identify, Get_client_nick(My_serv, channel, Client_id), Client_id))
         {
@@ -225,13 +225,13 @@ int  Operators::Mode_func(Server &My_serv, std::string arg, int Client_id)
     std::string identify_Part;
 
     (void)arg;
-    for (size_t i = 0; i < My_serv.args.size(); i++){
+    for (size_t i = 0; i < My_serv.getArgs().size(); i++){
         if (i == 1)
-            namePart = My_serv.args[1];
+            namePart = My_serv.getArgs()[1];
         if (i == 2)
-            moodPart = My_serv.args[2];
+            moodPart = My_serv.getArgs()[2];
         if (i == 3)
-            identify_Part = My_serv.args[3];
+            identify_Part = My_serv.getArgs()[3];
     }
 
     std::stringstream ss(namePart);
@@ -245,8 +245,8 @@ int  Operators::Mode_func(Server &My_serv, std::string arg, int Client_id)
             int channel_pos = 0;
             if (op.there_is_channel(My_serv, channel, channel_pos, Client_id))
             {
-                std::string str = ERR_INVALIDMODEPARM(My_serv.channels[channel_pos].getChannelName(), mode);
-                send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+                std::string str = ERR_INVALIDMODEPARM(My_serv.getChannels()[channel_pos].getChannelName(), mode);
+                send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
             }
         }
         else
@@ -255,7 +255,7 @@ int  Operators::Mode_func(Server &My_serv, std::string arg, int Client_id)
             if (op.there_is_channel(My_serv, channel, channel_pos, Client_id)){
                 if (channel_pos == -1)
                     return (1);
-                op.Set_mode(My_serv, My_serv.channels[channel_pos], mode, identify, Client_id);
+                op.Set_mode(My_serv, My_serv.getChannels()[channel_pos], mode, identify, Client_id);
             }
         }
         i++;

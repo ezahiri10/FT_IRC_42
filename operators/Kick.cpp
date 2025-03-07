@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/06 17:09:35 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/06 22:19:49 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,31 @@ bool Operators::Check_kick(Server &My_serv, Channel &channel, std::string client
 int Operators::Kick_func(Server &My_serv, std::string arg, int Client_id)
 {
     Operators op;
-    if (My_serv.polls.empty())
+    if (My_serv.getPolls().empty())
         return (false);
 
     std::string client;
     std::string channel;
     std::string reasen;
 
-    for (size_t i = 0; i < My_serv.args.size(); i++){
+    for (size_t i = 0; i < My_serv.getArgs().size(); i++){
         if (i == 1)
-            channel = My_serv.args[1];
+            channel = My_serv.getArgs()[1];
         if (i == 2)
-            client = My_serv.args[2];
+            client = My_serv.getArgs()[2];
         if (i == 3)
-            reasen = My_serv.args[3];
+            reasen = My_serv.getArgs()[3];
     }
-    if (My_serv.channels.empty())
+    if (My_serv.getChannels().empty())
     {
         std::string str = ERR_NOSUCHCHANNEL(channel);
-        send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+        send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
         return (0);
     }
     else if (channel.empty() || client.empty())
     {
         std::string str = ERR_NEEDMOREPARAMS(arg);
-        send(My_serv.polls[Client_id].fd, str.c_str(), str.length(), 0);
+        send(My_serv.getPolls()[Client_id].fd, str.c_str(), str.length(), 0);
     }
     else
     {
@@ -66,9 +66,9 @@ int Operators::Kick_func(Server &My_serv, std::string arg, int Client_id)
         if (op.there_is_channel(My_serv, channel, channel_pos, Client_id)){
             if (channel_pos == -1)
                 return (1);
-            op.Check_kick(My_serv, My_serv.channels[channel_pos], client, reasen, Client_id);
-            if(My_serv.channels[channel_pos].getClients().empty())
-                My_serv.channels.erase(My_serv.channels.begin() + channel_pos);
+            op.Check_kick(My_serv, My_serv.getChannels()[channel_pos], client, reasen, Client_id);
+            if(My_serv.getChannels()[channel_pos].getClients().empty())
+                My_serv.getChannels().erase(My_serv.getChannels().begin() + channel_pos);
         }
     }
 

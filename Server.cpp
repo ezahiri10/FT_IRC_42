@@ -6,12 +6,13 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 21:58:31 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 01:37:08 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Server.hpp"
+
 bool Server::isstop = false;
 
 void Server::ifFailed(const std::string &e)
@@ -131,6 +132,25 @@ void Server::creatServer()
     }
 }
 
+std::vector<pollfd> Server::getPolls () const
+{
+    return (this->polls);
+}
+
+std::vector<Client> Server::getClients () const
+{
+    return (this->clients);
+}
+
+std::vector<Channel> Server::getChannels() const
+{
+    return (this->channels);
+}
+
+std::vector<std::string> Server::getArgs () const 
+{
+    return (this->args);
+}
 
 
 std::vector<std::string> Server::splitByCRLF(const std::string& str) 
@@ -164,4 +184,12 @@ void Server::Parse(std::string msg, int clientId)
     {
         Authentication(tokns[i], clientId);
     }        
+}
+
+Server::~Server()
+{
+    for (size_t i = 0;i < this->polls.size(); i++)
+    {
+        close (this->polls[i].fd);
+    }
 }
