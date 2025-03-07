@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 03:16:23 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 14:10:45 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/07 05:00:26 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,7 @@ bool Server::messageToBot(const std::string &msgpart, int clientId)
         nick = "QUIT " + this->clients[clientId - 1].getNickname();
     if (nick.empty() == false)
     {
-        if (send (iter->getFd(), nick.c_str(), nick.size(), 0) < 0)
-            throw std::runtime_error("send field");
+        responseFd(nick, iter->getFd());
         return (true);
     }
     return (false);

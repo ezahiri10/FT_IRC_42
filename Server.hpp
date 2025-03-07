@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/07 01:39:15 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 04:11:20 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class Server
         std::vector<std::string> splitByCRLF(const std::string& str);
         void Parse(std::string msg, int clientId);
         bool messageToBot(const std::string &msgpart, int clientId);
+        void removeUserFromChienl(const std::string &name);
 
 
     public :

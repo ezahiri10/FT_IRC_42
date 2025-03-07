@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Operators.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/07 01:33:53 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 04:07:40 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ class Operators
 {
     private:
         bool there_is_user(Server &My_serv, std::string client_nick, int Client_id);
-        int Get_Channel_client_pos(Channel &channel, const std::string& nickname);
         std::string Get_client_nick(Server &My_serv, Channel &channel, int clientId);
         void Set_New_topic(Server &My_serv, Channel  &channel, std::string topic, int Client_id);
         bool Check_Channel_Op(Server &My_serv, Channel &channel, std::string client_nick, int clientId);
@@ -36,7 +35,7 @@ class Operators
         bool Check_identify(Server &My_serv, Channel &channel, std::string mode, std::string identify, int Client_id);
     public:
         Operators();
-        ~Operators();
+        static int Get_Channel_client_pos(Channel &channel, const std::string& nickname);
         static int Mode_func(Server &My_serv, std::string arg, int Client_id);
         static int Invite_func(Server &My_serv, std::string arg, int Client_id);
         static int Kick_func(Server &My_serv, std::string arg, int Client_id);
@@ -46,6 +45,7 @@ class Operators
         int Invite_client(Server &My_serv, Channel &channel, std::string invit_client, int Client_id);
         void Set_mode(Server &My_serv, Channel &channel, std::string mode, std::string identify, int Client_id);
         bool Check_kick(Server &My_serv, Channel &channel, std::string client, std::string reasen, int Client_id);
+        ~Operators();
 };
 void send_message(Channel &channel, std::string str);
 

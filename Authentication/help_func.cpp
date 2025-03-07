@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   help_func.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:05:17 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/06 14:02:19 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/07 04:54:13 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ std::vector<Client>::iterator Server::getClientByName(const std::string &name){
     return clients.end();
 }
 
-void Server::getArgs(std::string message) {
+void Server::getArgs(std::string message) 
+{
     this->args.clear();
     size_t endPos = message.find_last_not_of("\r\n");
-    if (endPos != std::string::npos) {
+    if (endPos != std::string::npos)
+    {
         message.erase(endPos + 1);
     }
     std::stringstream ss(message);

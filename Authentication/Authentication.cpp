@@ -94,17 +94,21 @@ void Server::user(const std::string &arg, int clientId){
 
 void Server::Authentication(const std::string &message, int clientId)
 {
-    if (message[0] == '\n')return;
     std::string command, arg;
+
+    if (message[0] == '\n')
+        return;
     getArgs(message);
     arg = getArg(message);
     if (!this->args.empty())
     command = this->args[0];
-    if (this->args.size() < 2){
-        responseId(ERR_NEEDMOREPARAMS(command), clientId);return;
-    }
     if(!checkCommand(command)){
-        responseId(ERR_UNKNOWNCOMMAND(command), clientId);return;
+        responseId(ERR_UNKNOWNCOMMAND(command), clientId);
+        return ;
+    }
+    if (this->args.size() < 2){
+        responseId(ERR_NEEDMOREPARAMS(command), clientId);
+        return ;
     }
     else if (command == "PASS")
         pass(arg, clientId);

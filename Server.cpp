@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/07 01:39:40 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/07 04:51:56 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,22 @@ void Server::acceptConnection()
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
 }
 
+void Server::removeUserFromChienl(const std::string &name)
+{
+    int pos;
+
+    for (size_t i = 0; i < this->channels.size(); i++)
+    {
+        pos = Operators::Get_Channel_client_pos(this->channels[i], name);
+        if (pos != -1)
+        {
+            std::string msg = RPL_PRIVMSG(name, this->channels[i].getChannelName(), "QUIT");
+            responseFd(msg, this->polls[pos].fd);
+            this->channels[i].removeClient(pos);   
+        }
+    }
+}
+
 void Server::recevMesseages(int i)
 {
     char buffer[BUFFER_SIZE];
@@ -64,16 +80,14 @@ void Server::recevMesseages(int i)
     if (isstop == true)
         return ;
     int numChar = recv(this->polls[i].fd, buffer, sizeof(buffer), 0);
-    if (numChar < 0)
-        throw std::runtime_error ("recv failed");
-    if (numChar == 0)
+    if (numChar <= 0)
     {
         std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
-        close(this->polls[i].fd);
         if (this->clients[i - 1].getNickname() != "BOT")
             this->messageToBot("QUIT", i);
-        this->polls.erase(this->polls.begin() + i);
         this->clients.erase(this->clients.begin() + i - 1);
+        close(this->polls[i].fd);
+        this->polls.erase(this->polls.begin() + i);
         return ;
     }
     if (numChar == 1024)
@@ -118,9 +132,7 @@ void Server::creatServer()
         for (size_t i = 1; i < this->polls.size(); i++)
         {
             if (this->polls[i].revents & POLLIN)
-            {
                 recevMesseages(i);
-            }
         }
     }
 }
@@ -176,7 +188,7 @@ void Server::Parse(std::string msg, int clientId)
     for (size_t i = 0; i < tokns.size(); i++)
     {
         Authentication(tokns[i], clientId);
-    }        
+    }
 }
 
 Server::~Server()
