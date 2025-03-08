@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/07 01:21:51 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 03:24:01 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void Server::addClientToChannel(const std::string &Ch_name, const std::string &C
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator it;
     iter = getChannelByName(Ch_name);
-    if (iter->geInvited()){
+    if (iter->getInvited()){
         responseId(ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
     if (clientExistInChannel(Ch_name, clientId))return;

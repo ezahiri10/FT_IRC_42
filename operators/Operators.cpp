@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/07 01:35:41 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 20:55:08 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,71 @@
 
 
 Operators::Operators(){
-    
+    this->Myserv = NULL;
 }
 Operators::~Operators(){
     
 }
-
-void send_message(Channel &channel, std::string str)
+Server *Operators::getMyserv() const
 {
+    return (this->Myserv);
+}
+void Operators::setMyserv(Server &server)
+{
+    this->Myserv = &server;
+}
+
+std::string getUsers(Channel &channel){
+    std::vector<std::string> allUsers;
+    std::vector<std::string> operators;
+    std::vector<Client>::iterator iter;
+    std::vector<Client> clients = channel.getClients();
+    std::string name;
+    operators = channel.getOperators();
+    for(iter = clients.begin(); iter != clients.end(); iter++){
+        for(size_t i = 0; i < operators.size(); i++){
+            if (iter->getNickname() == operators[i])
+                name = "@"+iter->getNickname();
+            else
+                name = iter->getNickname();
+        }
+        allUsers.push_back(name);
+    }
+    std::string usersList = "";
+    for (size_t i = 0; i < allUsers.size(); ++i) {
+        usersList += allUsers[i];
+        if (i < allUsers.size() - 1) usersList += " ";
+    }
+    return usersList;
+}
+
+void Operators::send_message(Channel &channel, std::string str)
+{
+    std::string users = getUsers(channel);
+    std::string new_str;
     std::vector<Client>::iterator it;
     std::vector<Client> clients_it = channel.getClients();
     for (it = clients_it.begin(); it != clients_it.end(); it++){
-        int fd = (*it).getFd();
-        send(fd, str.c_str(), str.length(), 0);
+        send(it->getFd(), str.c_str(), str.length(), 0);
+        new_str = RPL_NAMREPLY(it->getNickname(), channel.getChannelName(), users);
+        std::cout << "New_str = " << new_str << std::endl;
+        send(it->getFd(), new_str.c_str(), new_str.length(), 0);
     }
 }
 
 
-std::string Operators::Get_client_nick(Server &My_serv, Channel &channel, int clientId)
+std::string Operators::Get_client_nick(Channel &channel, int clientId)
 {
     for (std::vector<Client>::iterator it = channel.getClients().begin(); it != channel.getClients().end(); it++){
-        if (My_serv.getPolls()[clientId].fd == it->getFd())
+        if (getMyserv()->polls[clientId].fd == it->getFd())
             return (it->getNickname());
     }
     return ("");
 }
 
-bool Operators::there_is_channel(Server &My_serv, std::string channel, int &channel_pos, int clientId)
+bool Operators::there_is_channel(std::string channel, int &channel_pos, int clientId)
 {
-    std::vector<Channel> Channels = My_serv.getChannels();
+    std::vector<Channel> Channels = getMyserv()->channels;
     for (std::vector<Channel>::iterator it = Channels.begin(); it != Channels.end(); it++)
     {
         if (channel == it->getChannelName())
@@ -52,11 +88,11 @@ bool Operators::there_is_channel(Server &My_serv, std::string channel, int &chan
         }
     }
     std::string str = ERR_NOSUCHCHANNEL(channel);
-    send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
+    send(getMyserv()->polls[clientId].fd, str.c_str(), str.length(), 0);
     return (false);
 }
 
-bool Operators::already_on_channel(Server &My_serv, Channel &channel, std::string client, int clientId, int check)
+bool Operators::already_on_channel(Channel &channel, std::string client, int clientId, int check)
 {
     std::vector<Client>::iterator it;
     std::vector<Client> clients_it = channel.getClients();
@@ -66,7 +102,7 @@ bool Operators::already_on_channel(Server &My_serv, Channel &channel, std::strin
             if (check == 1)
             {
                 std::string str = ERR_USERONCHANNEL(client, client, channel.getChannelName());
-                send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
+                send(getMyserv()->polls[clientId].fd, str.c_str(), str.length(), 0);
             }
             return (true);
         }
@@ -74,7 +110,7 @@ bool Operators::already_on_channel(Server &My_serv, Channel &channel, std::strin
     if (!check)
     {
         std::string str = ERR_USERNOTINCHANNEL(client, channel.getChannelName());
-        send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
+        send(getMyserv()->polls[clientId].fd, str.c_str(), str.length(), 0);
     }
     return (false);
 }
@@ -91,19 +127,19 @@ int Operators::Get_Channel_client_pos(Channel &channel, const std::string& nickn
     return -1; 
 }
 
-bool Operators::there_is_user(Server &My_serv, std::string client_nick, int clientId)
+bool Operators::there_is_user(std::string client_nick, int clientId)
 {
-    std::vector<Client> client = My_serv.getClients();
+    std::vector<Client> client = getMyserv()->clients;
     for (std::vector<Client>::iterator it = client.begin(); it < client.end(); it++) {
         if (client_nick == it->getNickname())
             return true;
     }
     std::string str = ERR_NOSUCHNICK(client_nick);
-    send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
+    send(getMyserv()->polls[clientId].fd, str.c_str(), str.length(), 0);
     return false;
 }
 
-bool Operators::Check_Channel_Op(Server &My_serv, Channel &channel, std::string client_nick, int clientId)
+bool Operators::Check_Channel_Op(Channel &channel, std::string client_nick, int clientId)
 {
     std::vector<std::string>::iterator it;
     std::vector<std::string> operators = channel.getOperators();
@@ -114,6 +150,6 @@ bool Operators::Check_Channel_Op(Server &My_serv, Channel &channel, std::string 
             return (true);
     }
     std::string str = ERR_CHANOPRIVSNEEDED(channel.getChannelName());
-    send(My_serv.getPolls()[clientId].fd, str.c_str(), str.length(), 0);
+    send(getMyserv()->polls[clientId].fd, str.c_str(), str.length(), 0);
     return (false);
 }

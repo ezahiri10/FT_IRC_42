@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/07 01:39:40 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:39:24 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,24 @@ void Server::acceptConnection()
     std::cout << "Client " << clienfd <<  " is connected" << std::endl;
 }
 
+void Server::removeUserFromChienl(const std::string &name)
+{
+    std::string msg;
+    int pos;
+
+    for (size_t i = 0; i < this->channels.size(); i++)
+    {
+        pos = Operators::Get_Channel_client_pos(this->channels[i], name);
+        if (pos != -1)
+        {
+            msg = RPL_PRIVMSG(name, this->channels[i].getChannelName(), "QUIT");
+            responseFd(msg, this->channels[i].Channelclients[pos].getFd());
+            this->channels[i].removeClient(pos); 
+        }
+    }
+}
+
+
 void Server::recevMesseages(int i)
 {
     char buffer[BUFFER_SIZE];
@@ -64,16 +82,17 @@ void Server::recevMesseages(int i)
     if (isstop == true)
         return ;
     int numChar = recv(this->polls[i].fd, buffer, sizeof(buffer), 0);
-    if (numChar < 0)
-        throw std::runtime_error ("recv failed");
-    if (numChar == 0)
+    if (numChar <= 0)
     {
         std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
-        close(this->polls[i].fd);
         if (this->clients[i - 1].getNickname() != "BOT")
+        {
             this->messageToBot("QUIT", i);
-        this->polls.erase(this->polls.begin() + i);
+        }
         this->clients.erase(this->clients.begin() + i - 1);
+        removeUserFromChienl (this->clients[i - 1].getNickname());
+        close(this->polls[i].fd);
+        this->polls.erase(this->polls.begin() + i);
         return ;
     }
     if (numChar == 1024)
@@ -81,6 +100,7 @@ void Server::recevMesseages(int i)
     buffer[numChar] = '\0';
     Parse(buffer, i);
 }
+
 
 
 void Server::handler(int sig)
@@ -124,27 +144,6 @@ void Server::creatServer()
         }
     }
 }
-
-std::vector<pollfd> Server::getPolls () const
-{
-    return (this->polls);
-}
-
-std::vector<Client> Server::getClients () const
-{
-    return (this->clients);
-}
-
-std::vector<Channel> Server::getChannels() const
-{
-    return (this->channels);
-}
-
-std::vector<std::string> Server::getArgs () const 
-{
-    return (this->args);
-}
-
 
 std::vector<std::string> Server::splitByCRLF(const std::string& str) 
 {

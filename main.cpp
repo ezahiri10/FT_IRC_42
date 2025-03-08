@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:06:22 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/06 21:51:31 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:05:35 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int main (int ac , char **av)
     atexit(f);
     try
     {
+        signal(SIGPIPE, SIG_IGN);
         signal(SIGQUIT, Server::handler);
         signal(SIGINT, Server::handler);
         if (ac != 3)

@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/07 01:39:15 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 02:56:33 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,6 @@ class Server
     private :
         int servfd;
         int port;
-        std::vector<pollfd> polls;
-        std::vector<Client> clients;
-        std::vector<Channel> channels;
-        std::vector<std::string> args;
         std::string serverpass;
 
         void acceptConnection ();
@@ -37,19 +33,21 @@ class Server
         std::vector<std::string> splitByCRLF(const std::string& str);
         void Parse(std::string msg, int clientId);
         bool messageToBot(const std::string &msgpart, int clientId);
+        void removeUserFromChienl(const std::string &name);
 
 
     public :
+        std::vector<pollfd> polls;
+        std::vector<Client> clients;
+        std::vector<Channel> channels;
+        std::vector<std::string> args;
+
         static bool isstop;
         static void handler(int sig);
 
         Server();
         Server(const std::string &port, const std::string &pass);
 
-        std::vector<pollfd> getPolls () const;
-        std::vector<Client> getClients () const;
-        std::vector<Channel> getChannels() const;
-        std::vector<std::string> getArgs () const ;
         void creatServer();
         void Authentication(const std::string &message, int clientId);
         bool checkNickAvailability(const std::string& nick);
