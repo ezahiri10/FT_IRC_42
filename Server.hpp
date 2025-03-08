@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/07 04:11:20 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/08 21:35:04 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,6 @@ class Server
     private :
         int servfd;
         int port;
-        std::vector<pollfd> polls;
-        std::vector<Client> clients;
-        std::vector<Channel> channels;
-        std::vector<std::string> args;
         std::string serverpass;
 
         void acceptConnection ();
@@ -41,16 +37,17 @@ class Server
 
 
     public :
+        std::vector<pollfd> polls;
+        std::vector<Client> clients;
+        std::vector<Channel> channels;
+        std::vector<std::string> args;
+
         static bool isstop;
         static void handler(int sig);
 
         Server();
         Server(const std::string &port, const std::string &pass);
 
-        std::vector<pollfd> getPolls () const;
-        std::vector<Client> getClients () const;
-        std::vector<Channel> getChannels() const;
-        std::vector<std::string> getArgs () const ;
         void creatServer();
         void Authentication(const std::string &message, int clientId);
         bool checkNickAvailability(const std::string& nick);
@@ -65,6 +62,7 @@ class Server
         void createChannel(const std::string &Ch_name, int clientId);
         void addClientToChannel(const std::string &Ch_name, const std::string &Ch_pass, int clientId);
         std::vector<Channel>::iterator getChannelByName(const std::string &name);
+        Channel getChannel(std::string name);
         bool clientExistInChannel(const std::string &chName, int clientId);
         void privMsg(const std::string &arg, int clientId);
         void MsgToChannel(const std::string &channelName, const std::string &msg, int clientId);

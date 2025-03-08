@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/07 01:21:51 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 21:41:47 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,27 @@ std::vector<Channel>::iterator Server::getChannelByName(const std::string &name)
     return iter;
 }
 
+Channel Server::getChannel(std::string name){
+    std::vector<Channel>::iterator iter;
+    Channel target;
+    for(size_t i = 0; i < this->channels.size(); i++){
+        if (this->channels[i].getChannelName() == name){
+            target = this->channels[i];
+        }
+    }
+    return (target);
+}
+
 void Server::addClientToChannel(const std::string &Ch_name, const std::string &Ch_pass, int clientId){
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator it;
     iter = getChannelByName(Ch_name);
-    if (iter->geInvited()){
+    Channel tmp = getChannel(Ch_name);
+    if (iter->getInvited() && !Operators::has_invited(tmp , this->clients[clientId - 1].getNickname())){
         responseId(ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
     if (clientExistInChannel(Ch_name, clientId))return;
-    if (iter->Channelclients.size() + 1 > iter->getChannelLimit()){
+    if (iter->getHaslimit() && (iter->Channelclients.size() + 1 > iter->getChannelLimit())){
         responseId(ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
     if (iter->getIsprivate()){

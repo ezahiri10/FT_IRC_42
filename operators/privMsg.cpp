@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 03:16:23 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/07 05:00:26 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/08 21:04:55 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void Server::MsgToChannel(const std::string &channelName, const std::string &msg
     iter = getChannelByName(channelName);
     for(cIter = iter->Channelclients.begin(); cIter != iter->Channelclients.end(); cIter++){
         int fd = cIter->getFd();
-        responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), cIter->getNickname(), msg), fd);
+        responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), channelName, msg), fd);
     }
 }
 

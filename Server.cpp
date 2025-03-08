@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/07 04:51:56 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/08 21:05:17 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void Server::acceptConnection()
 
 void Server::removeUserFromChienl(const std::string &name)
 {
+    std::string msg;
     int pos;
 
     for (size_t i = 0; i < this->channels.size(); i++)
@@ -66,9 +67,9 @@ void Server::removeUserFromChienl(const std::string &name)
         pos = Operators::Get_Channel_client_pos(this->channels[i], name);
         if (pos != -1)
         {
-            std::string msg = RPL_PRIVMSG(name, this->channels[i].getChannelName(), "QUIT");
-            responseFd(msg, this->polls[pos].fd);
-            this->channels[i].removeClient(pos);   
+            msg = RPL_PRIVMSG(name, this->channels[i].getChannelName(), "QUIT");
+            responseFd(msg, this->channels[i].Channelclients[pos].getFd());
+            this->channels[i].removeClient(pos); 
         }
     }
 }
@@ -84,8 +85,11 @@ void Server::recevMesseages(int i)
     {
         std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
         if (this->clients[i - 1].getNickname() != "BOT")
+        {
             this->messageToBot("QUIT", i);
+        }
         this->clients.erase(this->clients.begin() + i - 1);
+        removeUserFromChienl (this->clients[i - 1].getNickname());
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
         return ;
@@ -95,6 +99,7 @@ void Server::recevMesseages(int i)
     buffer[numChar] = '\0';
     Parse(buffer, i);
 }
+
 
 
 void Server::handler(int sig)
@@ -136,27 +141,6 @@ void Server::creatServer()
         }
     }
 }
-
-std::vector<pollfd> Server::getPolls () const
-{
-    return (this->polls);
-}
-
-std::vector<Client> Server::getClients () const
-{
-    return (this->clients);
-}
-
-std::vector<Channel> Server::getChannels() const
-{
-    return (this->channels);
-}
-
-std::vector<std::string> Server::getArgs () const 
-{
-    return (this->args);
-}
-
 
 std::vector<std::string> Server::splitByCRLF(const std::string& str) 
 {
