@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 22:26:02 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:42:54 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int Operators::GetClientFd(std::string nick_name){
     }
     return (-1);
 }
-int Operators::ADD_client(Channel &channel, std::string nick_name, std::string invit_client)
+int Operators::AddClient(Channel &channel, std::string nick_name, std::string invit_client)
 {
     std::string str;
     int fd = GetClientFd(invit_client);
@@ -33,11 +33,11 @@ int Operators::ADD_client(Channel &channel, std::string nick_name, std::string i
     str = RPL_INVITE(nick_name, invit_client, channel.getChannelName());
     send(fd, str.c_str(), str.size(), 0);
     str = RPL_INVITING(nick_name, invit_client, channel.getChannelName());
-    send_message(channel, str);
+    SendMessage(channel, str);
     return (true);
 }
 
-bool Operators::has_invited(Channel &channel, std::string client_nick)
+bool Operators::HasInvited(Channel &channel, std::string client_nick)
 {
     std::vector<std::string>::iterator it;
     std::vector<std::string> clients = channel.getInvitations();
@@ -48,17 +48,17 @@ bool Operators::has_invited(Channel &channel, std::string client_nick)
     return (false);
 }
 
-int Operators::Invite_client(Channel &channel, std::string invit_client, int Client_id)
+int Operators::InviteClient(Channel &channel, std::string invit_client, int Client_id)
 {
-    if (there_is_user(invit_client, Client_id)
-        && !has_invited(channel, invit_client))
+    if (ThereIsUser(invit_client, Client_id)
+        && !HasInvited(channel, invit_client))
     {
-        ADD_client(channel, Get_client_nick(channel, Client_id), invit_client);
+        AddClient(channel, GetClientNick(channel, Client_id), invit_client);
     }  
     return(false);
 }
 
-int Operators::Invite_func(Server &My_serv, std::string arg, int Client_id)
+int Operators::InviteFunc(Server &My_serv, std::string arg, int Client_id)
 {
     Operators op;
     std::string channel;
@@ -87,10 +87,10 @@ int Operators::Invite_func(Server &My_serv, std::string arg, int Client_id)
             return (false);
         }
         int channel_pos = -1;
-        if (op.there_is_channel(channel, channel_pos, Client_id)){
+        if (op.ThereIsChannel(channel, channel_pos, Client_id)){
             if (channel_pos == -1)
                 return (1);
-            op.Invite_client(op.getMyserv()->channels[channel_pos], invit_client, Client_id);
+            op.InviteClient(op.getMyserv()->channels[channel_pos], invit_client, Client_id);
         }
     }
     return 0;

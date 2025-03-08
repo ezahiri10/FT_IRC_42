@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/08 21:41:47 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:44:06 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void Server::addClientToChannel(const std::string &Ch_name, const std::string &C
     std::vector<Client>::iterator it;
     iter = getChannelByName(Ch_name);
     Channel tmp = getChannel(Ch_name);
-    if (iter->getInvited() && !Operators::has_invited(tmp , this->clients[clientId - 1].getNickname())){
+    if (iter->getInvited() && !Operators::HasInvited(tmp , this->clients[clientId - 1].getNickname())){
         responseId(ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
     if (clientExistInChannel(Ch_name, clientId))return;
@@ -174,11 +174,11 @@ void Server::exec_cmds(const std::string &command, const std::string &arg, int c
     else if (command == "PRIVMSG")
         privMsg(arg, clientId);
     else if (command == "KICK")
-        op.Kick_func(*this, arg, clientId);
+        op.KickFunc(*this, arg, clientId);
     else if (command == "INVITE")
-        op.Invite_func(*this, arg, clientId);
+        op.InviteFunc(*this, arg, clientId);
     else if (command == "MODE")
-        op.Mode_func(*this, arg, clientId);
+        op.ModeFunc(*this, arg, clientId);
     else if (command == "TOPIC")
-        op.Topic_func(*this, arg, clientId);
+        op.TopicFunc(*this, arg, clientId);
 }
