@@ -6,14 +6,14 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 21:59:35 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:26:02 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Operators.hpp"
 
 
-int Operators::GetClientId(std::string nick_name){
+int Operators::GetClientFd(std::string nick_name){
     std::vector<Client> clients = getMyserv()->clients;
     std::vector<Client>::iterator it;
     for (it = clients.begin(); it != clients.end(); it++){
@@ -25,7 +25,7 @@ int Operators::GetClientId(std::string nick_name){
 int Operators::ADD_client(Channel &channel, std::string nick_name, std::string invit_client)
 {
     std::string str;
-    int fd = GetClientId(invit_client);
+    int fd = GetClientFd(invit_client);
     if (fd == -1)
         return (false);
     channel.addInvitations(invit_client);

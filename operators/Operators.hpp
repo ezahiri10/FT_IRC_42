@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 21:58:28 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:25:42 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Operators
         void Add_Remove_PASS(Channel &channel, std::string mode, std::string pass, int Client_id);
         bool Check_identify(Channel &channel, std::string mode, std::string identify, int Client_id);
         void Add_Remove_LIMIT(Channel &channel, std::string mode, std::string identify, int  Client_id);
-        int GetClientId(std::string nick_name);
+        int GetClientFd(std::string nick_name);
     public:
         Operators();
         ~Operators();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Operators.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 20:55:08 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:19:54 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void Operators::send_message(Channel &channel, std::string str)
     for (it = clients_it.begin(); it != clients_it.end(); it++){
         send(it->getFd(), str.c_str(), str.length(), 0);
         new_str = RPL_NAMREPLY(it->getNickname(), channel.getChannelName(), users);
-        std::cout << "New_str = " << new_str << std::endl;
         send(it->getFd(), new_str.c_str(), new_str.length(), 0);
     }
 }

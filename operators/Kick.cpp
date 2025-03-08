@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 20:44:29 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:25:49 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool Operators::Check_kick(Channel &channel, std::string client, std::string rea
         && there_is_user(client, Client_id)
         && Check_Channel_Op(channel, Get_client_nick(channel, Client_id), Client_id))
     {
-        std::string msg = ":IRCServer KICK " + channel.getChannelName() + " " + client;
+        std::string msg = ":"  + Get_client_nick(channel, Client_id) + " KICK " + channel.getChannelName() + " " + client;
         if (reasen.empty())
             msg += POSTFIX;
         else
@@ -27,8 +27,9 @@ bool Operators::Check_kick(Channel &channel, std::string client, std::string rea
         int Client_index = Get_Channel_client_pos(channel, client);
         if (Client_index != -1)
         {
-            send_message(channel, msg);
+            send(GetClientFd(client), msg.c_str(), msg.size(), 0);
             channel.removeClient(Client_index);
+            send_message(channel, msg);
         }
     }
     return (true);
