@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 22:42:54 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/09 01:56:50 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,16 @@ std::string getUsers(Channel &channel){
     return usersList;
 }
 
+
 void Operators::SendMessage(Channel &channel, std::string str)
 {
     std::string users = getUsers(channel);
-    std::string new_str;
     std::vector<Client>::iterator it;
     std::vector<Client> clients_it = channel.getClients();
     for (it = clients_it.begin(); it != clients_it.end(); it++){
         send(it->getFd(), str.c_str(), str.length(), 0);
-        new_str = RPL_NAMREPLY(it->getNickname(), channel.getChannelName(), users);
-        send(it->getFd(), new_str.c_str(), new_str.length(), 0);
+        str = RPL_NAMREPLY(it->getNickname(), channel.getChannelName(), users);
+        send(it->getFd(), str.c_str(), str.length(), 0);
     }
 }
 
@@ -121,6 +121,18 @@ int Operators::GetChannelClientPos(Channel &channel, const std::string& nickname
     for (it = clients.begin(); it != clients.end(); ++it)
     {
         if (nickname == it->getNickname())
+            return std::distance(clients.begin(), it);
+    }
+    return -1; 
+}
+
+int Operators::GetChannelOpPos(Channel &channel, const std::string& nickname)
+{
+    std::vector<std::string> clients = channel.getOperators();
+    std::vector<std::string>::iterator it;
+    for (it = clients.begin(); it != clients.end(); ++it)
+    {
+        if (nickname == (*it))
             return std::distance(clients.begin(), it);
     }
     return -1; 

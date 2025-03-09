@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 22:44:06 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/09 01:55:47 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ class Operators
         void AddRemovePass(Channel &channel, std::string mode, std::string pass, int Client_id);
         bool CheckIdentify(Channel &channel, std::string mode, std::string identify, int Client_id);
         void AddRemoveLimit(Channel &channel, std::string mode, std::string identify, int  Client_id);
+        bool IsAnOwner(Channel &channel, std::string nick_name, int Client_id);
+        int GetChannelOpPos(Channel &channel, const std::string& nickname);
         int GetClientFd(std::string nick_name);
     public:
         Operators();

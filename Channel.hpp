@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 20:33:05 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/09 01:17:03 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ class Channel {
         void addOperator(const std::string &op);
         void addMode(const std::string &mode);
         void removeClient(int pos);
+        void removeOperator(int pos);
         void setIsprivate(const bool &isPrivate);
         bool getIsprivate() const;
 };

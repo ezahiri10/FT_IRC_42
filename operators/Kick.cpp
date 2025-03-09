@@ -6,29 +6,46 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 22:42:54 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/09 01:42:30 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Operators.hpp"
 
+bool Operators::IsAnOwner(Channel &channel, std::string nick_name, int Client_id)
+{
+    if (channel.getOperators()[0] == nick_name)
+    {
+        //replie : Owner cannot KICK the Channel
+        std::string msg = ":IRCServer Owner cannot KICK the Channel\r\n";
+        send(getMyserv()->polls[Client_id].fd, msg.c_str(), msg.size(), 0);
+        return (true);
+    }
+    return (false);
+}
+
 bool Operators::Check_kick(Channel &channel, std::string client, std::string reasen, int Client_id)
 {
     if (AlreadyOnChannel(channel, GetClientNick(channel, Client_id), Client_id, 0)
         && ThereIsUser(client, Client_id)
-        && CheckChannelOp(channel, GetClientNick(channel, Client_id), Client_id))
+        && CheckChannelOp(channel, GetClientNick(channel, Client_id), Client_id)
+        && !IsAnOwner(channel, client, Client_id))
     {
-        std::string msg = ":"  + GetClientNick(channel, Client_id) + " KICK " + channel.getChannelName() + " " + client;
+        
+        std::string msg = ":" + GetClientNick(channel, Client_id) + "!~" + getMyserv()->clients[Client_id - 1].getUsername()\
+            + "@ 127.0.0.1 KICK " + channel.getChannelName() + " " + client;
         if (reasen.empty())
             msg += POSTFIX;
         else
             msg += ": " + reasen + POSTFIX;
-        
         int Client_index = GetChannelClientPos(channel, client);
+        int Op_index = GetChannelOpPos(channel, client);
         if (Client_index != -1)
         {
             send(GetClientFd(client), msg.c_str(), msg.size(), 0);
             channel.removeClient(Client_index);
+            if (Op_index != -1)
+                channel.removeOperator(Op_index);
             SendMessage(channel, msg);
         }
     }

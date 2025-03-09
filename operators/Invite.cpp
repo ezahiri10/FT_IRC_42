@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 22:42:54 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/09 01:27:02 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ bool Operators::HasInvited(Channel &channel, std::string client_nick)
 int Operators::InviteClient(Channel &channel, std::string invit_client, int Client_id)
 {
     if (ThereIsUser(invit_client, Client_id)
+        && !AlreadyOnChannel(channel, invit_client, Client_id, 1)
         && !HasInvited(channel, invit_client))
     {
         AddClient(channel, GetClientNick(channel, Client_id), invit_client);
