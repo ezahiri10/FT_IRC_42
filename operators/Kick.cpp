@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/09 01:42:30 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 01:37:16 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,32 +24,55 @@ bool Operators::IsAnOwner(Channel &channel, std::string nick_name, int Client_id
     return (false);
 }
 
+
+/*
+
+ss << ":" << currentClient->getHostname_Kick() << "@" << "localhost" << " KICK " << channelName << " " << targetNickname;
+
+        if (!cause.empty())
+            ss << " :" << cause;
+        ss << "\r\n";
+
+        std::string message = ss.str();
+
+        for (std::vector<client>::iterator it = channel->getClients().begin(); it != channel->getClients().end(); ++it) {
+            if (targetClient->getfd() != it->getfd())
+                sendReponse(message, it->getfd());
+        }
+        
+        sendReponse(message, targetClient->getfd());*/
 bool Operators::Check_kick(Channel &channel, std::string client, std::string reasen, int Client_id)
 {
-    if (AlreadyOnChannel(channel, GetClientNick(channel, Client_id), Client_id, 0)
+    std::string kicker_nick = GetClientNick(channel, Client_id);
+    if (AlreadyOnChannel(channel, kicker_nick, Client_id, 0)
         && ThereIsUser(client, Client_id)
-        && CheckChannelOp(channel, GetClientNick(channel, Client_id), Client_id)
+        && AlreadyOnChannel(channel, client, Client_id, 0)
+        && CheckChannelOp(channel, kicker_nick, Client_id)
         && !IsAnOwner(channel, client, Client_id))
     {
-        
-        std::string msg = ":" + GetClientNick(channel, Client_id) + "!~" + getMyserv()->clients[Client_id - 1].getUsername()\
-            + "@ 127.0.0.1 KICK " + channel.getChannelName() + " " + client;
+        std::stringstream ss;
+        ss << ":" << kicker_nick << "!~" << getMyserv()->clients[Client_id - 1].getUsername()
+           << "@127.0.0.1 KICK " << channel.getChannelName() << " " << client;
+
         if (reasen.empty())
-            msg += POSTFIX;
+            ss << "\r\n";
         else
-            msg += ": " + reasen + POSTFIX;
+            ss << " :" << reasen << "\r\n";
+        std::string msg = ss.str();
         int Client_index = GetChannelClientPos(channel, client);
         int Op_index = GetChannelOpPos(channel, client);
         if (Client_index != -1)
         {
-            send(GetClientFd(client), msg.c_str(), msg.size(), 0);
+            send(GetClientFd(client), msg.c_str(), msg.size(), 0); 
+            if (Op_index != -1)  
+              channel.removeOperator(Op_index);
             channel.removeClient(Client_index);
-            if (Op_index != -1)
-                channel.removeOperator(Op_index);
-            SendMessage(channel, msg);
+            std::string nick_name = getMyserv()->clients[Client_id - 1].getNickname();
+            SendMessage(channel, nick_name, msg);
         }
+        return (true);
     }
-    return (true);
+    return (false);
 }
 
 int Operators::KickFunc(Server &My_serv, std::string arg, int Client_id)

@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/09 01:56:50 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 01:28:20 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ std::string getUsers(Channel &channel){
     std::vector<Client> clients = channel.getClients();
     std::string name;
     operators = channel.getOperators();
-    for(iter = clients.begin(); iter != clients.end(); iter++){
+    for(iter = clients.begin(); iter != clients.end(); ++iter){
         for(size_t i = 0; i < operators.size(); i++){
             if (iter->getNickname() == operators[i])
                 name = "@"+iter->getNickname();
@@ -53,15 +53,17 @@ std::string getUsers(Channel &channel){
 }
 
 
-void Operators::SendMessage(Channel &channel, std::string str)
+void Operators::SendMessage(Channel &channel, std::string nick_name, std::string str)
 {
+    (void)nick_name;
+    std::string new_str;
     std::string users = getUsers(channel);
     std::vector<Client>::iterator it;
-    std::vector<Client> clients_it = channel.getClients();
-    for (it = clients_it.begin(); it != clients_it.end(); it++){
+    std::vector<Client> clients = channel.getClients();
+    for (it = clients.begin(); it != clients.end(); it++){
         send(it->getFd(), str.c_str(), str.length(), 0);
-        str = RPL_NAMREPLY(it->getNickname(), channel.getChannelName(), users);
-        send(it->getFd(), str.c_str(), str.length(), 0);
+        new_str = RPL_NAMREPLY(nick_name, channel.getChannelName(), users);
+        send(it->getFd(), new_str.c_str(), new_str.length(), 0);
     }
 }
 

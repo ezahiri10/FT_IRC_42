@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/09 01:55:47 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 00:39:35 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class Operators
         static bool HasInvited(Channel &channel, std::string client_nick);
         void setMyserv(Server &server);
         static int GetChannelClientPos(Channel &channel, const std::string& nickname);
-        static void SendMessage(Channel &channel, std::string str);
+        static void SendMessage(Channel &channel, std::string nick_name, std::string str);
         static int ModeFunc(Server &My_serv, std::string arg, int Client_id);
         static int InviteFunc(Server &My_serv, std::string arg, int Client_id);
         static int KickFunc(Server &My_serv, std::string arg, int Client_id);

@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 22:42:54 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 00:37:30 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void AddMode(Channel &channel, std::string mode, std::string client_nick)
         std::string channel_name = channel.getChannelName();
         std::string server_name = ":IRCServer";
         std::string str = RPL_UMODEIS(server_name, channel_name, mode, client_nick);
-        Operators::SendMessage(channel, str);
+        Operators::SendMessage(channel, client_nick, str);
         channel.addMode(mode);
     }
 }
@@ -53,7 +53,7 @@ void RemoveMode(Channel &channel, std::string mode, std::string client_nick)
     std::string channel_name = channel.getChannelName();
     std::string server_name = ":IRCServer";
     std::string str = RPL_UMODEIS(server_name, channel_name, mode, client_nick);
-    Operators::SendMessage(channel, str);
+    Operators::SendMessage(channel, client_nick, str);
 }
 
 bool FtIsDigits(std::string identify)

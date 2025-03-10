@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 19:13:59 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/09 01:27:02 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/09 19:42:16 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int Operators::AddClient(Channel &channel, std::string nick_name, std::string in
     str = RPL_INVITE(nick_name, invit_client, channel.getChannelName());
     send(fd, str.c_str(), str.size(), 0);
     str = RPL_INVITING(nick_name, invit_client, channel.getChannelName());
-    SendMessage(channel, str);
+    SendMessage(channel, nick_name, str);
     return (true);
 }
 

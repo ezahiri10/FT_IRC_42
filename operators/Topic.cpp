@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:44:48 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/08 22:44:06 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/09 19:43:38 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void Operators::SetNewTopic(Channel  &channel, std::string topic, int Client_id)
     if (!getMyserv()->clients.empty())
     {
         std::string str = RPL_TOPIC(getMyserv()->clients[Client_id - 1].getNickname(), channel.getChannelName(), topic);
-        SendMessage(channel, str);
+        SendMessage(channel, getMyserv()->clients[Client_id - 1].getNickname(), str);
         channel.setTopic(topic);
     }
 }
