@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/10 00:07:08 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:15:41 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ std::string Server::getAllUsers(const std::string &channel){
     std::string name;
     operators = chIter->getOperators();
     for(iter = chIter->Channelclients.begin(); iter != chIter->Channelclients.end(); iter++){
+        name = iter->getNickname();
         for(size_t i = 0; i < operators.size(); i++){
-            if (iter->getNickname() == operators[i])
+            if (name == operators[i]){
                 name = "@"+iter->getNickname();
-            else
-                name = iter->getNickname();
+                break;
+            }
         }
         allUsers.push_back(name);
     }

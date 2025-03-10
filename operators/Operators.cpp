@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Operators.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/10 01:28:20 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:27:49 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,12 @@ std::string getUsers(Channel &channel){
     std::string name;
     operators = channel.getOperators();
     for(iter = clients.begin(); iter != clients.end(); ++iter){
+        name = iter->getNickname();
         for(size_t i = 0; i < operators.size(); i++){
-            if (iter->getNickname() == operators[i])
+            if (name == operators[i]){
                 name = "@"+iter->getNickname();
-            else
-                name = iter->getNickname();
+                break;
+            }
         }
         allUsers.push_back(name);
     }
@@ -58,6 +59,7 @@ void Operators::SendMessage(Channel &channel, std::string nick_name, std::string
     (void)nick_name;
     std::string new_str;
     std::string users = getUsers(channel);
+    std::cout << "=> "<< users << std::endl;
     std::vector<Client>::iterator it;
     std::vector<Client> clients = channel.getClients();
     for (it = clients.begin(); it != clients.end(); it++){

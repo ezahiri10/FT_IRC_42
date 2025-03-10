@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/10 00:37:30 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:49:19 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,27 +29,15 @@ bool Operators::CheckValidMode(std::string client, std::string mode, int Client_
 
 void AddMode(Channel &channel, std::string mode, std::string client_nick)
 {
-    std::vector<std::string> Modes = channel.getModes();
-    if (std::find(Modes.begin(), Modes.end(), mode) != Modes.end())
-        return ;
-    else
-    {
-        std::string channel_name = channel.getChannelName();
-        std::string server_name = ":IRCServer";
-        std::string str = RPL_UMODEIS(server_name, channel_name, mode, client_nick);
-        Operators::SendMessage(channel, client_nick, str);
-        channel.addMode(mode);
-    }
+    std::string channel_name = channel.getChannelName();
+    std::string server_name = ":IRCServer";
+    std::string str = RPL_UMODEIS(server_name, channel_name, mode, client_nick);
+    Operators::SendMessage(channel, client_nick, str);
+    channel.addMode(mode);
 }
 
 void RemoveMode(Channel &channel, std::string mode, std::string client_nick)
 {
-    std::vector<std::string> Modes = channel.getModes();
-
-    std::vector<std::string>::iterator it = std::find(Modes.begin(), Modes.end(), mode);
-
-    if (it != Modes.end())
-        Modes.erase(it);
     std::string channel_name = channel.getChannelName();
     std::string server_name = ":IRCServer";
     std::string str = RPL_UMODEIS(server_name, channel_name, mode, client_nick);
@@ -148,20 +136,27 @@ void Operators::AddRemoveOP(Channel &channel, std::string mode, std::string op, 
             if (std::find(ops.begin(), ops.end(), op) == ops.end())
                 channel.addOperator(op);
             AddMode(channel,  mode, GetClientNick(channel, Client_id));
+            std::cout << "****************2222222222\n";
         }
     } else
     {
+        size_t pos = 0;
         std::vector<std::string> ops = channel.getOperators();
-        channel.getOperators().erase(std::remove(ops.begin(), ops.end(), op), ops.end());
+        for (std::vector<std::string>::iterator it = ops.begin(); it != ops.end(); it++)
+        {
+            if ((*it) == op)
+            {
+                pos = std::distance(ops.begin(), it);
+                break;
+            }
+        }
+        channel.getOperators().erase(ops.begin() + pos);
         RemoveMode(channel, mode, GetClientNick(channel, Client_id));
     }
 }
 
 
 bool Operators::CheckIdentify(Channel &channel, std::string mode, std::string identify, int Client_id){
-    if (getMyserv()->channels.empty())
-        return (false);
-
     if (mode == "+o" || mode == "-o")
     {
         if (identify.empty())

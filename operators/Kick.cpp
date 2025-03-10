@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/10 01:40:43 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 21:23:31 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,25 @@ bool Operators::Check_kick(Channel &channel, std::string client, std::string rea
         && CheckChannelOp(channel, kicker_nick, Client_id)
         && !IsAnOwner(channel, client, Client_id))
     {
-        std::stringstream ss;
-        ss << ":" << kicker_nick << "!~" << getMyserv()->clients[Client_id - 1].getUsername()
-           << "@127.0.0.1 KICK " << channel.getChannelName() << " " << client;
+        std::string ss = ":IRCServer KICK " + channel.getChannelName() + " " + client;
+        // ss = ":" + kicker_nick + "!~" + getMyserv()->clients[Client_id - 1].getUsername()
+        //    + "@127.0.0.1 KICK " + channel.getChannelName() + " " + client;
 
         if (reasen.empty())
-            ss << "\r\n";
+            ss += "\r\n";
         else
-            ss << " :" << reasen << "\r\n";
-        std::string msg = ss.str();
+            ss += " :" + reasen + "\r\n";
+        // std::string msg = ss.str();
         int Client_index = GetChannelClientPos(channel, client);
         int Op_index = GetChannelOpPos(channel, client);
         if (Client_index != -1)
         {
-            send(GetClientFd(client), msg.c_str(), msg.size(), 0); 
+            send(GetClientFd(client), ss.c_str(), ss.size(), 0); 
             if (Op_index != -1)  
               channel.removeOperator(Op_index);
             channel.removeClient(Client_index);
             std::string nick_name = getMyserv()->clients[Client_id - 1].getNickname();
-            SendMessage(channel, nick_name, msg);
+            SendMessage(channel, nick_name, ss);
         }
         return (true);
     }
