@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/10 01:37:16 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/10 01:40:43 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,15 @@ bool Operators::IsAnOwner(Channel &channel, std::string nick_name, int Client_id
     if (channel.getOperators()[0] == nick_name)
     {
         //replie : Owner cannot KICK the Channel
-        std::string msg = ":IRCServer Owner cannot KICK the Channel\r\n";
+        std::stringstream ss;
+        ss << ":IRCServer Owner cannot KICK the Channel\r\n";
+        std::string msg = ss.str();
         send(getMyserv()->polls[Client_id].fd, msg.c_str(), msg.size(), 0);
         return (true);
     }
     return (false);
 }
 
-
-/*
-
-ss << ":" << currentClient->getHostname_Kick() << "@" << "localhost" << " KICK " << channelName << " " << targetNickname;
-
-        if (!cause.empty())
-            ss << " :" << cause;
-        ss << "\r\n";
-
-        std::string message = ss.str();
-
-        for (std::vector<client>::iterator it = channel->getClients().begin(); it != channel->getClients().end(); ++it) {
-            if (targetClient->getfd() != it->getfd())
-                sendReponse(message, it->getfd());
-        }
-        
-        sendReponse(message, targetClient->getfd());*/
 bool Operators::Check_kick(Channel &channel, std::string client, std::string reasen, int Client_id)
 {
     std::string kicker_nick = GetClientNick(channel, Client_id);
