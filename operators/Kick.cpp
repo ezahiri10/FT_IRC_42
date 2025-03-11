@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/10 21:23:31 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/11 22:42:13 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ bool Operators::IsAnOwner(Channel &channel, std::string nick_name, int Client_id
 {
     if (channel.getOperators()[0] == nick_name)
     {
-        //replie : Owner cannot KICK the Channel
         std::stringstream ss;
         ss << ":IRCServer Owner cannot KICK the Channel\r\n";
         std::string msg = ss.str();
@@ -36,14 +35,11 @@ bool Operators::Check_kick(Channel &channel, std::string client, std::string rea
         && !IsAnOwner(channel, client, Client_id))
     {
         std::string ss = ":IRCServer KICK " + channel.getChannelName() + " " + client;
-        // ss = ":" + kicker_nick + "!~" + getMyserv()->clients[Client_id - 1].getUsername()
-        //    + "@127.0.0.1 KICK " + channel.getChannelName() + " " + client;
 
         if (reasen.empty())
             ss += "\r\n";
         else
             ss += " :" + reasen + "\r\n";
-        // std::string msg = ss.str();
         int Client_index = GetChannelClientPos(channel, client);
         int Op_index = GetChannelOpPos(channel, client);
         if (Client_index != -1)

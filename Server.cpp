@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/08 22:32:43 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/11 22:15:13 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,16 +158,14 @@ std::vector<std::string> Server::splitByCRLF(const std::string& str)
 }
 
 void Server::Parse(std::string msg, int clientId)
-{   if(msg == "\n"){
-        std::cout << msg;return;
-    }
+{
     if (msg.size() > 512)
     {
         msg.resize(510);
         msg += "\r\n";
     }
-    if (msg.substr(msg.size() - 2) != "\r\n")
-        msg += "\r\n";
+    if (msg.size() > 2  && msg.substr(msg.size() - 1) != "\n") 
+        return ;
     std::vector<std::string> tokns = splitByCRLF(msg);
     for (size_t i = 0; i < tokns.size(); i++)
     {

@@ -21,6 +21,7 @@
 #define ERR_NOTREGISTERED								"Error: You are not registered."
 #define ERR_CHANNELISFULL(client, channel)				PREFIX " 471 " + client + " " + channel + " :Cannot join channel (+l)" POSTFIX
 #define ERR_INVITEONLYCHAN(client, channel)				PREFIX " 473 " + client + " " + channel + " :Cannot join channel (+i)" POSTFIX
+#define ERR_BADCHANNELKEY(client, channel)	            PREFIX " 475 " + client + " " + channel + " :Cannot join channel (+k)" POSTFIX
 #define ERR_NEEDMODEPARM(channelname, mode)				(std::string(": 696 ") + channelname + " * You must specify a parameter for the key mode. " + mode + POSTFIX)
 #define ERR_INVALIDMODEPARM(channelname, mode)			(std::string(": 696 ") + channelname + " Invalid mode parameter. " + mode + POSTFIX)
 #define ERR_INVALIDKEY(client, channelname)             PREFIX "525 " + client + " " + channelname + " :Key is not well-formed" POSTFIX
