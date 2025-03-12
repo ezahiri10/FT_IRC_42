@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/09 01:17:03 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/12 04:37:57 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 class Channel {
     private:
-        int         limit;
+        size_t         limit;
         bool        invited;
         bool        haslimit;
         bool        istopic;

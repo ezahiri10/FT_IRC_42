@@ -6,7 +6,7 @@
 /*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/11 22:53:11 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/12 04:11:09 by ael-fagr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void Server::addClientToChannel(const std::string &Ch_name, const std::string &C
         if(iter->getChannelPassword() == Ch_pass)
             iter->addClient(this->clients[clientId - 1]);
         else{
-            responseId(ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
+            responseId(ERR_BADCHANNELKEY(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
         }
     }else
         iter->addClient(this->clients[clientId - 1]);
