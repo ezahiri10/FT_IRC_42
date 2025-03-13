@@ -96,7 +96,7 @@ void Server::Authentication(const std::string &message, int clientId)
 {
     std::string command, arg;
 
-    if (message[0] == '\n')
+    if (message[0] == '\n' || message.empty())
         return;
     getArgs(message);
     arg = getArg(message);

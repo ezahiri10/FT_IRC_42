@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/10 00:07:20 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/13 02:36:49 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ class Server
         void Parse(std::string msg, int clientId);
         bool messageToBot(const std::string &msgpart, int clientId);
         void removeUserFromChienl(const std::string &name);
-
-
+        void changeNewLineToCRLF(std::string &msg);
     public :
         std::vector<pollfd> polls;
         std::vector<Client> clients;

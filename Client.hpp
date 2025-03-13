@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:10:33 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/03 15:18:33 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 01:34:55 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,13 @@ class Client
         bool has_nick;
         bool has_user;
         bool clientExist;
+        std::string buffer;
         int getFd( void ) const;
         Client();
-        std::string getNickname( void ) const;
-        std::string getUsername ( void ) const;
-        std::string getPassword ( void ) const;
-        std::string getIp ( void ) const;
+        const std::string &getNickname( void ) const;
+        const std::string &getUsername ( void ) const;
+        const std::string &getPassword ( void ) const;
+        const std::string &getIp ( void ) const;
         void setFd (int fd);
         void setNickname (const std::string &nickname);
         void setUsername (const std::string &username);

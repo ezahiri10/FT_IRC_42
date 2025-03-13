@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/11 22:15:13 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/13 02:35:15 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,21 +156,54 @@ std::vector<std::string> Server::splitByCRLF(const std::string& str)
     }
     return result;
 }
+// change \n to \r\n if \r follows \n not to duplicate \r\n
+
+void Server::changeNewLineToCRLF(std::string &msg)
+{
+    size_t pos = 0;
+    while ((pos = msg.find("\n", pos)) != std::string::npos)
+    {
+        if (msg[pos - 1] != '\r')
+        {
+            msg.replace(pos, 1, "\r\n");
+            pos += 2;
+        }
+        else
+            pos++;
+    }
+}
+
+void printNewlinCr(const std::string &msg)
+{
+    for (size_t i = 0; i < msg.size(); i++)
+    {
+        if (msg[i] == '\n')
+            std::cout << "\\n";
+        else if (msg[i] == '\r')
+            std::cout << "\\r";
+        else
+            std::cout << msg[i];
+    }
+    std::cout << std::endl;
+}
 
 void Server::Parse(std::string msg, int clientId)
 {
-    if (msg.size() > 512)
+    if (msg.find ("\n") == std::string::npos)
     {
-        msg.resize(510);
-        msg += "\r\n";
-    }
-    if (msg.size() > 2  && msg.substr(msg.size() - 1) != "\n") 
+        this->clients[clientId - 1].buffer += msg;
         return ;
-    std::vector<std::string> tokns = splitByCRLF(msg);
+    }
+    this->clients[clientId - 1].buffer += msg;
+    changeNewLineToCRLF(this->clients[clientId - 1].buffer);
+    if (this->clients[clientId - 1].buffer.substr(this->clients[clientId - 1].buffer.size() - 1) != "\n")
+        return ;
+    std::vector<std::string> tokns = splitByCRLF(this->clients[clientId - 1].buffer);
     for (size_t i = 0; i < tokns.size(); i++)
     {
         Authentication(tokns[i], clientId);
     }
+    this->clients[clientId - 1].buffer.clear();
 }
 
 Server::~Server()
