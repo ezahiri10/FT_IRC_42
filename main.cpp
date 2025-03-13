@@ -6,18 +6,14 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:06:22 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/10 22:30:37 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:20:02 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
 void printWelcomeBanner(){
-    const std::string color_cyan = "\033[1;36m"; 
-    const std::string color_green = "\033[1;32m"; 
-    const std::string color_reset = "\033[0m";  
-
-    std::cout << color_cyan <<
+    std::cout << BLUE <<
        "IIIIIIIIIIRRRRRRRRRRRRRRRRR           CCCCCCCCCCCCC\n"
         "I::::::::IR::::::::::::::::R       CCC::::::::::::C\n"
         "I::::::::IR::::::RRRRRR:::::R    CC:::::::::::::::C\n"
@@ -34,7 +30,7 @@ void printWelcomeBanner(){
         "I::::::::IR::::::R     R:::::R   CC:::::::::::::::C\n"
         "I::::::::IR::::::R     R:::::R     CCC::::::::::::C\n"
         "IIIIIIIIIIRRRRRRRR     RRRRRRR        CCCCCCCCCCCCC\n";
-        std::cout<< color_reset << std::endl;
+        std::cout << YELLOW << "Welcome To The IRC Server :"<<RESET << std::endl<<std::endl;
 }
 
 int main (int ac , char **av)

@@ -46,8 +46,7 @@ void Server::pass(const std::string &arg, int clientId){
     iter = getClient( this->polls[clientId].fd );
     bool XRP = true;
     if (iter != clients.end() && iter->clientExist){
-        std::string err = ERR_ALREADYREGISTRED(iter->getNickname());
-        send(this->polls[clientId].fd, err.c_str(), err.size(), 0);
+        responseFd(ERR_ALREADYREGISTRED(iter->getNickname()), this->polls[clientId].fd);
         XRP = false;
     }
     if(checkPass(arg, this->serverpass, this->polls[clientId].fd, XRP)){
@@ -62,12 +61,10 @@ void Server::nick(const std::string &arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd );
     if(iter == clients.end() || !iter->has_pass){
-        send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
-        return;
+        responseFd(ERR_NOTREGISTERED, this->polls[clientId].fd);
     }
     else if (checkNickAvailability(arg)){
-        std::string err = ERR_NICKNAMEINUSE(arg);
-        send(this->polls[clientId].fd, err.c_str(), err.size(), 0);
+        responseFd(ERR_NICKNAMEINUSE(arg), this->polls[clientId].fd);
     }
     else{
         this->clients[clientId - 1].setNickname(arg);
@@ -79,12 +76,10 @@ void Server::user(const std::string &arg, int clientId){
     std::vector<Client>::iterator iter;
     iter = getClient( this->polls[clientId].fd );
     if(iter == clients.end() || !iter->has_pass){
-        send(this->polls[clientId].fd, ERR_NOTREGISTERED, strlen(ERR_NOTREGISTERED), 0);
-        return;
+        responseFd(ERR_NOTREGISTERED, this->polls[clientId].fd);
     }
-    else if (this->args.size() < 5){
-        responseId(ERR_NEEDMOREPARAMS(arg), clientId);return;
-    }
+    else if (this->args.size() < 5)
+        responseId(ERR_NEEDMOREPARAMS(arg), clientId);
     else{
         this->clients[clientId - 1].setUsername(arg);
         this->clients[clientId - 1].has_user = true;
@@ -122,6 +117,7 @@ void Server::Authentication(const std::string &message, int clientId)
     iter = getClient( this->polls[clientId].fd );
     if (iter != clients.end() && iter->Authontacated() && !iter->clientExist){
         this->clients[clientId - 1].clientExist = true;
+        std::cout << BLUE <<this->clients[clientId - 1].getNickname() << ": Connect To The Server" << RESET << std::endl;
         responseId(RPL_WELCOME(this->clients[clientId - 1].getNickname(), "Welcome To The Irc Server"), clientId);return;
     }
 }

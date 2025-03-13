@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/13 02:36:49 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/13 14:56:58 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 #include "operators/Operators.hpp"
+const std::string RESET = "\033[0m";
+const std::string RED = "\033[31m";
+const std::string YELLOW = "\033[33m";
+const std::string BLUE = "\033[1;36m";
 class Server 
 {
     private :
@@ -64,8 +68,8 @@ class Server
         Channel getChannel(std::string name);
         bool clientExistInChannel(const std::string &chName, int clientId);
         void privMsg(const std::string &arg, int clientId);
-        void MsgToChannel(const std::string &channelName, const std::string &msg, int clientId);
-        void MsgToClient(const std::string &clientName, const std::string &msg, int clientId);
+        void msgToChannel(const std::string &channelName, const std::string &msg, int clientId);
+        void msgToClient(const std::string &clientName, const std::string &msg, int clientId);
         std::vector<Client>::iterator getClientByName(const std::string &name);
         void responseId(const std::string &str, int clientId);
         void responseFd(const std::string &str, int fd);

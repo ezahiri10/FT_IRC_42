@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 03:16:23 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/08 21:04:55 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:56:58 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ std::string getPartss(std::string str, char x){
     return (str.substr(pos));
 }
 
-void Server::MsgToChannel(const std::string &channelName, const std::string &msg, int clientId){
+void Server::msgToChannel(const std::string &channelName, const std::string &msg, int clientId){
     std::vector<Channel>::iterator iter;
     std::vector<Client>::iterator cIter;
     cIter = getClient(this->polls[clientId].fd);
@@ -42,7 +42,7 @@ void Server::MsgToChannel(const std::string &channelName, const std::string &msg
     }
 }
 
-void Server::MsgToClient(const std::string &clientName, const std::string &msg, int clientId){
+void Server::msgToClient(const std::string &clientName, const std::string &msg, int clientId){
     std::vector<Client>::iterator iter;
     if (!checkNickAvailability(clientName)){
         responseFd(ERR_NOSUCHNICK(clientName), this->polls[clientId].fd);
@@ -104,8 +104,8 @@ void Server::privMsg(const std::string &arg, int clientId){
     std::string name;
     while(getline(ss, name, ',')){
         if (name[0] == '#')
-            MsgToChannel(name, msgPart, clientId);
+            msgToChannel(name, msgPart, clientId);
         else
-            MsgToClient(name, msgPart, clientId);
+            msgToClient(name, msgPart, clientId);
     }
 }

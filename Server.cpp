@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/13 02:47:19 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/13 16:38:33 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void Server::recevMesseages(int i)
     int numChar = recv(this->polls[i].fd, buffer, sizeof(buffer), 0);
     if (numChar <= 0)
     {
-        std::cout << "Client " << this->polls[i].fd << " is disconnected" << std::endl;
+        std::cout << RED << "Client " << this->polls[i].fd << " is disconnected" << RESET << std::endl;
         if (this->clients[i - 1].getNickname() != "BOT")
         {
             this->messageToBot("QUIT", i);
