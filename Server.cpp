@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/13 16:38:33 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:22:07 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ void Server::recevMesseages(int i)
         {
             this->messageToBot("QUIT", i);
         }
-        this->clients.erase(this->clients.begin() + i - 1);
         removeUserFromChienl (this->clients[i - 1].getNickname());
+        this->clients.erase(this->clients.begin() + i - 1);
         close(this->polls[i].fd);
         this->polls.erase(this->polls.begin() + i);
         return ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/12 04:11:09 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:16:37 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void Server::createChannel(const std::string &Ch_name, int clientId){
     Channel newChannel;
     std::vector<Client>::iterator iter;
     std::vector<Channel>::iterator chIter;
-    std::vector<Client>::iterator it;
 
     newChannel.setChannelName(Ch_name);
     iter = getClient(this->polls[clientId].fd);
@@ -53,11 +52,11 @@ void Server::createChannel(const std::string &Ch_name, int clientId){
     this->channels.push_back(newChannel);
     std::string users = getAllUsers(Ch_name);
     chIter = getChannelByName(Ch_name);
-    for(it = chIter->Channelclients.begin(); it != chIter->Channelclients.end(); it++){
+    for(iter = chIter->Channelclients.begin(); iter != chIter->Channelclients.end(); iter++){
         std::string str;
-        str = it->getNickname()+ "!" + it->getUsername();
-        responseFd(RPL_JOINMSG(str, this->clients[clientId - 1].getIp(), Ch_name), it->getFd());
-        responseFd(RPL_NAMREPLY(this->clients[clientId - 1].getNickname(), Ch_name, users), it->getFd());
+        str = iter->getNickname()+ "!" + iter->getUsername();
+        responseFd(RPL_JOINMSG(str, this->clients[clientId - 1].getIp(), Ch_name), iter->getFd());
+        responseFd(RPL_NAMREPLY(this->clients[clientId - 1].getNickname(), Ch_name, users), iter->getFd());
     }
     std::cout << RPL_ENDOFNAMES(this->clients[clientId - 1].getNickname(), Ch_name);
 }
@@ -148,8 +147,7 @@ void Server::join(const std::string &arg, int clientId) {
     while (getline(ss, channel, ',')) {
         std::string pass = getPass(passPart, i);
         if (channel.empty() || channel[0] != '#'){
-            std::string err = ERR_NOSUCHCHANNEL(channel);
-            send(this->polls[clientId].fd, err.c_str(), err.length(), 0);
+            responseFd(ERR_NOSUCHCHANNEL(channel), this->polls[clientId].fd);
             continue;
         }
         if (!checkChannelExist(channel))
