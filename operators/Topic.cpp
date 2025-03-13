@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:44:48 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/09 19:43:38 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:35:36 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void Operators::SetNewTopic(Channel  &channel, std::string topic, int Client_id)
     if (!getMyserv()->clients.empty())
     {
         std::string str = RPL_TOPIC(getMyserv()->clients[Client_id - 1].getNickname(), channel.getChannelName(), topic);
-        SendMessage(channel, getMyserv()->clients[Client_id - 1].getNickname(), str);
+        sendMessage(channel, getMyserv()->clients[Client_id - 1].getNickname(), str);
         channel.setTopic(topic);
     }
 }
@@ -32,14 +32,14 @@ void Operators::DesplayTopic(Channel  &channel, int Client_id){
 
 void Operators::AddTopic(Channel  &channel, std::string topic, int Client_id)
 {
-    if (AlreadyOnChannel(channel, GetClientNick(channel, Client_id), Client_id, 0))
+    if (alreadyOnChannel(channel, getClientNick(channel, Client_id), Client_id, 0))
     {
         if (topic.empty())
             DesplayTopic(channel, Client_id);
         else
         {
             if (channel.getIstopic()
-                && CheckChannelOp(channel, GetClientNick(channel, Client_id), Client_id))
+                && CheckChannelOp(channel, getClientNick(channel, Client_id), Client_id))
                 SetNewTopic(channel, topic, Client_id);
             else if (!channel.getIstopic())
                 SetNewTopic(channel, topic, Client_id);
@@ -76,7 +76,7 @@ int Operators::TopicFunc(Server &My_serv, std::string arg, int Client_id)
     else
     {
         int channel_pos = -1;
-        if (op.ThereIsChannel(channel, channel_pos, Client_id)){
+        if (op.thereIsChannel(channel, channel_pos, Client_id)){
             if (channel_pos == -1)
                 return (1);
             op.AddTopic(op.getMyserv()->channels[channel_pos], topic, Client_id);

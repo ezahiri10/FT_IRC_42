@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:48:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/11 22:42:13 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:35:36 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ bool Operators::IsAnOwner(Channel &channel, std::string nick_name, int Client_id
 
 bool Operators::Check_kick(Channel &channel, std::string client, std::string reasen, int Client_id)
 {
-    std::string kicker_nick = GetClientNick(channel, Client_id);
-    if (AlreadyOnChannel(channel, kicker_nick, Client_id, 0)
-        && ThereIsUser(client, Client_id)
-        && AlreadyOnChannel(channel, client, Client_id, 0)
+    std::string kicker_nick = getClientNick(channel, Client_id);
+    if (alreadyOnChannel(channel, kicker_nick, Client_id, 0)
+        && thereIsUser(client, Client_id)
+        && alreadyOnChannel(channel, client, Client_id, 0)
         && CheckChannelOp(channel, kicker_nick, Client_id)
         && !IsAnOwner(channel, client, Client_id))
     {
@@ -40,8 +40,8 @@ bool Operators::Check_kick(Channel &channel, std::string client, std::string rea
             ss += "\r\n";
         else
             ss += " :" + reasen + "\r\n";
-        int Client_index = GetChannelClientPos(channel, client);
-        int Op_index = GetChannelOpPos(channel, client);
+        int Client_index = getChannelClientPos(channel, client);
+        int Op_index = getChannelOpPos(channel, client);
         if (Client_index != -1)
         {
             send(GetClientFd(client), ss.c_str(), ss.size(), 0); 
@@ -49,7 +49,7 @@ bool Operators::Check_kick(Channel &channel, std::string client, std::string rea
               channel.removeOperator(Op_index);
             channel.removeClient(Client_index);
             std::string nick_name = getMyserv()->clients[Client_id - 1].getNickname();
-            SendMessage(channel, nick_name, ss);
+            sendMessage(channel, nick_name, ss);
         }
         return (true);
     }
@@ -90,7 +90,7 @@ int Operators::KickFunc(Server &My_serv, std::string arg, int Client_id)
     else
     {
         int channel_pos = -1;
-        if (op.ThereIsChannel(channel, channel_pos, Client_id)){
+        if (op.thereIsChannel(channel, channel_pos, Client_id)){
             if (channel_pos == -1)
                 return (1);
             op.Check_kick(op.getMyserv()->channels[channel_pos], client, reasen, Client_id);

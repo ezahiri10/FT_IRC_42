@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Operators.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:03:24 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/10 22:27:49 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:35:36 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ std::string getUsers(Channel &channel){
 }
 
 
-void Operators::SendMessage(Channel &channel, std::string nick_name, std::string str)
+void Operators::sendMessage(Channel &channel, std::string nick_name, std::string str)
 {
     (void)nick_name;
     std::string new_str;
@@ -70,7 +70,7 @@ void Operators::SendMessage(Channel &channel, std::string nick_name, std::string
 }
 
 
-std::string Operators::GetClientNick(Channel &channel, int clientId)
+std::string Operators::getClientNick(Channel &channel, int clientId)
 {
     for (std::vector<Client>::iterator it = channel.getClients().begin(); it != channel.getClients().end(); it++){
         if (getMyserv()->polls[clientId].fd == it->getFd())
@@ -79,7 +79,7 @@ std::string Operators::GetClientNick(Channel &channel, int clientId)
     return ("");
 }
 
-bool Operators::ThereIsChannel(std::string channel, int &channel_pos, int clientId)
+bool Operators::thereIsChannel(std::string channel, int &channel_pos, int clientId)
 {
     std::vector<Channel> Channels = getMyserv()->channels;
     for (std::vector<Channel>::iterator it = Channels.begin(); it != Channels.end(); it++)
@@ -95,7 +95,7 @@ bool Operators::ThereIsChannel(std::string channel, int &channel_pos, int client
     return (false);
 }
 
-bool Operators::AlreadyOnChannel(Channel &channel, std::string client, int clientId, int check)
+bool Operators::alreadyOnChannel(Channel &channel, std::string client, int clientId, int check)
 {
     std::vector<Client>::iterator it;
     std::vector<Client> clients_it = channel.getClients();
@@ -118,7 +118,7 @@ bool Operators::AlreadyOnChannel(Channel &channel, std::string client, int clien
     return (false);
 }
 
-int Operators::GetChannelClientPos(Channel &channel, const std::string& nickname)
+int Operators::getChannelClientPos(Channel &channel, const std::string& nickname)
 {
     std::vector<Client>& clients = channel.getClients();
     std::vector<Client>::iterator it;
@@ -130,7 +130,7 @@ int Operators::GetChannelClientPos(Channel &channel, const std::string& nickname
     return -1; 
 }
 
-int Operators::GetChannelOpPos(Channel &channel, const std::string& nickname)
+int Operators::getChannelOpPos(Channel &channel, const std::string& nickname)
 {
     std::vector<std::string> clients = channel.getOperators();
     std::vector<std::string>::iterator it;
@@ -142,7 +142,7 @@ int Operators::GetChannelOpPos(Channel &channel, const std::string& nickname)
     return -1; 
 }
 
-bool Operators::ThereIsUser(std::string client_nick, int clientId)
+bool Operators::thereIsUser(std::string client_nick, int clientId)
 {
     std::vector<Client> client = getMyserv()->clients;
     for (std::vector<Client>::iterator it = client.begin(); it < client.end(); it++) {

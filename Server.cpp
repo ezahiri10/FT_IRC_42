@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/13 17:22:07 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:33:54 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void Server::removeUserFromChienl(const std::string &name)
 
     for (size_t i = 0; i < this->channels.size(); i++)
     {
-        pos = Operators::GetChannelClientPos(this->channels[i], name);
+        pos = Operators::getChannelClientPos(this->channels[i], name);
         if (pos != -1)
         {
             msg = RPL_PRIVMSG(name, this->channels[i].getChannelName(), "QUIT");
