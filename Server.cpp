@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/13 17:33:54 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/13 17:46:32 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void Server::removeUserFromChienl(const std::string &name)
             msg = RPL_PRIVMSG(name, this->channels[i].getChannelName(), "QUIT");
             responseFd(msg, this->channels[i].Channelclients[pos].getFd());
             this->channels[i].removeClient(pos); 
+            if (this->channels[i].getClients().empty())
+                this->channels.erase(this->channels.begin() + i);
         }
     }
 }
