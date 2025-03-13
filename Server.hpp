@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/13 14:56:58 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:06:49 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ class Server
         void responseId(const std::string &str, int clientId);
         void responseFd(const std::string &str, int fd);
         std::string getAllUsers(const std::string &channel);
+        std::string getParts(std::string str, char x);
         void sendReponse(std::string reponse, int fdclient);
         ~Server ();
 };

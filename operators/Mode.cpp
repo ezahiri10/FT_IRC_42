@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:53:47 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/13 17:35:36 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/13 17:53:14 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void Operators::AddRemoveLimit(Channel &channel, std::string mode, std::string i
             int user_limit;
             user_limit = std::atoi(identify.c_str());
 
-            channel.setHaslimit(true);
+            channel.setLimitation(true);
             channel.setChannelLimit(user_limit);
             AddMode(channel, mode, getClientNick(channel, Client_id));
         }
@@ -73,7 +73,7 @@ void Operators::AddRemoveLimit(Channel &channel, std::string mode, std::string i
     }
     else
     {
-        channel.setHaslimit(false);
+        channel.setLimitation(false);
         RemoveMode(channel, mode, getClientNick(channel, Client_id));
     }
 }

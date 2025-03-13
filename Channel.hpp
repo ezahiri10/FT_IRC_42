@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:04:45 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/12 04:37:57 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:52:05 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ class Channel {
         bool getIstopic() const;
         void setIstopic(const bool &istopic);
 
-        bool getHaslimit() const;
-        void setHaslimit(const bool &haslimit);
+        bool getLimitation() const;
+        void setLimitation(const bool &haslimit);
 
         std::string getTopic() const;
         void setTopic(const std::string &topic);

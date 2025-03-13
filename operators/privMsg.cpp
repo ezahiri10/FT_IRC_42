@@ -6,22 +6,12 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 03:16:23 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/13 14:56:58 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 19:36:49 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Server.hpp"
 #include "../Channel.hpp"
-
-std::string getPartss(std::string str, char x){
-    int pos = 0;
-    std::string namesPart;
-    std::string msgPart;
-    pos = str.find(' ');
-    if (x == 'N')
-        return (str.substr(0,pos));
-    return (str.substr(pos));
-}
 
 void Server::msgToChannel(const std::string &channelName, const std::string &msg, int clientId){
     std::vector<Channel>::iterator iter;
@@ -37,8 +27,7 @@ void Server::msgToChannel(const std::string &channelName, const std::string &msg
     }
     iter = getChannelByName(channelName);
     for(cIter = iter->Channelclients.begin(); cIter != iter->Channelclients.end(); cIter++){
-        int fd = cIter->getFd();
-        responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), channelName, msg), fd);
+        responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), channelName, msg), cIter->getFd());
     }
 }
 
@@ -48,10 +37,8 @@ void Server::msgToClient(const std::string &clientName, const std::string &msg, 
         responseFd(ERR_NOSUCHNICK(clientName), this->polls[clientId].fd);
         std::cout << ERR_NOSUCHNICK(clientName);return;
     }
-
     iter = getClientByName(clientName);
-    int fd = iter->getFd();
-    responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), iter->getNickname(), msg), fd);
+    responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), iter->getNickname(), msg), iter->getFd());
 }
 
 std::string trim(const std::string & source) {
@@ -91,8 +78,8 @@ void Server::privMsg(const std::string &arg, int clientId){
         responseFd( ERR_NEEDMOREPARAMS(arg), this->polls[clientId].fd);
         return;
     }
-    std::string namesPart = getPartss(arg, 'N');
-    std::string msgPart = getPartss(arg, 'X');
+    std::string namesPart = getParts(arg, 'N');
+    std::string msgPart = getParts(arg, 'X');
     msgPart = trim(msgPart);
     if (msgPart[0] != ':')
         msgPart = this->args[2];

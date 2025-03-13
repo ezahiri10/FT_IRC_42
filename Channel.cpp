@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-fagr <ael-fagr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/09 01:17:38 by ael-fagr         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:53:14 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,10 @@ bool Channel::getIstopic() const{
     return this->istopic;
 }
 
-bool Channel::getHaslimit() const {
+bool Channel::getLimitation() const {
     return (this->haslimit);
 }
-void Channel::setHaslimit(const bool &haslimit){
+void Channel::setLimitation(const bool &haslimit){
     this->haslimit = haslimit;
 }
 // void Channel::clearChannel() {

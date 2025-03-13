@@ -6,7 +6,7 @@
 /*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/13 17:16:37 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:18:50 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ void Server::createChannel(const std::string &Ch_name, int clientId){
     std::string users = getAllUsers(Ch_name);
     chIter = getChannelByName(Ch_name);
     for(iter = chIter->Channelclients.begin(); iter != chIter->Channelclients.end(); iter++){
-        std::string str;
-        str = iter->getNickname()+ "!" + iter->getUsername();
-        responseFd(RPL_JOINMSG(str, this->clients[clientId - 1].getIp(), Ch_name), iter->getFd());
+        std::string hostName;
+        hostName = iter->getNickname()+ "!" + iter->getUsername();
+        responseFd(RPL_JOINMSG(hostName, this->clients[clientId - 1].getIp(), Ch_name), iter->getFd());
         responseFd(RPL_NAMREPLY(this->clients[clientId - 1].getNickname(), Ch_name, users), iter->getFd());
     }
     std::cout << RPL_ENDOFNAMES(this->clients[clientId - 1].getNickname(), Ch_name);
@@ -90,7 +90,7 @@ void Server::addClientToChannel(const std::string &Ch_name, const std::string &C
         responseId(ERR_INVITEONLYCHAN(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
     if (clientExistInChannel(Ch_name, clientId))return;
-    if (iter->getHaslimit() && (iter->Channelclients.size() + 1 > iter->getChannelLimit())){
+    if (iter->getLimitation() && (iter->Channelclients.size() + 1 > iter->getChannelLimit())){
         responseId(ERR_CHANNELISFULL(this->clients[clientId - 1].getNickname(), Ch_name), clientId);return;
     }
     if (iter->getIsprivate()){
@@ -110,7 +110,7 @@ void Server::addClientToChannel(const std::string &Ch_name, const std::string &C
     std::cout << RPL_JOIN(this->clients[clientId - 1].getNickname(), Ch_name);
 }
 
-std::string getParts(std::string str, char x){
+std::string Server::getParts(std::string str, char x){
     int pos = 0;
     std::string namePart;
     std::string passPart;
@@ -125,7 +125,7 @@ std::string getParts(std::string str, char x){
     return (passPart);
 }
 
-std::string getPass(std::string pass, int i) {
+std::string getPass(std::string pass, int i){
     std::vector<std::string> passList;
     std::stringstream ss(pass);
     std::string token;
@@ -177,7 +177,7 @@ void Server::exec_cmds(const std::string &command, const std::string &arg, int c
     else if (command == "INVITE")
         op.InviteFunc(*this, arg, clientId);
     else if (command == "MODE")
-        op.ModeFunc(*this, arg, clientId);
+        op.ModeFunc(*this, arg, clientId);`
     else if (command == "TOPIC")
         op.TopicFunc(*this, arg, clientId);
 }
