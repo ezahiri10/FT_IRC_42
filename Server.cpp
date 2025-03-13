@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/13 02:35:15 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/13 02:47:19 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Server::ifFailed(const std::string &e)
     {
         close (this->polls[i].fd);
     }
-    throw std::runtime_error(e.c_str());
+    throw std::runtime_error((e + ": " + strerror(errno)).c_str());
 }
 
 Server::Server(const std::string &port, const std::string &pass)
@@ -37,7 +37,7 @@ Server::Server(const std::string &port, const std::string &pass)
         throw std::invalid_argument("invalid port");
     this->servfd = socket(AF_INET, SOCK_STREAM, 0);
     if (this->servfd == -1)
-        throw std::runtime_error ("socket failed");
+        throw std::runtime_error ((std::string("socket failed: ") + strerror(errno)).c_str());
     this->serverpass = pass;
 }
 
@@ -47,7 +47,7 @@ void Server::acceptConnection()
         return ;
     int clienfd = accept(this->servfd, NULL, NULL);
     if (clienfd < 0)
-        throw std::runtime_error ("accept failed");
+        throw std::runtime_error ((std::string("accept failed: ") + strerror(errno)).c_str());
     pollfd p;
     p.fd = clienfd;
     p.events= POLLIN;
@@ -157,7 +157,6 @@ std::vector<std::string> Server::splitByCRLF(const std::string& str)
     return result;
 }
 // change \n to \r\n if \r follows \n not to duplicate \r\n
-
 void Server::changeNewLineToCRLF(std::string &msg)
 {
     size_t pos = 0;
