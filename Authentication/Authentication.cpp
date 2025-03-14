@@ -27,10 +27,13 @@ std::string getClientIP(int client_fd) {
     socklen_t addr_len = sizeof(addr);
 
     if (getpeername(client_fd, (struct sockaddr*)&addr, &addr_len) == -1){
-        std::cerr << "Error: Could not retrieve client IP!" << std::endl;
-        return "UNKNOWN";
+        throw std::runtime_error("Error: Could not retrieve client IP!");
     }
-    return inet_ntoa(addr.sin_addr);
+    char ipStr[INET_ADDRSTRLEN];
+    if (!inet_ntop(AF_INET, &addr.sin_addr, ipStr, sizeof(ipStr))) {
+        throw std::runtime_error("Error: inet_ntop failed!");
+    }
+    return std::string(ipStr);
 }
 
 std::string getArg(std::string str){
