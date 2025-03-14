@@ -6,7 +6,7 @@
 /*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 10:21:35 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/03/13 17:46:32 by ezahiri          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:59:02 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ std::vector<std::string> Server::splitByCRLF(const std::string& str)
     }
     return result;
 }
-// change \n to \r\n if \r follows \n not to duplicate \r\n
+
 void Server::changeNewLineToCRLF(std::string &msg)
 {
     size_t pos = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:22:10 by ael-fagr          #+#    #+#             */
-/*   Updated: 2025/03/13 17:53:14 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/14 17:58:49 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,3 @@ bool Channel::getLimitation() const {
 void Channel::setLimitation(const bool &haslimit){
     this->haslimit = haslimit;
 }
-// void Channel::clearChannel() {
-//     this->clients.clear();
-//     this->operators.clear(); 
-//     this->topic.clear(); 
-//     this->name.clear();   
-// }

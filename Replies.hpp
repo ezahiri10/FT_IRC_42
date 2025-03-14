@@ -1,7 +1,7 @@
 #define once
 
 #define PREFIX ":IRCServer "
-#define POSTFIX "\r\n" 
+#define POSTFIX "\r\n"
 //Errors :
 #define ERR_NICKNAMEINUSE(target)						PREFIX "433 " + target + " :Nickname is already in use" POSTFIX 
 #define ERR_NEEDMOREPARAMS(command)						PREFIX "461 " + command + " :Not enough parameters" POSTFIX  

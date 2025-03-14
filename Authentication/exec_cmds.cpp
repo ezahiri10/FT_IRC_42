@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 23:22:13 by yakazdao          #+#    #+#             */
-/*   Updated: 2025/03/13 21:18:50 by yakazdao         ###   ########.fr       */
+/*   Updated: 2025/03/14 17:58:03 by ezahiri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void Server::exec_cmds(const std::string &command, const std::string &arg, int c
     else if (command == "INVITE")
         op.InviteFunc(*this, arg, clientId);
     else if (command == "MODE")
-        op.ModeFunc(*this, arg, clientId);`
+        op.ModeFunc(*this, arg, clientId);
     else if (command == "TOPIC")
         op.TopicFunc(*this, arg, clientId);
 }
