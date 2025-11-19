@@ -38,4 +38,4 @@ This project helps in understanding low-level network programming, client-server
 ```bash
 git clone https://github.com/ezahiri10/FT_IRC_42.git
 cd FT_IRC_42
-
+make
