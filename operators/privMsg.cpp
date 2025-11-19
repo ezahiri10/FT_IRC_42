@@ -1,0 +1,98 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   privMsg.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/06 03:16:23 by ezahiri           #+#    #+#             */
+/*   Updated: 2025/03/13 19:36:49 by yakazdao         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../Server.hpp"
+#include "../Channel.hpp"
+
+void Server::msgToChannel(const std::string &channelName, const std::string &msg, int clientId){
+    std::vector<Channel>::iterator iter;
+    std::vector<Client>::iterator cIter;
+    cIter = getClient(this->polls[clientId].fd);
+    if (!checkChannelExist(channelName)){
+        responseFd(ERR_NOSUCHCHANNEL(channelName), this->polls[clientId].fd);
+        std::cout << ERR_NOSUCHCHANNEL(channelName);return;
+    }
+    if(!clientExistInChannel(channelName, clientId)){
+        responseFd(ERR_NOTONCHANNEL(cIter->getNickname(), channelName), cIter->getFd());
+        return;
+    }
+    iter = getChannelByName(channelName);
+    for(cIter = iter->Channelclients.begin(); cIter != iter->Channelclients.end(); cIter++){
+        responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), channelName, msg), cIter->getFd());
+    }
+}
+
+void Server::msgToClient(const std::string &clientName, const std::string &msg, int clientId){
+    std::vector<Client>::iterator iter;
+    if (!checkNickAvailability(clientName)){
+        responseFd(ERR_NOSUCHNICK(clientName), this->polls[clientId].fd);
+        std::cout << ERR_NOSUCHNICK(clientName);return;
+    }
+    iter = getClientByName(clientName);
+    responseFd(RPL_PRIVMSG(this->clients[clientId - 1].getNickname(), iter->getNickname(), msg), iter->getFd());
+}
+
+std::string trim(const std::string & source) {
+    std::string s(source);
+    s.erase(0,s.find_first_not_of(" \n\r\t"));
+    s.erase(s.find_last_not_of(" \n\r\t")+1);
+    return s;
+}
+
+bool Server::messageToBot(const std::string &msgpart, int clientId)
+{
+    std::vector<Client>::iterator iter;
+    std::string nick;
+
+    nick.clear();
+    iter = getClientByName("BOT");
+    if (msgpart == "GAME" && iter != this->clients.end())
+        nick =  "GAME " + this->clients[clientId - 1].getNickname();
+    else if (strncmp(msgpart.c_str(), "MOVE", 4) == 0 && iter != this->clients.end())
+    {
+        if (msgpart.size() < 5)
+            return (false);
+        nick = "MOVE "  +  this->clients[clientId - 1].getNickname() + " " + msgpart.substr(4);
+    }
+    else if (msgpart == "QUIT" && iter != this->clients.end())
+        nick = "QUIT " + this->clients[clientId - 1].getNickname();
+    if (nick.empty() == false)
+    {
+        responseFd(nick, iter->getFd());
+        return (true);
+    }
+    return (false);
+}
+
+void Server::privMsg(const std::string &arg, int clientId){
+    if (this->args.size() < 3){
+        responseFd( ERR_NEEDMOREPARAMS(arg), this->polls[clientId].fd);
+        return;
+    }
+    std::string namesPart = getParts(arg, 'N');
+    std::string msgPart = getParts(arg, 'X');
+    msgPart = trim(msgPart);
+    if (msgPart[0] != ':')
+        msgPart = this->args[2];
+    else
+        msgPart.erase(0,msgPart.find_first_not_of(":"));
+    if (namesPart == "BOT" && messageToBot(msgPart, clientId))
+        return ;
+    std::stringstream ss(namesPart);
+    std::string name;
+    while(getline(ss, name, ',')){
+        if (name[0] == '#')
+            msgToChannel(name, msgPart, clientId);
+        else
+            msgToClient(name, msgPart, clientId);
+    }
+}

@@ -1,0 +1,63 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Operators.hpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/01 13:24:03 by ael-fagr          #+#    #+#             */
+/*   Updated: 2025/03/13 17:35:36 by ezahiri          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef OPERATORS_HPP
+#define OPERATORS_HPP
+
+#include "../Server.hpp"
+#include "../Replies.hpp"
+#include <iostream>
+#include <iterator>
+#include <algorithm>
+#include <vector>
+#include <set>
+class Server;
+
+class Operators 
+{
+    private:
+        Server *Myserv;
+        bool thereIsUser(std::string client_nick, int Client_id);
+        std::string getClientNick(Channel &channel, int clientId);
+        void DesplayTopic(Channel  &channel, int Client_id);
+        void SetNewTopic(Channel  &channel, std::string topic, int Client_id);
+        bool CheckChannelOp(Channel &channel, std::string client_nick, int clientId);
+        void AddRemoveOP(Channel &channel, std::string mode, std::string op, int Client_id);
+        bool alreadyOnChannel(Channel &channel, std::string client, int clientId, int check);
+        bool CheckValidMode(std::string client, std::string mode, int Client_id);
+        void AddRemovePass(Channel &channel, std::string mode, std::string pass, int Client_id);
+        bool CheckIdentify(Channel &channel, std::string mode, std::string identify, int Client_id);
+        void AddRemoveLimit(Channel &channel, std::string mode, std::string identify, int  Client_id);
+        bool IsAnOwner(Channel &channel, std::string nick_name, int Client_id);
+        int getChannelOpPos(Channel &channel, const std::string& nickname);
+        int GetClientFd(std::string nick_name);
+    public:
+        Operators();
+        ~Operators();
+        Server *getMyserv() const;
+        static bool HasInvited(Channel &channel, std::string client_nick);
+        void setMyserv(Server &server);
+        static int getChannelClientPos(Channel &channel, const std::string& nickname);
+        static void sendMessage(Channel &channel, std::string nick_name, std::string str);
+        static int ModeFunc(Server &My_serv, std::string arg, int Client_id);
+        static int InviteFunc(Server &My_serv, std::string arg, int Client_id);
+        static int KickFunc(Server &My_serv, std::string arg, int Client_id);
+        static int TopicFunc(Server &My_serv, std::string arg, int Client_id);
+        void AddTopic(Channel  &channel, std::string topic, int Client_id);
+        bool thereIsChannel(std::string channel, int &channel_pos, int clientFD);
+        int InviteClient(Channel &channel, std::string invit_client, int Client_id);
+        int AddClient(Channel &channel, std::string nick_name, std::string invit_client);
+        void SetMode(Channel &channel, std::string mode, std::string identify, int Client_id);
+        bool Check_kick(Channel &channel, std::string client, std::string reasen, int Client_id);
+};
+
+#endif

@@ -2,14 +2,38 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC = Client.cpp main.cpp Server.cpp 
-HEADER = Client.hpp Server.hpp 
+SRC = Authentication/Authentication.cpp Client.cpp main.cpp Server.cpp\
+		Authentication/exec_cmds.cpp \
+		Authentication/help_func.cpp \
+		Channel.cpp\
+		operators/privMsg.cpp\
+		operators/Kick.cpp\
+		operators/Mode.cpp\
+		operators/Invite.cpp\
+		operators/Topic.cpp\
+		operators/Operators.cpp
+
+BOTCPP = BOTDIR/Bot.cpp BOTDIR/Player.cpp BOTDIR/main.cpp
+
+BOTHPP = BOTDIR/Bot.hpp BOTDIR/Player.hpp
+
+HEADER = Client.hpp Replies.hpp Server.hpp 
+
+BOTOBJ = $(BOTCPP:.cpp=.o)
 
 OBJ = $(SRC:.cpp=.o)
 
 NAME = ircserv
 
-all: $(NAME)
+BOT = bot
+
+all: $(BOT) $(NAME)
+
+BOTDIR/%.o: BOTDIR/%.cpp $(BOTHPP)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BOT): $(BOTOBJ)
+	$(CC) $(CFLAGS) $(BOTCPP) -o $(BOT)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
@@ -18,9 +42,9 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) $(BOTOBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(BOT)
 
 re: fclean all

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezahiri <ezahiri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yakazdao <yakazdao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 09:03:15 by ezahiri           #+#    #+#             */
-/*   Updated: 2025/02/21 19:04:06 by ezahiri          ###   ########.fr       */
+/*   Created: 2025/02/24 06:46:07 by yakazdao          #+#    #+#             */
+/*   Updated: 2025/03/13 18:06:49 by yakazdao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
@@ -17,23 +18,64 @@
 #define BUFFER_SIZE 1024
 
 #include "Client.hpp"
-
-class Server
+#include "Channel.hpp"
+#include "operators/Operators.hpp"
+const std::string RESET = "\033[0m";
+const std::string RED = "\033[31m";
+const std::string YELLOW = "\033[33m";
+const std::string BLUE = "\033[1;36m";
+class Server 
 {
     private :
         int servfd;
         int port;
         std::string serverpass;
-        std::vector<pollfd> polls;
-        std::vector<Client> clients;
+
         void acceptConnection ();
         void recevMesseages(int i);
         void ifFailed(const std::string &e);
+        std::vector<std::string> splitByCRLF(const std::string& str);
+        void Parse(std::string msg, int clientId);
+        bool messageToBot(const std::string &msgpart, int clientId);
+        void removeUserFromChienl(const std::string &name);
+        void changeNewLineToCRLF(std::string &msg);
     public :
+        std::vector<pollfd> polls;
+        std::vector<Client> clients;
+        std::vector<Channel> channels;
+        std::vector<std::string> args;
+
         static bool isstop;
         static void handler(int sig);
+
+        Server();
         Server(const std::string &port, const std::string &pass);
+
         void creatServer();
+        void Authentication(const std::string &message, int clientId);
+        bool checkNickAvailability(const std::string& nick);
+        void pass(const std::string &arg, int clientId);
+        void nick(const std::string &arg, int clientId);
+        void user(const std::string &arg, int clientId);
+        void getArgs(std::string message);
+        std::vector<Client>::iterator getClient(int fd);
+        void exec_cmds(const std::string &command, const std::string &arg, int i);
+        void join(const std::string &arg, int clientId);
+        bool checkChannelExist(const std::string &channelName);
+        void createChannel(const std::string &Ch_name, int clientId);
+        void addClientToChannel(const std::string &Ch_name, const std::string &Ch_pass, int clientId);
+        std::vector<Channel>::iterator getChannelByName(const std::string &name);
+        Channel getChannel(std::string name);
+        bool clientExistInChannel(const std::string &chName, int clientId);
+        void privMsg(const std::string &arg, int clientId);
+        void msgToChannel(const std::string &channelName, const std::string &msg, int clientId);
+        void msgToClient(const std::string &clientName, const std::string &msg, int clientId);
+        std::vector<Client>::iterator getClientByName(const std::string &name);
+        void responseId(const std::string &str, int clientId);
+        void responseFd(const std::string &str, int fd);
+        std::string getAllUsers(const std::string &channel);
+        std::string getParts(std::string str, char x);
+        void sendReponse(std::string reponse, int fdclient);
         ~Server ();
 };
 
